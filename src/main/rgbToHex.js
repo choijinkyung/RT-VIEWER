@@ -6,18 +6,18 @@ var rgbToHex = function (color) {
     return hex;
 };
 
-var fullColorHex = function(rgb) {
-    rgb=rgb.split('\\');
+var fullColorHex = function (rgb) {
+    rgb = rgb.split('\\');
 
-    let r=rgb[0];
-    let g=rgb[1];
-    let b=rgb[2];
+    let r = rgb[0];
+    let g = rgb[1];
+    let b = rgb[2];
 
     var red = rgbToHex(r);
     var green = rgbToHex(g);
     var blue = rgbToHex(b);
 
-    return "#"+red+green+blue;
+    return "#" + red + green + blue;
 };
 
 export default fullColorHex

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import * as cornerstone from "cornerstone-core";
 import * as cornerstoneTools from "cornerstone-tools";
 import * as cornerstoneMath from "cornerstone-math"
@@ -20,7 +20,7 @@ import {
     vflipOn,
     rotateOn
 } from "./buttonEventFunction.js"
-import { handleFileChange, handle, imageIdList, handleFileSelect, handleDragOver } from './loadData.js'
+import {handleFileChange, handle, imageIdList, handleFileSelect, handleDragOver} from './loadData.js'
 
 cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
@@ -91,13 +91,13 @@ class MainUIElements extends React.Component {
                 <div>File Select =>
                     <input type="file" onChange={(e) => {
                         handleFileChange(e)
-                    }} />&nbsp;&nbsp;
+                    }}/>&nbsp;&nbsp;
                 </div>
                 <div>Directory Select =>
                     <input type="file" id="filepicker" name="fileList" webkitdirectory={""} directory={""} multiple
                            onChange={(e) => {
                                imageIdList(e);
-                           }} />
+                           }}/>
                 </div>
                 <ul id="listing"></ul>
 
@@ -190,7 +190,7 @@ class MainUIElements extends React.Component {
                                  ref={input => {
                                      this.element = input;
                                  }}>
-                                <canvas id="myCanvas" className={"canvas"} width={512} height={512} />
+                                <canvas id="myCanvas" className={"canvas"} width={512} height={512}/>
                             </div>
                             <div id="topleft" className="overlay" className="topleft">
                                 Patient Name:

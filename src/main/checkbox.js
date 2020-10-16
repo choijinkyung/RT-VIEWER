@@ -1,5 +1,3 @@
-import $ from "jquery";
-
 function addCheckbox(ROI_LIST_Array) {
     ROI_LIST_Array.forEach(function (n) {
         let ul = document.getElementById('ul');
@@ -19,7 +17,4 @@ function addCheckbox(ROI_LIST_Array) {
     });
 
 }
-
-
-
 export default addCheckbox;

@@ -7,7 +7,7 @@ import * as cornerstoneMath from "cornerstone-math"
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import voxelCal from "./pixel2voxel";
 import readTextFile from "./openFile";
-import { structFile, sendImage, reset } from "./ROI";
+import {structFile, sendImage, reset} from "./ROI";
 
 cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
@@ -34,17 +34,15 @@ function imageIdList(e) {
          output.appendChild(item);
      };
     */
-    let cnt=0;
-
-
+    let cnt = 0;
 
     for (let i = 0; i < max; i++) {
         imageId[i] = cornerstoneWadoImageLoader.wadouri.fileManager.add(e.target.files[i]) //save file name in array
         dumpFiles[i] = e.target.files[i];
-        if(cnt>max){
+        if (cnt > max) {
             alert('ERROR : There are Too many files.');
         }
-        cnt ++;
+        cnt++;
     }
 
     //Index 114 : RT STRUCTURE FILE
@@ -55,6 +53,7 @@ function imageIdList(e) {
 
     let el = document.getElementById('dicomImage');
     el.onwheel = wheelE;
+
     function wheelE(e) {
         // Firefox e.detail > 0 scroll back, < 0 scroll forward
         // chrome/safari e.wheelDelta < 0 scroll back, > 0 scroll forward
@@ -88,7 +87,6 @@ function imageIdList(e) {
 }
 
 
-
 let img;
 
 // show image #1 initially
@@ -99,15 +97,14 @@ function updateTheImage(imageIds, imageIndex) {
     cornerstone.loadImage(imageIds[currentImageIndex]).then(function (image) {
         const viewport = cornerstone.getDefaultViewportForImage(el, image);
 
-        if(image.data.string('x00080060')==='CT' || image.data.string('x00080060')==='ct' || image.data.string('x00080060')==='MRI'  ){
+        if (image.data.string('x00080060') === 'CT' || image.data.string('x00080060') === 'ct' || image.data.string('x00080060') === 'MRI') {
             cornerstone.displayImage(el, image, viewport);
 
             dicomParse(image);
             voxelCal(image);
             sendImage(image);
             img = image;
-        }
-        else{
+        } else {
             alert("ERROR: Confirm this image's modality : CT , MRI ... ");
         }
 
@@ -134,15 +131,14 @@ function loadData(imageId) {
     cornerstone.enable(el)
     cornerstone.loadImage(imageId).then(function (image) {
         const viewport = cornerstone.getDefaultViewportForImage(el, image);
-        if(image.data.string('x00080060')==='CT' || image.data.string('x00080060')==='ct' || image.data.string('x00080060')==='MRI'  ){
+        if (image.data.string('x00080060') === 'CT' || image.data.string('x00080060') === 'ct' || image.data.string('x00080060') === 'MRI') {
             cornerstone.displayImage(el, image, viewport);
 
             dicomParse(image);
             voxelCal(image);
             sendImage(image);
             img = image;
-        }
-        else{
+        } else {
             alert("ERROR: Confirm this image's modality : CT , MRI ... ");
         }
     });
@@ -177,4 +173,4 @@ function handleDragOver(evt) {
     evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 }
 
-export { handleFileChange, handle, loadData, imageIdList, handleFileSelect, handleDragOver }
+export {handleFileChange, handle, loadData, imageIdList, handleFileSelect, handleDragOver}

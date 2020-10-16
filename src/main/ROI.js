@@ -2,13 +2,14 @@ import $ from "jquery";
 import dicomParser from "dicom-parser";
 import addCheckbox from "./checkbox";
 import pixelCal from "./voxel2pixel";
-import fullColorHex from "./rgbToHex";
+import fullColorHex from "./rgbToHex.js";
 
 function isASCII(str) {
     return /^[\x00-\x7F]*$/.test(str);
 }
 
 let dataSet;
+
 function structFile(file) {
     // clear any data currently being displayed as we parse this next file
     document.getElementById('rtstruct').innerHTML = '';
@@ -101,6 +102,7 @@ function structFile(file) {
 }
 
 let roi_List = [];
+
 function ROIList(dataSet) {
     try {
         for (let propertyName in dataSet.elements) {
@@ -175,6 +177,7 @@ function ROIList(dataSet) {
 }
 
 let contourList = [];
+
 function contour(dataSet, output1, output3) {
     try {
         for (let propertyName in dataSet.elements) {
@@ -268,8 +271,7 @@ function roiJson(roi_List) {
     for (let i = 0; i < roi_List.length; i++) {
         if (roi_List[i] == 'x30060022') {
             ROI_Number[i] = roi_List[i + 1];
-        }
-        else if (roi_List[i] == 'x30060026') {
+        } else if (roi_List[i] == 'x30060026') {
             ROI_Name[i] = roi_List[i + 1];
         }
     }
@@ -298,6 +300,7 @@ function roiJson(roi_List) {
 }
 
 let contour_data_Array = new Array();
+
 function contourJson(contourList) {
     let Referenced_Instance_UID = [];
     let contour_data = [];
@@ -313,8 +316,7 @@ function contourJson(contourList) {
             contour_data[i] = contourList[i + 5];
             if (contourList[i + 6] == 'x30060084') {
                 Referenced_ROI_Number[i] = contourList[i + 7];
-            }
-            else if (contourList[i + 6] == 'x00081155') {
+            } else if (contourList[i + 6] == 'x00081155') {
                 for (j = i + 6; j < contourList.length; j++) {
                     if (contourList[j + 2] == 'x30060084') {
                         Referenced_ROI_Number[i] = contourList[j + 3];
@@ -322,13 +324,12 @@ function contourJson(contourList) {
                     }
                 }
             }
-            if(contourList[i] =='x3006002a'){
-                ROI_display_color[i] = contourList[i+1];
-            }
-            else if(contourList[i]=='x30060050'){
-                for(j=i;j>0;j--){
-                    if(contourList[j]=='x3006002a'){
-                        ROI_display_color[i] = contourList[j+1];
+            if (contourList[i] == 'x3006002a') {
+                ROI_display_color[i] = contourList[i + 1];
+            } else if (contourList[i] == 'x30060050') {
+                for (j = i; j > 0; j--) {
+                    if (contourList[j] == 'x3006002a') {
+                        ROI_display_color[i] = contourList[j + 1];
                         break;
                     }
                 }
@@ -363,8 +364,8 @@ function contourJson(contourList) {
     });
 }
 
-let struct, color ;
-let checkVal = 11;
+let struct, color;
+let checkVal = 13;
 
 function sendImage(image) {
     let Instance_UID = 0;
@@ -376,7 +377,7 @@ function sendImage(image) {
                 struct = contour_data_Array[i]['x30060050'];
                 color = contour_data_Array[i]['x3006002a'];
 
-                draw(image, struct,color);
+                draw(image, struct, color);
             }
 
         }
@@ -388,7 +389,7 @@ function sendImage(image) {
 let canvas;
 let ctx;
 
-function draw(image, struct,color) {
+function draw(image, struct, color) {
     let px = pixelCal(image, struct);
     let pi = px[0];
     let pj = px[1];
@@ -406,7 +407,7 @@ function draw(image, struct,color) {
     ctx.closePath();
     ctx.stroke();
     ctx.fillStyle = fullColorHex(color);
-    ctx.globalAlpha = 0.5;
+    ctx.globalAlpha = 0.7;
     ctx.fill();
 
     return canvas;
@@ -420,15 +421,14 @@ function reset() {
 }
 
 
-
-function check(){
-    $(document).ready(function(){
-        $(':checkbox[name="roi"]').click(function(){
-            if(!$(".roi").prop('checked')){
+function check() {
+    $(document).ready(function () {
+        $(':checkbox[name="roi"]').click(function () {
+            if (!$(".roi").prop('checked')) {
                 alert("체크박스 체크했음!");
-                $(".roi").prop('checked',true);
-            }else{
-                $(".roi").prop('checked',false);
+                $(".roi").prop('checked', true);
+            } else {
+                $(".roi").prop('checked', false);
                 alert("체크박스 체크 해제!");
             }
         });
@@ -436,4 +436,4 @@ function check(){
 
 }
 
-export { structFile, sendImage, draw, reset }
+export {structFile, sendImage, draw, reset}
