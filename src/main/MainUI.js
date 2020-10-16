@@ -101,88 +101,84 @@ class MainUIElements extends React.Component {
                 </div>
                 <ul id="listing"></ul>
 
-                <button onClick={() => {
-                    handle()
-                }}>TEST
-                </button>
-                <div>
-                    <button onClick={() => {
-                        angleOn()
-                    }}>Angle
-                    </button>
-                    &nbsp;&nbsp;
-                    <button onClick={() => {
-                        lengthOn()
-                    }}>Length
-                    </button>
-                    &nbsp;&nbsp;
-                    <button onClick={() => {
-                        drawCircle()
-                    }}>Circle
-                    </button>
-                    &nbsp;&nbsp;
-                    <button onClick={() => {
-                        drawRectangle()
-                    }}>Rectangle
-                    </button>
-                    &nbsp;&nbsp;
-                    <button onClick={() => {
-                        eraserOn()
-                    }}>Erase
-                    </button>
-                    &nbsp;&nbsp;
-                    <button onClick={() => {
-                        reductionOn()
-                    }}>256x256
-                    </button>
-                    &nbsp;&nbsp;
-                    <button onClick={() => {
-                        expansionOn()
-                    }}>512x512
-                    </button>
-                    &nbsp;&nbsp;
+                <div className={'left'}>
+                    <div>
+                        <button onClick={() => {
+                            angleOn()
+                        }}>Angle
+                        </button>
+                        &nbsp;&nbsp;
+                        <button onClick={() => {
+                            lengthOn()
+                        }}>Length
+                        </button>
+                        &nbsp;&nbsp;
+                        <button onClick={() => {
+                            drawCircle()
+                        }}>Circle
+                        </button>
+                        &nbsp;&nbsp;
+                        <button onClick={() => {
+                            drawRectangle()
+                        }}>Rectangle
+                        </button>
+                        &nbsp;&nbsp;
+                        <button onClick={() => {
+                            eraserOn()
+                        }}>Erase
+                        </button>
+                        &nbsp;&nbsp;
+                        <button onClick={() => {
+                            reductionOn()
+                        }}>256x256
+                        </button>
+                        &nbsp;&nbsp;
+                        <button onClick={() => {
+                            expansionOn()
+                        }}>512x512
+                        </button>
+                        &nbsp;&nbsp;
+                    </div>
+                    <div>
+                        <button onClick={() => {
+                            invertOn()
+                        }}>Toggle Invert
+                        </button>
+                        &nbsp;&nbsp;
+                        <button onClick={() => {
+                            interpolationOn()
+                        }}>Toggle Interpolation
+                        </button>
+                        &nbsp;&nbsp;
+                        <button onClick={() => {
+                            hflipOn()
+                        }}>Horizontal Flip
+                        </button>
+                        &nbsp;&nbsp;
+                        <button onClick={() => {
+                            vflipOn()
+                        }}>Vertical Flip
+                        </button>
+                        &nbsp;&nbsp;
+                        <button onClick={() => {
+                            rotateOn()
+                        }}>Rotate 90
+                        </button>
+                        &nbsp;&nbsp;
+                    </div>
                 </div>
-                <div>
-                    <button onClick={() => {
-                        invertOn()
-                    }}>Toggle Invert
-                    </button>
-                    &nbsp;&nbsp;
-                    <button onClick={() => {
-                        interpolationOn()
-                    }}>Toggle Interpolation
-                    </button>
-                    &nbsp;&nbsp;
-                    <button onClick={() => {
-                        hflipOn()
-                    }}>Horizontal Flip
-                    </button>
-                    &nbsp;&nbsp;
-                    <button onClick={() => {
-                        vflipOn()
-                    }}>Vertical Flip
-                    </button>
-                    &nbsp;&nbsp;
-                    <button onClick={() => {
-                        rotateOn()
-                    }}>Rotate 90
-                    </button>
-                    &nbsp;&nbsp;
-                </div>
-
-                <div>
-                    <ul>
-                        <li>Left click drag - window/level</li>
-                        <li>Middle Mouse button drag - pan</li>
-                        <li>Right click drag - zoom</li>
-                        <li>Mouse wheel - scroll images</li>
-                        <li>Double Click - save pixel/voxel</li>
-                    </ul>
-                </div>
-
-
-                <div>
-                    <div class="left">
+                    <div className={'right'}>
+                        <ul>
+                            <li>Left click drag - window/level</li>
+                            <li>Middle Mouse button drag - pan</li>
+                            <li>Right click drag - zoom</li>
+                            <li>Mouse wheel - scroll images</li>
+                            <li>Double Click - save pixel/voxel</li>
+                        </ul>
+                    </div>
+                <br></br> <br></br> <br></br>
+                <div class="left">
+                    <div >
                         <div id="dicomImageWrapper" className="wrapper"
                              onContextMenu="return false" onWheel={(e) => {
                         }}>
@@ -207,23 +203,21 @@ class MainUIElements extends React.Component {
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className="right">
-                    <div><span id="coords"></span></div>
-                    <div><span id="voxelCoords">voxel</span></div>
+                    <div >
+                        <div><span id="voxelCoords"></span></div>
+                        <div><span id="voxelValue"></span></div>
 
-                    <div><span id="pixelValue"></span></div>
-                    <div><span id="voxelValue"></span></div>
+                        <div><span id="patient">Patient ID : </span></div>
+                        <div><span id="modality">Modality : </span></div>
+                        <div><span id="instanceUID">Instance UID : </span></div>
 
-                    <div><span id="patient">Patient ID : </span></div>
-                    <div><span id="modality">Modality : </span></div>
-                    <div><span id="instanceUID">Instance UID : </span></div>
 
-                    <div><span id="contour">contourData : </span></div>
-                    <div>
-                        <ul id="ul">Structure Set ROI Sequence</ul>
                     </div>
                 </div>
+                <div className = "right">
+                    <ul id="ul">Structure Set ROI Sequence</ul>
+                </div>
+
                 <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
                 <br></br><br></br><br></br><br></br><br></br><br></br><br></br>
 
@@ -270,7 +264,7 @@ class MainUIElements extends React.Component {
                     </div>
                 </div>
                */}
-
+                {/*
                 <div>
                     <div className="left">
                         <div id="status1" className="alert alert-success">
@@ -304,6 +298,8 @@ class MainUIElements extends React.Component {
                         </div>
                     </div>
                 </div>
+                <div id="displaylet">display</div>
+                */}
 
             </div>
         );

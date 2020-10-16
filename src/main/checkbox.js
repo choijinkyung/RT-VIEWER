@@ -7,7 +7,6 @@ function addCheckbox(ROI_LIST_Array) {
         checkbox.type = 'checkbox';
         checkbox.value = n.x30060022;
         checkbox.name = 'roi';
-        checkbox.class = 'roiSet';
 
         li.append(checkbox);
 
