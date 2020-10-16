@@ -353,7 +353,7 @@ function contourJson(contourList) {
     //parsing to JSON
     $(function () {
         for (let i = 0; i < contourList.length; i++) {
-            let contour_object = new Object();
+            let contour_object = {};
             contour_object.x30060084 = Referenced_ROI_Number[i];
             contour_object.x00081155 = Referenced_Instance_UID[i];
             contour_object.x30060050 = contour_data[i];
