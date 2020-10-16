@@ -12,12 +12,12 @@ let dataSet;
 
 function structFile(file) {
     // clear any data currently being displayed as we parse this next file
-    document.getElementById('rtstruct').innerHTML = '';
-    document.getElementById('rtstruct3').innerHTML = '';
+    //document.getElementById('rtstruct').innerHTML = '';
+    //document.getElementById('rtstruct3').innerHTML = '';
 
     $('#status').removeClass('alert-warning alert-success alert-danger').addClass('alert-info');
     $('#warnings').empty();
-    document.getElementById('statusText2').innerHTML = 'Status: Loading file, please wait..';
+    //document.getElementById('statusText2').innerHTML = 'Status: Loading file, please wait..';
 
     let reader = new FileReader();
     reader.onload = function (file) {
@@ -30,7 +30,7 @@ function structFile(file) {
         let mb = kb / 1024;
         let byteStr = mb > 1 ? mb.toFixed(3) + " MB" : kb.toFixed(0) + " KB";
 
-        document.getElementById('statusText2').innerHTML = 'Status: Parsing ' + byteStr + ' bytes, please wait..';
+        //document.getElementById('statusText2').innerHTML = 'Status: Parsing ' + byteStr + ' bytes, please wait..';
 
 
         // set a short timeout to do the parse so the DOM has time to update itself with the above message
@@ -48,16 +48,17 @@ function structFile(file) {
                 roiJson(roi_List);
                 contourJson(contourList);
 
-                check();
+                checkEvent();
+
                 // Combine the array of strings into one string and add it to the DOM
-                document.getElementById('rtstruct').innerHTML = '<ul>' + output1.join('') + '</ul>';
-                document.getElementById('rtstruct3').innerHTML = '<ul>' + output3.join('') + '</ul>';
+               // document.getElementById('rtstruct').innerHTML = '<ul>' + output1.join('') + '</ul>';
+                //document.getElementById('rtstruct3').innerHTML = '<ul>' + output3.join('') + '</ul>';
 
                 let end = new Date().getTime();
                 let time = end - start;
                 if (dataSet.warnings.length > 0) {
                     $('#status1').removeClass('alert-success alert-info alert-danger').addClass('alert-warning');
-                    $('#statusText2').html('Status: Warnings encountered while parsing file (file of size ' + byteStr + ' parsed in ' + time + 'ms)');
+                   // $('#statusText2').html('Status: Warnings encountered while parsing file (file of size ' + byteStr + ' parsed in ' + time + 'ms)');
 
                     dataSet.warnings.forEach(function (warning) {
                         $("#warnings").append('<li>' + warning + '</li>');
@@ -66,10 +67,10 @@ function structFile(file) {
                     let pixelData = dataSet.elements.x7fe00010;
                     if (pixelData) {
                         $('#status1').removeClass('alert-warning alert-info alert-danger').addClass('alert-success');
-                        $('#statusText').html('Status: Ready (file of size ' + byteStr + ' parsed in ' + time + 'ms)');
+                     //   $('#statusText2').html('Status: Ready (file of size ' + byteStr + ' parsed in ' + time + 'ms)');
                     } else {
                         $('#status1').removeClass('alert-warning alert-info alert-danger').addClass('alert-success');
-                        $('#statusText2').html('Status: Ready - no pixel data found (file of size ' + byteStr + ' parsed in ' + time + 'ms)');
+                      //  $('#statusText2').html('Status: Ready - no pixel data found (file of size ' + byteStr + ' parsed in ' + time + 'ms)');
                     }
                 }
 
@@ -79,19 +80,19 @@ function structFile(file) {
                     message = err.exception;
                 }
                 $('#status').removeClass('alert-success alert-info alert-warning').addClass('alert-danger');
-                document.getElementById('statusText2').innerHTML = 'Status: Error - ' + message + ' (file of size ' + byteStr + ' )';
+               // document.getElementById('statusText2').innerHTML = 'Status: Error - ' + message + ' (file of size ' + byteStr + ' )';
 
                 if (err.output1 || err.output3) {
-                    document.getElementById('rtstruct').innerHTML = '<ul>' + output1.join('') + '</ul>';
-                    document.getElementById('rtstruct3').innerHTML = '<ul>' + output3.join('') + '</ul>';
+                  //  document.getElementById('rtstruct').innerHTML = '<ul>' + output1.join('') + '</ul>';
+                  //  document.getElementById('rtstruct3').innerHTML = '<ul>' + output3.join('') + '</ul>';
                 } else if (err.dataSet) {
                     var output1 = [];
                     var output3 = [];
 
                     ROIList(err.dataSet);
                     contour(err.dataSet, output1, output3);
-                    document.getElementById('rtstruct').innerHTML = '<ul>' + output1.join('') + '</ul>';
-                    document.getElementById('rtstruct3').innerHTML = '<ul>' + output3.join('') + '</ul>';
+                  //  document.getElementById('rtstruct').innerHTML = '<ul>' + output1.join('') + '</ul>';
+                   // document.getElementById('rtstruct3').innerHTML = '<ul>' + output3.join('') + '</ul>';
                 }
             }
         }, 10);
@@ -297,6 +298,7 @@ function roiJson(roi_List) {
         }
         addCheckbox(ROI_LIST_Array);
     });
+
 }
 
 let contour_data_Array = new Array();
@@ -311,24 +313,24 @@ function contourJson(contourList) {
         let j = 0;
 
 
-        if (contourList[i + 2] == 'x00081155') {
+        if (contourList[i + 2] === 'x00081155') {
             Referenced_Instance_UID[i] = contourList[i + 3];
             contour_data[i] = contourList[i + 5];
-            if (contourList[i + 6] == 'x30060084') {
+            if (contourList[i + 6] === 'x30060084') {
                 Referenced_ROI_Number[i] = contourList[i + 7];
-            } else if (contourList[i + 6] == 'x00081155') {
+            } else if (contourList[i + 6] === 'x00081155') {
                 for (j = i + 6; j < contourList.length; j++) {
-                    if (contourList[j + 2] == 'x30060084') {
+                    if (contourList[j + 2] === 'x30060084') {
                         Referenced_ROI_Number[i] = contourList[j + 3];
                         break;
                     }
                 }
             }
-            if (contourList[i] == 'x3006002a') {
+            if (contourList[i] === 'x3006002a') {
                 ROI_display_color[i] = contourList[i + 1];
-            } else if (contourList[i] == 'x30060050') {
+            } else if (contourList[i] === 'x30060050') {
                 for (j = i; j > 0; j--) {
-                    if (contourList[j] == 'x3006002a') {
+                    if (contourList[j] === 'x3006002a') {
                         ROI_display_color[i] = contourList[j + 1];
                         break;
                     }
@@ -364,25 +366,42 @@ function contourJson(contourList) {
     });
 }
 
+/*Object that includes array*/
+let information = {
+    ROIs: []
+}
 let struct, color;
-let checkVal = 13;
+let checkVal = information.ROIs;
 
 function sendImage(image) {
     let Instance_UID = 0;
     Instance_UID = image.data.string('x00080018');
 
-    for (let i = 0; i < contour_data_Array.length; i++) {
-        if (contour_data_Array[i]['x30060084'] == checkVal) {
-            if (contour_data_Array[i]['x00081155'] == Instance_UID) {
-                struct = contour_data_Array[i]['x30060050'];
-                color = contour_data_Array[i]['x3006002a'];
+    for(let j=0;j<checkVal.length;j++){
+        for (let i = 0; i < contour_data_Array.length; i++) {
+            if (contour_data_Array[i]['x30060084'] === checkVal[j]) {
+                if (contour_data_Array[i]['x00081155'] === Instance_UID) {
+                    struct = contour_data_Array[i]['x30060050'];
+                    color = contour_data_Array[i]['x3006002a'];
 
-                draw(image, struct, color);
+                    draw(image, struct, color);
+                }
             }
-
         }
     }
 
+    for(let j=0;j<checkVal.length;j++){
+        for (let i = 0; i < contour_data_Array.length; i++) {
+            if (contour_data_Array[i]['x30060084'] !== checkVal[j]) {
+                if (contour_data_Array[i]['x00081155'] === Instance_UID) {
+                    struct = contour_data_Array[i]['x30060050'];
+                    color = contour_data_Array[i]['x3006002a'];
+
+                    resetCanvas(image, struct);
+                }
+            }
+        }
+    }
 }
 
 //draw ROI contouring from textFile
@@ -402,12 +421,14 @@ function draw(image, struct, color) {
     for (let i = 1; i <= pi.length * 3; i++) {
         if (i % 3 === 0) {
             ctx.lineTo(pi[i], pj[i + 1]);
+
         }
     }
+
     ctx.closePath();
-    ctx.stroke();
     ctx.fillStyle = fullColorHex(color);
-    ctx.globalAlpha = 0.7;
+    ctx.globalAlpha = 0.6;
+    ctx.stroke();
     ctx.fill();
 
     return canvas;
@@ -417,23 +438,64 @@ function reset() {
     canvas = document.getElementById("myCanvas");
     ctx = canvas.getContext("2d");
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0,0,512,512);
+}
+
+function resetCanvas(image,struct) {
+    let px = pixelCal(image, struct);
+    let pi = px[0];
+    let pj = px[1];
+
+    canvas = document.getElementById("myCanvas");
+    ctx = canvas.getContext("2d");
+
+    ctx.beginPath();
+    ctx.moveTo(pi[0], pj[1]);
+    for (let i = 1; i <= pi.length * 3; i++) {
+        if (i % 3 === 0) {
+            ctx.lineTo(pi[i], pj[i + 1]);
+        }
+    }
+    ctx.closePath();
+    ctx.globalAlpha = 0;
+    ctx.fill();
+
 }
 
 
-function check() {
-    $(document).ready(function () {
-        $(':checkbox[name="roi"]').click(function () {
-            if (!$(".roi").prop('checked')) {
-                alert("체크박스 체크했음!");
-                $(".roi").prop('checked', true);
-            } else {
-                $(".roi").prop('checked', false);
-                alert("체크박스 체크 해제!");
+/*Function*/
+function addROIset(evt) {
+    if (evt.target.checked) {
+        information.ROIs.push(evt.target.value);
+    } else {
+        let index = information.ROIs.indexOf(evt.target.value);
+        if (index !== -1){
+            information.ROIs.splice(index, 1);
+        }
+    }
+
+//    let showROIset = information.ROIs.join(", "); //converts to string
+  //  document.getElementById("displaylet").innerHTML = showROIset; //prints to HTML document
+}
+
+
+function checkEvent(){
+    /*Event Listener*/
+    $(document).ready(function(){
+        let roi = document.getElementsByName("roi");
+        if (roi[0].addEventListener) {
+            for (let i = 0; i < roi.length; i++) {
+                roi[i].addEventListener("change", addROIset, false);
             }
-        });
-    });
+        } else if (roi[0].attachEvent) {
+            for (let i = 0; i < roi.length; i++) {
+                roi[i].attachEvent("onchange", addROIset);
+            }
+        }
+    })
 
 }
 
-export {structFile, sendImage, draw, reset}
+
+
+export {structFile, sendImage, draw, reset , checkEvent}

@@ -16,7 +16,7 @@ cornerstoneTools.external.Hammer = Hammer;
 cornerstoneTools.external.cornerstoneMath = cornerstoneMath
 cornerstoneTools.init();
 
-let currentImageIndex = 72;
+let currentImageIndex = 0;
 
 //Import a list of file names from a selected folder
 function imageIdList(e) {
