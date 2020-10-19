@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React from "react";
 import * as cornerstone from "cornerstone-core";
 import * as cornerstoneTools from "cornerstone-tools";
 import * as cornerstoneMath from "cornerstone-math"
@@ -20,7 +20,7 @@ import {
     vflipOn,
     rotateOn
 } from "./buttonEventFunction.js"
-import {handleFileChange, handle, imageIdList, handleFileSelect, handleDragOver} from './loadData.js'
+import {handleFileChange,handle, imageIdList, handleFileSelect, handleDragOver} from './loadData.js'
 
 cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser

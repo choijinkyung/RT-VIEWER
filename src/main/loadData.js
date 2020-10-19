@@ -77,7 +77,6 @@ function imageIdList(e) {
                 }
             }
         } else {
-            index = currentImageIndex;
             updateTheImage(imageId, currentImageIndex); //update images
             reset();
         }
