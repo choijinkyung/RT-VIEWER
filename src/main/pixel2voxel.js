@@ -47,9 +47,8 @@ function voxelCal(image) {
             let Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
             let Pz = (Xz * Di * pixelCoords.x) + (Yz * Dj * pixelCoords.y) + Sz;
 
-            Px = Math.floor(Px * 10) / 10;
-            Py = Math.floor(Py * 10) / 10;
-            Pz = Math.floor(Pz * 10) / 10;
+            //Px = Math.floor(Px * 10) / 10;
+           // Py = Math.floor(Py * 10) / 10;
             document.getElementById('voxelCoords').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
         });
 
@@ -61,9 +60,8 @@ function voxelCal(image) {
             let Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
             let Pz = (Xz * Di * pixelCoords.x) + (Yz * Dj * pixelCoords.y) + Sz;
 
-            Px = Math.floor(Px * 10) / 10;
-            Py = Math.floor(Py * 10) / 10;
-            Pz = Math.floor(Pz * 10) / 10;
+           // Px = Math.floor(Px * 10) / 10;
+          //  Py = Math.floor(Py * 10) / 10;
 
             document.getElementById('voxelValue').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
         });
@@ -71,7 +69,6 @@ function voxelCal(image) {
     } else {
         alert('NOT CT IMAGES')
     }
-
 }
 
 export default voxelCal;

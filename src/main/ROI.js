@@ -3,6 +3,7 @@ import dicomParser from "dicom-parser";
 import addCheckbox from "./checkbox";
 import pixelCal from "./voxel2pixel";
 import fullColorHex from "./rgbToHex.js";
+import * as cornerstone from "cornerstone-core";
 
 function isASCII(str) {
     return /^[\x00-\x7F]*$/.test(str);
@@ -403,16 +404,28 @@ function sendImage(image) {
 }
 
 //draw ROI contouring from textFile
-let canvas;
-let ctx;
 
 function draw(image, struct, color) {
+    //function drawEvent(scale,translatePos){
     let px = pixelCal(image, struct);
     let pi = px[0];
     let pj = px[1];
 
-    canvas = document.getElementById("myCanvas");
-    ctx = canvas.getContext("2d");
+    let canvas = document.getElementById("myCanvas");
+    let ctx = canvas.getContext("2d");
+
+    let translatePos = {
+        x: 0,
+        y: 0
+    };
+
+    let scale = 1.0;
+    let startDragOffset = {};
+    let mouseDown = false;
+
+    ctx.save();
+    ctx.translate(translatePos.x,translatePos.y);
+    ctx.scale(scale,scale);
 
     ctx.beginPath();
     ctx.moveTo(pi[0], pj[1]);
@@ -422,19 +435,70 @@ function draw(image, struct, color) {
 
         }
     }
-
     ctx.closePath();
     ctx.fillStyle = fullColorHex(color);
-    ctx.globalAlpha = 0.6;
+    ctx.globalAlpha = 0.5;
     ctx.stroke();
     ctx.fill();
+    ctx.restore();
 
-    return canvas;
+    // add event listeners to handle screen drag
+    canvas.addEventListener("mousedown", function(evt){
+        mouseDown = true;
+        startDragOffset.x = evt.clientX - translatePos.x;
+        startDragOffset.y = evt.clientY - translatePos.y;
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+    });
+
+    canvas.addEventListener("mouseup", function(evt){
+        mouseDown = false;
+        translatePos.x = evt.clientX - startDragOffset.x;
+        translatePos.y = evt.clientY - startDragOffset.y;
+        ctx.save();
+        ctx.translate(translatePos.x,translatePos.y);
+        ctx.scale(scale,scale);
+
+        ctx.beginPath();
+        ctx.moveTo(pi[0], pj[1]);
+        for (let i = 1; i <= pi.length * 3; i++) {
+            if (i % 3 === 0) {
+                ctx.lineTo(pi[i], pj[i + 1]);
+
+            }
+        }
+        ctx.closePath();
+        ctx.fillStyle = fullColorHex(color);
+        ctx.globalAlpha = 0.5;
+        ctx.stroke();
+        ctx.fill();
+        ctx.restore();
+    });
+
+    canvas.addEventListener("mouseover", function(evt){
+        mouseDown = false;
+    });
+
+    canvas.addEventListener("mouseout", function(evt){
+        mouseDown = false;
+    });
+
+    canvas.addEventListener("mousemove", function(evt){
+        if (mouseDown) {
+
+            translatePos.x = evt.clientX - startDragOffset.x;
+            translatePos.y = evt.clientY - startDragOffset.y;
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        }
+    });
+
 }
 
+
+
 function reset() {
-    canvas = document.getElementById("myCanvas");
-    ctx = canvas.getContext("2d");
+    let canvas = document.getElementById("myCanvas");
+    let ctx = canvas.getContext("2d");
 
     ctx.clearRect(0,0,512,512);
 }
@@ -444,8 +508,8 @@ function resetCanvas(image,struct) {
     let pi = px[0];
     let pj = px[1];
 
-    canvas = document.getElementById("myCanvas");
-    ctx = canvas.getContext("2d");
+    let canvas = document.getElementById("myCanvas");
+    let ctx = canvas.getContext("2d");
 
     ctx.beginPath();
     ctx.moveTo(pi[0], pj[1]);
@@ -481,11 +545,11 @@ function checkEvent(){
         let roi = document.getElementsByName("roi");
         if (roi[0].addEventListener) {
             for (let i = 0; i < roi.length; i++) {
-                roi[i].addEventListener("change", addROIset, false);
+                roi[i].addEventListener("click", addROIset, false);
             }
         } else if (roi[0].attachEvent) {
             for (let i = 0; i < roi.length; i++) {
-                roi[i].attachEvent("onchange", addROIset);
+                roi[i].attachEvent("onclick", addROIset);
             }
         }
     })

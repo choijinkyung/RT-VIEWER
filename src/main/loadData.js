@@ -42,14 +42,13 @@ function imageIdList(e) {
         if (cnt > max) {
             alert('ERROR : There are Too many files.');
         }
+
         cnt++;
     }
-
-    //Index 114 : RT STRUCTURE FILE
-    //Index 72 : initial CT Image
+    //Index 113 : RT STRUCTURE FILE
     //dumpFile(dumpfiles[71]);
     structFile(dumpFiles[113]);
-    updateTheImage(imageId, currentImageIndex);
+    loadData(imageId[currentImageIndex]);
 
     let el = document.getElementById('dicomImage');
     el.onwheel = wheelE;
@@ -95,8 +94,7 @@ function updateTheImage(imageIds, imageIndex) {
     currentImageIndex = imageIndex;
     cornerstone.loadImage(imageIds[currentImageIndex]).then(function (image) {
         const viewport = cornerstone.getDefaultViewportForImage(el, image);
-
-        if (image.data.string('x00080060') === 'CT' || image.data.string('x00080060') === 'ct' || image.data.string('x00080060') === 'MRI') {
+        if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2') {
             cornerstone.displayImage(el, image, viewport);
 
             dicomParse(image);
@@ -124,19 +122,27 @@ function handleFileChange(e) {
     loadData(imageId);
 }
 
+function loadStructureFile(imageId){
+    cornerstone.loadImage(imageId).then(function (image) {
+        if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.481.3') {
+            structFile(imageId);
+        }
+    });
+}
 //load one CT Image from local file
 function loadData(imageId) {
     let el = document.getElementById('dicomImage');
     cornerstone.enable(el)
     cornerstone.loadImage(imageId).then(function (image) {
         const viewport = cornerstone.getDefaultViewportForImage(el, image);
-        if (image.data.string('x00080060') === 'CT' || image.data.string('x00080060') === 'ct' || image.data.string('x00080060') === 'MRI') {
+        if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2') {
             cornerstone.displayImage(el, image, viewport);
 
             dicomParse(image);
             voxelCal(image);
             sendImage(image);
             img = image;
+
         } else {
             alert("ERROR: Confirm this image's modality : CT , MRI ... ");
         }

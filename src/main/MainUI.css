@@ -17,6 +17,8 @@
     background: #00ff0000;
     position: absolute;
     border: 1px;
+    height: 512px;
+    width: 512px;
 }
 
 .overlay {

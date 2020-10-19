@@ -39,49 +39,50 @@ class MainUIElements extends React.Component {
         dropZone.addEventListener('dragover', handleDragOver, false);
         dropZone.addEventListener('drop', handleFileSelect, false);
 
-        element.addEventListener('mousedown', function (e) {
-            let lastX = e.pageX;
-            let lastY = e.pageY;
-            const mouseButton = e.which;
+           element.addEventListener('mousedown', function (e) {
+                 let lastX = e.pageX;
+                 let lastY = e.pageY;
+                 const mouseButton = e.which;
 
-            function mouseMoveHandler(e) {
-                const deltaX = e.pageX - lastX;
-                const deltaY = e.pageY - lastY;
-                lastX = e.pageX;
-                lastY = e.pageY;
 
-                if (mouseButton === 1) {
-                    let viewport = cornerstone.getViewport(element);
-                    viewport.voi.windowWidth += (deltaX / viewport.scale);
-                    viewport.voi.windowCenter += (deltaY / viewport.scale);
-                    cornerstone.setViewport(element, viewport);
+                 function mouseMoveHandler(e) {
+                     const deltaX = e.pageX - lastX;
+                     const deltaY = e.pageY - lastY;
+                     lastX = e.pageX;
+                     lastY = e.pageY;
 
-                    document.getElementById('bottomleft').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth)
-                        + "/" + Math.round(viewport.voi.windowCenter);
+                     if (mouseButton === 1) {
+                         let viewport = cornerstone.getViewport(element);
+                         viewport.translation.x += (deltaX / viewport.scale);
+                         viewport.translation.y += (deltaY / viewport.scale);
+                         cornerstone.setViewport(element, viewport);
 
-                } else if (mouseButton === 2) {
-                    let viewport = cornerstone.getViewport(element);
-                    viewport.translation.x += (deltaX / viewport.scale);
-                    viewport.translation.y += (deltaY / viewport.scale);
-                    cornerstone.setViewport(element, viewport);
+                     } else if (mouseButton === 2) {
+                         let viewport = cornerstone.getViewport(element);
+                         viewport.voi.windowWidth += (deltaX / viewport.scale);
+                         viewport.voi.windowCenter += (deltaY / viewport.scale);
+                         cornerstone.setViewport(element, viewport);
 
-                } else if (mouseButton === 3) {
-                    let viewport = cornerstone.getViewport(element);
-                    viewport.scale += (deltaY / 100);
-                    cornerstone.setViewport(element, viewport);
-                    document.getElementById('bottomright').textContent = "Zoom:" + viewport.scale + "x";
-                }
-            }
+                         document.getElementById('bottomleft').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth)
+                             + "/" + Math.round(viewport.voi.windowCenter);
 
-            function mouseUpHandler() {
-                document.removeEventListener('mousemove', mouseMoveHandler);
-                document.removeEventListener('mouseup', mouseUpHandler);
-            }
 
-            document.addEventListener('mousemove', mouseMoveHandler);
-            document.addEventListener('mouseup', mouseUpHandler);
-        });
+                     } else if (mouseButton === 3) {
+                         let viewport = cornerstone.getViewport(element);
+                         viewport.scale += (deltaY / 100);
+                         cornerstone.setViewport(element, viewport);
+                         document.getElementById('bottomright').textContent = "Zoom:" + viewport.scale + "x";
+                     }
+                 }
 
+                 function mouseUpHandler() {
+                     document.removeEventListener('mousemove', mouseMoveHandler);
+                     document.removeEventListener('mouseup', mouseUpHandler);
+                 }
+
+                 document.addEventListener('mousemove', mouseMoveHandler);
+                 document.addEventListener('mouseup', mouseUpHandler);
+             });
     }
 
     //Rendering
