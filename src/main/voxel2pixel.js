@@ -7,7 +7,6 @@ function isASCII(str) {
 //Convert Parsed contour data to Array
 function pixelCal(image, struct) {
     let str = struct.split("\\");
-
     let vPx = []; //contour Data Px (voxel point x )
     let vPy = []; //contour Data Py (voxel point y )
     let vPz = []; //contour Data Pz (voxel point z )

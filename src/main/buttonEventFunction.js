@@ -22,6 +22,8 @@ function angleOn() {
     const AngleTool = cornerstoneTools.AngleTool;
     cornerstoneTools.addTool(AngleTool)
     cornerstoneTools.setToolActive('Angle', {mouseButtonMask: 1})
+
+
 }
 
 function lengthOn() {
