@@ -311,8 +311,6 @@ function contourJson(contourList) {
 
     for (let i = 0; i < contourList.length; i++) {
         let j = 0;
-
-
         if (contourList[i + 2] === 'x00081155') {
             Referenced_Instance_UID[i] = contourList[i + 3];
             contour_data[i] = contourList[i + 5];
@@ -458,8 +456,6 @@ function resetCanvas(image,struct) {
     }
     ctx.closePath();
     ctx.globalAlpha = 0;
-    ctx.fill();
-
 }
 
 
