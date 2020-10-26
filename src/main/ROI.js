@@ -365,14 +365,14 @@ function contourJson(contourList) {
     });
 }
 
-/*Object that includes array*/
 let information = {
     ROIs: []
 }
 let struct, color;
+
 let checkVal = information.ROIs;
 
-function sendImage(image) {
+function sendDrawImage(image) {
     let Instance_UID = 0;
     Instance_UID = image.data.string('x00080018');
 
@@ -388,6 +388,11 @@ function sendImage(image) {
             }
         }
     }
+}
+
+function sendResetImage(image){
+    let Instance_UID = 0;
+    Instance_UID = image.data.string('x00080018');
 
     for(let j=0;j<checkVal.length;j++){
         for (let i = 0; i < contour_data_Array.length; i++) {
@@ -403,10 +408,60 @@ function sendImage(image) {
     }
 }
 
-//draw ROI contouring from textFile
+/*Function*/
+function addROIset(evt) {
+    let checkVal;
+    if (evt.target.checked) {
+        information.ROIs.push(evt.target.value);
+    } else {
+        let index = information.ROIs.indexOf(evt.target.value);
+        if (index !== -1){
+            information.ROIs.splice(index, 1);
+        }
+    }
 
-function draw(image, struct, color) {
+//    let showROIset = information.ROIs.join(", "); //converts to string
+    //  document.getElementById("displaylet").innerHTML = showROIset; //prints to HTML document
+}
+
+
+function checkEvent(){
+    /*Event Listener*/
+    $(document).ready(function(){
+        let roi = document.getElementsByName("roi");
+        if (roi[0].addEventListener) {
+            for (let i = 0; i < roi.length; i++) {
+                roi[i].addEventListener("click", addROIset, false);
+            }
+        } else if (roi[0].attachEvent) {
+            for (let i = 0; i < roi.length; i++) {
+                roi[i].attachEvent("onclick", addROIset);
+            }
+        }
+    })
+
+}
+let global = {
+    scale	: 1,
+    offset	: {
+        x : 0,
+        y : 0,
+    },
+};
+let pan = {
+    start : {
+        x : null,
+        y : null,
+    },
+    offset : {
+        x : 0,
+        y : 0,
+    },
+};
+
+function draw(image,struct,color) {
     //function drawEvent(scale,translatePos){
+
     let px = pixelCal(image, struct);
     let pi = px[0];
     let pj = px[1];
@@ -414,18 +469,10 @@ function draw(image, struct, color) {
     let canvas = document.getElementById("myCanvas");
     let ctx = canvas.getContext("2d");
 
-    let translatePos = {
-        x: 0,
-        y: 0
-    };
+   ctx.setTransform(1,0,0,1,0,0);
+  // ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    let scale = 1.0;
-    let startDragOffset = {};
-    let mouseDown = false;
-
-    ctx.save();
-    ctx.translate(translatePos.x,translatePos.y);
-    ctx.scale(scale,scale);
+    ctx.translate(pan.offset.x,pan.offset.y);
 
     ctx.beginPath();
     ctx.moveTo(pi[0], pj[1]);
@@ -440,61 +487,34 @@ function draw(image, struct, color) {
     ctx.globalAlpha = 0.5;
     ctx.stroke();
     ctx.fill();
-    ctx.restore();
 
-    // add event listeners to handle screen drag
-    canvas.addEventListener("mousedown", function(evt){
-        mouseDown = true;
-        startDragOffset.x = evt.clientX - translatePos.x;
-        startDragOffset.y = evt.clientY - translatePos.y;
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-    });
 
-    canvas.addEventListener("mouseup", function(evt){
-        mouseDown = false;
-        translatePos.x = evt.clientX - startDragOffset.x;
-        translatePos.y = evt.clientY - startDragOffset.y;
-        ctx.save();
-        ctx.translate(translatePos.x,translatePos.y);
-        ctx.scale(scale,scale);
+    canvas.addEventListener("mousedown", startPan);
+    canvas.addEventListener("mouseleave", endPan);
+    canvas.addEventListener("mouseup", endPan);
 
-        ctx.beginPath();
-        ctx.moveTo(pi[0], pj[1]);
-        for (let i = 1; i <= pi.length * 3; i++) {
-            if (i % 3 === 0) {
-                ctx.lineTo(pi[i], pj[i + 1]);
+    function startPan(e) {
+        canvas.addEventListener("mousemove", trackMouse);
+        pan.start.x = e.clientX;
+        pan.start.y = e.clientY;
+    }
 
-            }
-        }
-        ctx.closePath();
-        ctx.fillStyle = fullColorHex(color);
-        ctx.globalAlpha = 0.5;
-        ctx.stroke();
-        ctx.fill();
-        ctx.restore();
-    });
+    function endPan(e) {
+        canvas.removeEventListener("mousemove", trackMouse);
+        pan.start.x = null;
+        pan.start.y = null;
+        global.offset.x = pan.offset.x;
+        global.offset.y = pan.offset.y;
+    }
 
-    canvas.addEventListener("mouseover", function(evt){
-        mouseDown = false;
-    });
-
-    canvas.addEventListener("mouseout", function(evt){
-        mouseDown = false;
-    });
-
-    canvas.addEventListener("mousemove", function(evt){
-        if (mouseDown) {
-
-            translatePos.x = evt.clientX - startDragOffset.x;
-            translatePos.y = evt.clientY - startDragOffset.y;
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-
-        }
-    });
+    function trackMouse(e) {
+        var offsetX	 = e.clientX - pan.start.x;
+        var offsetY	 = e.clientY - pan.start.y;
+        pan.offset.x = global.offset.x + offsetX;
+        pan.offset.y = global.offset.y + offsetY;
+    }
 
 }
-
-
 
 function reset() {
     let canvas = document.getElementById("myCanvas");
@@ -523,39 +543,5 @@ function resetCanvas(image,struct) {
 }
 
 
-/*Function*/
-function addROIset(evt) {
-    if (evt.target.checked) {
-        information.ROIs.push(evt.target.value);
-    } else {
-        let index = information.ROIs.indexOf(evt.target.value);
-        if (index !== -1){
-            information.ROIs.splice(index, 1);
-        }
-    }
 
-//    let showROIset = information.ROIs.join(", "); //converts to string
-  //  document.getElementById("displaylet").innerHTML = showROIset; //prints to HTML document
-}
-
-
-function checkEvent(){
-    /*Event Listener*/
-    $(document).ready(function(){
-        let roi = document.getElementsByName("roi");
-        if (roi[0].addEventListener) {
-            for (let i = 0; i < roi.length; i++) {
-                roi[i].addEventListener("click", addROIset, false);
-            }
-        } else if (roi[0].attachEvent) {
-            for (let i = 0; i < roi.length; i++) {
-                roi[i].attachEvent("onclick", addROIset);
-            }
-        }
-    })
-
-}
-
-
-
-export {structFile, sendImage, draw, reset , checkEvent}
+export {structFile, draw, reset , sendDrawImage, sendResetImage, checkEvent}

@@ -28,6 +28,7 @@ cornerstoneTools.external.cornerstone = cornerstone
 cornerstoneTools.external.Hammer = Hammer;
 cornerstoneTools.external.cornerstoneMath = cornerstoneMath
 cornerstoneTools.init();
+dicomParser.toString().bold()
 
 
 class MainUIElements extends React.Component {
