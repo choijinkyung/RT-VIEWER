@@ -37,7 +37,7 @@ function voxelCal(image) {
         document.getElementById('Xxyz').textContent = 'Xx : ' + Xx + ', Xy : ' + Xy + ', Xz : ' + Xz;
         document.getElementById('Yxyz').textContent = 'Yx : ' + Yx + ', Yy : ' + Yy + ', Yz : ' + Yz;
         document.getElementById('Dij').textContent = 'Di : ' + Di + ', Dj : ' + Dj;
-         */
+        */
 
         el.addEventListener('mousemove', function (event) {
             const pixelCoords = cornerstone.pageToPixel(el, event.pageX, event.pageY);
