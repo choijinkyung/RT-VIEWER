@@ -370,15 +370,15 @@ let information = {
 }
 let struct, color;
 
-let checkVal = information.ROIs;
+let checkVal_send = information.ROIs;
 
 function sendDrawImage(image) {
     let Instance_UID = 0;
     Instance_UID = image.data.string('x00080018');
 
-    for(let j=0;j<checkVal.length;j++){
+    for(let j=0;j<checkVal_send.length;j++){
         for (let i = 0; i < contour_data_Array.length; i++) {
-            if (contour_data_Array[i]['x30060084'] === checkVal[j]) {
+            if (contour_data_Array[i]['x30060084'] === checkVal_send[j]) {
                 if (contour_data_Array[i]['x00081155'] === Instance_UID) {
                     struct = contour_data_Array[i]['x30060050'];
                     color = contour_data_Array[i]['x3006002a'];
@@ -389,14 +389,13 @@ function sendDrawImage(image) {
         }
     }
 }
-
 function sendResetImage(image){
     let Instance_UID = 0;
     Instance_UID = image.data.string('x00080018');
 
-    for(let j=0;j<checkVal.length;j++){
+    for(let j=0;j<checkVal_send.length;j++){
         for (let i = 0; i < contour_data_Array.length; i++) {
-            if (contour_data_Array[i]['x30060084'] !== checkVal[j]) {
+            if (contour_data_Array[i]['x30060084'] !== checkVal_send[j]) {
                 if (contour_data_Array[i]['x00081155'] === Instance_UID) {
                     struct = contour_data_Array[i]['x30060050'];
                     color = contour_data_Array[i]['x3006002a'];
@@ -408,16 +407,57 @@ function sendResetImage(image){
     }
 }
 
+let img;
+function getImage(image){
+    img = image;
+    return img;
+}
+function checkDrawImage(checkVal_check) {
+    let Instance_UID = 0;
+    Instance_UID = img.data.string('x00080018');
+        for (let i = 0; i < contour_data_Array.length; i++) {
+            if (contour_data_Array[i]['x30060084'] === checkVal_check) {
+                if (contour_data_Array[i]['x00081155'] === Instance_UID) {
+                    struct = contour_data_Array[i]['x30060050'];
+                    color = contour_data_Array[i]['x3006002a'];
+
+                    draw(img, struct, color);
+                }
+            }
+        }
+
+}
+function checkResetImage(checkVal_check) {
+    let Instance_UID = 0;
+    Instance_UID = img.data.string('x00080018');
+    for (let i = 0; i < contour_data_Array.length; i++) {
+        if (contour_data_Array[i]['x30060084'] === checkVal_check) {
+            if (contour_data_Array[i]['x00081155'] === Instance_UID) {
+                struct = contour_data_Array[i]['x30060050'];
+                color = contour_data_Array[i]['x3006002a'];
+
+                resetCanvas(img, struct);
+            }
+        }
+    }
+}
+
+
 /*Function*/
 function addROIset(evt) {
-    let checkVal;
-    if (evt.target.checked) {
+    let checkVal_check;
+    if (evt.target.checked == true) {
         information.ROIs.push(evt.target.value);
+        checkVal_check = evt.target.value;
+        checkDrawImage(checkVal_check);
+
     } else {
         let index = information.ROIs.indexOf(evt.target.value);
         if (index !== -1){
             information.ROIs.splice(index, 1);
         }
+        checkVal_check = evt.target.value;
+        checkResetImage(checkVal_check);
     }
 
 //    let showROIset = information.ROIs.join(", "); //converts to string
@@ -431,33 +471,16 @@ function checkEvent(){
         let roi = document.getElementsByName("roi");
         if (roi[0].addEventListener) {
             for (let i = 0; i < roi.length; i++) {
-                roi[i].addEventListener("click", addROIset, false);
+                roi[i].addEventListener("change", addROIset, false);
             }
         } else if (roi[0].attachEvent) {
             for (let i = 0; i < roi.length; i++) {
-                roi[i].attachEvent("onclick", addROIset);
+                roi[i].attachEvent("onchange", addROIset);
             }
         }
     })
 
 }
-let global = {
-    scale	: 1,
-    offset	: {
-        x : 0,
-        y : 0,
-    },
-};
-let pan = {
-    start : {
-        x : null,
-        y : null,
-    },
-    offset : {
-        x : 0,
-        y : 0,
-    },
-};
 
 function draw(image,struct,color) {
     //function drawEvent(scale,translatePos){
@@ -468,11 +491,6 @@ function draw(image,struct,color) {
 
     let canvas = document.getElementById("myCanvas");
     let ctx = canvas.getContext("2d");
-
-   ctx.setTransform(1,0,0,1,0,0);
-  // ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    ctx.translate(pan.offset.x,pan.offset.y);
 
     ctx.beginPath();
     ctx.moveTo(pi[0], pj[1]);
@@ -488,31 +506,6 @@ function draw(image,struct,color) {
     ctx.stroke();
     ctx.fill();
 
-
-    canvas.addEventListener("mousedown", startPan);
-    canvas.addEventListener("mouseleave", endPan);
-    canvas.addEventListener("mouseup", endPan);
-
-    function startPan(e) {
-        canvas.addEventListener("mousemove", trackMouse);
-        pan.start.x = e.clientX;
-        pan.start.y = e.clientY;
-    }
-
-    function endPan(e) {
-        canvas.removeEventListener("mousemove", trackMouse);
-        pan.start.x = null;
-        pan.start.y = null;
-        global.offset.x = pan.offset.x;
-        global.offset.y = pan.offset.y;
-    }
-
-    function trackMouse(e) {
-        var offsetX	 = e.clientX - pan.start.x;
-        var offsetY	 = e.clientY - pan.start.y;
-        pan.offset.x = global.offset.x + offsetX;
-        pan.offset.y = global.offset.y + offsetY;
-    }
 
 }
 
@@ -539,9 +532,12 @@ function resetCanvas(image,struct) {
         }
     }
     ctx.closePath();
-    ctx.globalAlpha = 0;
+    ctx.fillStyle = '#ffffff';
+    ctx.globalAlpha = 1;
+    ctx.stroke();
+    ctx.fill();
 }
 
 
 
-export {structFile, draw, reset , sendDrawImage, sendResetImage, checkEvent}
+export {structFile, draw, reset , sendDrawImage, getImage}

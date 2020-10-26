@@ -7,7 +7,7 @@ import * as cornerstoneMath from "cornerstone-math"
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import voxelCal from "./pixel2voxel";
 import readTextFile from "./openFile";
-import {structFile, reset, checkEvent, sendDrawImageImage, sendResetImage, sendDrawImage} from "./ROI";
+import {structFile, reset, getImage, sendDrawImage} from "./ROI";
 
 cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
@@ -99,8 +99,9 @@ function updateTheImage(imageIds, imageIndex) {
 
             dicomParse(image);
             voxelCal(image);
+            getImage(image);
             sendDrawImage(image);
-            sendResetImage(image);
+
             img = image;
         } else {
             alert("ERROR: Confirm this image's modality : CT , MRI ... ");
@@ -141,8 +142,9 @@ function loadData(imageId) {
 
             dicomParse(image);
             voxelCal(image);
+            getImage(image);
             sendDrawImage(image);
-            sendResetImage(image)
+
             img = image;
 
         } else {
