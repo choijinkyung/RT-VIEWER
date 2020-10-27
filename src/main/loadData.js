@@ -42,11 +42,10 @@ function imageIdList(e) {
         if (cnt > max) {
             alert('ERROR : There are Too many files.');
         }
-
         cnt++;
     }
     //Index 113 : RT STRUCTURE FILE
-    //dumpFile(dumpfiles[71]);
+
     structFile(dumpFiles[113]);
     loadData(imageId[currentImageIndex]);
 
@@ -106,9 +105,7 @@ function updateTheImage(imageIds, imageIndex) {
         } else {
             alert("ERROR: Confirm this image's modality : CT , MRI ... ");
         }
-
     });
-
     return img;
 }
 
@@ -124,13 +121,6 @@ function handleFileChange(e) {
     loadData(imageId);
 }
 
-function loadStructureFile(imageId){
-    cornerstone.loadImage(imageId).then(function (image) {
-        if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.481.3') {
-            structFile(imageId);
-        }
-    });
-}
 //load one CT Image from local file
 function loadData(imageId) {
     let el = document.getElementById('dicomImage');
