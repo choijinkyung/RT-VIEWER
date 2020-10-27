@@ -1,3 +1,6 @@
+import $ from "jquery";
+import {addROIset} from "./ROI";
+
 function addCheckbox(ROI_LIST_Array) {
     ROI_LIST_Array.forEach(function (n) {
         let ul = document.getElementById('ul');
@@ -16,4 +19,21 @@ function addCheckbox(ROI_LIST_Array) {
     });
 
 }
-export default addCheckbox;
+
+function checkEvent(){
+    /*Event Listener*/
+    $(document).ready(function(){
+        let roi = document.getElementsByName("roi");
+        if (roi[0].addEventListener) {
+            for (let i = 0; i < roi.length; i++) {
+                roi[i].addEventListener("change", addROIset, false);
+            }
+        } else if (roi[0].attachEvent) {
+            for (let i = 0; i < roi.length; i++) {
+                roi[i].attachEvent("onchange", addROIset);
+            }
+        }
+    })
+
+}
+export {addCheckbox,checkEvent};

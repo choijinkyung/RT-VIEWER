@@ -1,6 +1,6 @@
 import $ from "jquery";
 import dicomParser from "dicom-parser";
-import addCheckbox from "./checkbox";
+import {addCheckbox,checkEvent} from "./checkbox";
 import pixelCal from "./voxel2pixel";
 import fullColorHex from "./rgbToHex.js";
 import * as cornerstone from "cornerstone-core";
@@ -389,29 +389,13 @@ function sendDrawImage(image) {
         }
     }
 }
-function sendResetImage(image){
-    let Instance_UID = 0;
-    Instance_UID = image.data.string('x00080018');
-
-    for(let j=0;j<checkVal_send.length;j++){
-        for (let i = 0; i < contour_data_Array.length; i++) {
-            if (contour_data_Array[i]['x30060084'] !== checkVal_send[j]) {
-                if (contour_data_Array[i]['x00081155'] === Instance_UID) {
-                    struct = contour_data_Array[i]['x30060050'];
-                    color = contour_data_Array[i]['x3006002a'];
-
-                    resetCanvas(image, struct);
-                }
-            }
-        }
-    }
-}
 
 let img;
 function getImage(image){
     img = image;
     return img;
 }
+
 function checkDrawImage(checkVal_check) {
     let Instance_UID = 0;
     Instance_UID = img.data.string('x00080018');
@@ -421,12 +405,13 @@ function checkDrawImage(checkVal_check) {
                     struct = contour_data_Array[i]['x30060050'];
                     color = contour_data_Array[i]['x3006002a'];
 
-                    draw(img, struct, color);
+                    draw(img, struct, color,checkVal_check);
                 }
             }
         }
 
 }
+
 function checkResetImage(checkVal_check) {
     let Instance_UID = 0;
     Instance_UID = img.data.string('x00080018');
@@ -436,22 +421,22 @@ function checkResetImage(checkVal_check) {
                 struct = contour_data_Array[i]['x30060050'];
                 color = contour_data_Array[i]['x3006002a'];
 
-                resetCanvas(img, struct);
+                resetCanvas(checkVal_check);
             }
         }
     }
+
 }
-
-
 /*Function*/
 function addROIset(evt) {
     let checkVal_check;
     if (evt.target.checked == true) {
         information.ROIs.push(evt.target.value);
         checkVal_check = evt.target.value;
-        checkDrawImage(checkVal_check);
 
-    } else {
+        checkDrawImage(checkVal_check);
+    }
+    else {
         let index = information.ROIs.indexOf(evt.target.value);
         if (index !== -1){
             information.ROIs.splice(index, 1);
@@ -459,30 +444,10 @@ function addROIset(evt) {
         checkVal_check = evt.target.value;
         checkResetImage(checkVal_check);
     }
-
-//    let showROIset = information.ROIs.join(", "); //converts to string
-    //  document.getElementById("displaylet").innerHTML = showROIset; //prints to HTML document
 }
 
-
-function checkEvent(){
-    /*Event Listener*/
-    $(document).ready(function(){
-        let roi = document.getElementsByName("roi");
-        if (roi[0].addEventListener) {
-            for (let i = 0; i < roi.length; i++) {
-                roi[i].addEventListener("change", addROIset, false);
-            }
-        } else if (roi[0].attachEvent) {
-            for (let i = 0; i < roi.length; i++) {
-                roi[i].attachEvent("onchange", addROIset);
-            }
-        }
-    })
-
-}
-
-function draw(image,struct,color) {
+let canvas_obj = [];
+function draw(image,struct,color,checkVal_check) {
     //function drawEvent(scale,translatePos){
 
     let px = pixelCal(image, struct);
@@ -492,6 +457,7 @@ function draw(image,struct,color) {
     let canvas = document.getElementById("myCanvas");
     let ctx = canvas.getContext("2d");
 
+    ctx.save();
     ctx.beginPath();
     ctx.moveTo(pi[0], pj[1]);
     for (let i = 1; i <= pi.length * 3; i++) {
@@ -505,7 +471,8 @@ function draw(image,struct,color) {
     ctx.globalAlpha = 0.5;
     ctx.stroke();
     ctx.fill();
-
+    ctx.restore();
+    canvas_obj[checkVal_check] = canvas;
 
 }
 
@@ -516,28 +483,9 @@ function reset() {
     ctx.clearRect(0,0,512,512);
 }
 
-function resetCanvas(image,struct) {
-    let px = pixelCal(image, struct);
-    let pi = px[0];
-    let pj = px[1];
-
-    let canvas = document.getElementById("myCanvas");
-    let ctx = canvas.getContext("2d");
-
-    ctx.beginPath();
-    ctx.moveTo(pi[0], pj[1]);
-    for (let i = 1; i <= pi.length * 3; i++) {
-        if (i % 3 === 0) {
-            ctx.lineTo(pi[i], pj[i + 1]);
-        }
-    }
-    ctx.closePath();
-    ctx.fillStyle = '#ffffff';
-    ctx.globalAlpha = 1;
-    ctx.stroke();
-    ctx.fill();
+function resetCanvas(checkVal_check) {
+    canvas_obj[checkVal_check].style.fillStyle='#ffffff';
+    canvas_obj[checkVal_check].style.globalAlpha=0;
 }
 
-
-
-export {structFile, draw, reset , sendDrawImage, getImage}
+export {structFile, draw, reset , sendDrawImage, getImage , addROIset}
