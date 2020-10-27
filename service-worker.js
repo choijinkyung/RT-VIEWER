@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/DICOM-RT-VIEWER/precache-manifest.59f232cf00679a8b4c640c50760f26ae.js"
+  "/DICOM-RT-VIEWER/precache-manifest.0b59e387e90fe5d6de159f1a0cae26b7.js"
 );
 
 self.addEventListener('message', (event) => {
