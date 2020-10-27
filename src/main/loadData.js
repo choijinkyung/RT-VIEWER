@@ -8,6 +8,8 @@ import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import voxelCal from "./pixel2voxel";
 import readTextFile from "./openFile";
 import {structFile, reset, getImage, sendDrawImage} from "./ROI";
+import {doseFile,sendDose} from "./isodose";
+import {dumpFile} from './dumpFile'
 
 cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
@@ -46,8 +48,9 @@ function imageIdList(e) {
     }
     //Index 113 : RT STRUCTURE FILE
 
+    doseFile(dumpFiles[111]);
     structFile(dumpFiles[113]);
-    loadData(imageId[currentImageIndex]);
+    updateTheImage(imageId,currentImageIndex);
 
     let el = document.getElementById('dicomImage');
     el.onwheel = wheelE;
@@ -93,14 +96,14 @@ function updateTheImage(imageIds, imageIndex) {
     currentImageIndex = imageIndex;
     cornerstone.loadImage(imageIds[currentImageIndex]).then(function (image) {
         const viewport = cornerstone.getDefaultViewportForImage(el, image);
-        if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2') {
+        if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2'|| image.data.string('x00080016') ==='1.2.840.10008.5.1.4.1.1.481.2') {
             cornerstone.displayImage(el, image, viewport);
 
             dicomParse(image);
             voxelCal(image);
             getImage(image);
             sendDrawImage(image);
-
+            sendDose(image);
             img = image;
         } else {
             alert("ERROR: Confirm this image's modality : CT , MRI ... ");
@@ -117,6 +120,7 @@ function handleFileChange(e) {
     let files = e.target.files;
     // this UI is only built for a single file so just dump the first one
     structFile(files[0]);
+   // doseFile(files[0]);
     const imageId = cornerstoneWadoImageLoader.wadouri.fileManager.add(files[0]);
     loadData(imageId);
 }
@@ -127,17 +131,22 @@ function loadData(imageId) {
     cornerstone.enable(el)
     cornerstone.loadImage(imageId).then(function (image) {
         const viewport = cornerstone.getDefaultViewportForImage(el, image);
-        if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2') {
+        if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2'|| image.data.string('x00080016') ==='1.2.840.10008.5.1.4.1.1.481.2') {
             cornerstone.displayImage(el, image, viewport);
 
             dicomParse(image);
             voxelCal(image);
             getImage(image);
             sendDrawImage(image);
+            sendDose(image);
 
             img = image;
 
-        } else {
+        }
+        else if (image.data.string('x0080016') ==='1.2.840.10008.5.1.4.1.1.481.2'){
+            alert('dose file')
+        }
+        else {
             alert("ERROR: Confirm this image's modality : CT , MRI ... ");
         }
     });
@@ -160,7 +169,7 @@ function handleFileSelect(evt) {
 
     // this UI is only built for a single file so just dump the first one
     structFile(files[0]);
-
+   // doseFile(files[0]);
     const imageId = cornerstoneWadoImageLoader.wadouri.fileManager.add(files[0]);
     loadData(imageId);
 }

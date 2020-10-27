@@ -448,8 +448,6 @@ function addROIset(evt) {
 
 let canvas_obj = [];
 function draw(image,struct,color,checkVal_check) {
-    //function drawEvent(scale,translatePos){
-
     let px = pixelCal(image, struct);
     let pi = px[0];
     let pj = px[1];
@@ -473,7 +471,6 @@ function draw(image,struct,color,checkVal_check) {
     ctx.fill();
     ctx.restore();
     canvas_obj[checkVal_check] = canvas;
-
 }
 
 function reset() {
