@@ -25,6 +25,7 @@ let dataSet;
 function dumpFile(file) {
     // clear any data currently being displayed as we parse this next file
     document.getElementById('rtstruct').innerHTML = '';
+    document.getElementById('rtstruct3').innerHTML = '';
 
     $('#status').removeClass('alert-warning alert-success alert-danger').addClass('alert-info');
     $('#warnings').empty();
@@ -53,10 +54,11 @@ function dumpFile(file) {
                 // of strings of the contents.
 
                 let output = [];
-
-                dumpDataSet(dataSet, output);
+                let output2 = [];
+                dumpDataSet(dataSet, output, output2);
                 // Combine the array of strings into one string and add it to the DOM
                 document.getElementById('rtstruct').innerHTML = '<ul>' + output.join('') + '</ul>';
+                document.getElementById('rtstruct3').innerHTML = '<ul>' + output.join('') + '</ul>';
 
                 let end = new Date().getTime();
                 let time = end - start;
@@ -85,12 +87,15 @@ function dumpFile(file) {
                 }
                 $('#status').removeClass('alert-success alert-info alert-warning').addClass('alert-danger');
                 document.getElementById('statusText').innerHTML = 'Status: Error - ' + message + ' (file of size ' + byteStr + ' )';
-                if (err.output) {
+                if (err.output || err.output2) {
                     document.getElementById('rtstruct').innerHTML = '<ul>' + output.join('') + '</ul>';
+                    document.getElementById('rtstruct3').innerHTML = '<ul>' + output2.join('') + '</ul>';
                 } else if (err.dataSet) {
                     var output = [];
-                    dumpDataSet(err.dataSet, output);
+                    var output2 = [];
+                    dumpDataSet(err.dataSet, output, output2);
                     document.getElementById('rtstruct').innerHTML = '<ul>' + output.join('') + '</ul>';
+                    document.getElementById('rtstruct3').innerHTML = '<ul>' + output2.join('') + '</ul>';
                 }
             }
         }, 10);
@@ -102,7 +107,7 @@ function dumpFile(file) {
 }
 
 
-function dumpDataSet(dataSet, output) {
+function dumpDataSet(dataSet, output,output2) {
     try {
         for (let propertyName in dataSet.elements) {
             let element = dataSet.elements[propertyName];
@@ -136,7 +141,7 @@ function dumpDataSet(dataSet, output) {
                     output.push('<ul>');
 
                     // each item contains its own data set so we iterate over the items and recursively call this function
-                    dumpDataSet(item.dataSet, output);
+                    dumpDataSet(item.dataSet, output,output2);
 
                     output.push('</ul>');
                 });
@@ -209,8 +214,10 @@ function dumpDataSet(dataSet, output) {
     } catch (err) {
         let ex = {
             exception: err,
-            output: output
+            output: output,
+            output2: output2
         }
         throw ex;
     }
 }
+

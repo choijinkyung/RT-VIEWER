@@ -4,7 +4,8 @@ import * as cornerstone from "cornerstone-core";
 //caculate voxel from pixel
 function voxelCal(image) {
     let modality = image.data.string('x00080060');
-    if (modality === ('CT')) {
+    let SOP_UID = image.data.string('x00080016');
+    if (modality === ('CT') || SOP_UID ==='1.2.840.10008.5.1.4.1.1.481.2' || modality === 'RTDOSE') {
         let imgPos = image.data.string('x00200032');
         let imgPosArr = imgPos.split("\\");
 
@@ -66,7 +67,8 @@ function voxelCal(image) {
             document.getElementById('voxelValue').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
         });
         return [Sx, Sy, Di, Dj]
-    } else {
+    }
+    else {
         alert('NOT CT IMAGES')
     }
 }

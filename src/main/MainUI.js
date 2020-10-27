@@ -266,11 +266,11 @@ class MainUIElements extends React.Component {
                     </div>
                 </div>
                */}
-                {/*
+
                 <div>
                     <div className="left">
                         <div id="status1" className="alert alert-success">
-                            <div id="statusText2">
+                            <div id="statusText">
                                 Status: Ready (no file loaded)
                             </div>
                             <ul id="warnings">
@@ -288,6 +288,7 @@ class MainUIElements extends React.Component {
                         </div>
                     </div>
                     <br></br><br></br>
+                    {/*
                     <div className="right">
                         <div className="row2">
                             <div className="col-md-12">
@@ -298,11 +299,8 @@ class MainUIElements extends React.Component {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>*/}
                 </div>
-                <div id="displaylet">display</div>
-                */}
-
             </div>
         );
     }
