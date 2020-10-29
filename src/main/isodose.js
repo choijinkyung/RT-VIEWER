@@ -1,7 +1,5 @@
 import $ from "jquery";
 import dicomParser from "dicom-parser";
-import pixelCal from './voxel2pixel';
-import fullColorHex from "./rgbToHex";
 
 function isASCII(str) {
     return /^[\x00-\x7F]*$/.test(str);
@@ -97,7 +95,10 @@ function doseDump(dataSet, output) {
     try {
         for (let propertyName in dataSet.elements) {
             let element = dataSet.elements[propertyName];
-            if (element.tag === 'x3004000c' || element.tag === 'x3004000e' || element.tag === 'x00200032' || element.tag === 'x00200037' ||element.tag === 'x7fe00010') {
+            //00280008 - Number of frames /00200032 - Image Position / 00200037 - Image Orientation /
+            // 3004000e - Dose grid scaling / 30040002 - Dose Units (Gy)
+            //x7fe00010 - pixel data
+            if (element.tag === 'x00280008' ||element.tag==='x30040002'|| element.tag === 'x3004000e' || element.tag === 'x00200032' || element.tag === 'x00200037' ||element.tag === 'x7fe00010') {
 
                 let text = element.tag;
                 text += " length=" + element.length;
@@ -188,7 +189,7 @@ function doseDump(dataSet, output) {
                         }
                     }
                     // finally we add the string to our output array surrounded by li elements so it shows up in the DOM as a list
-                    output.push('<li style="color:' + color + ';">' + text + dataSet.string(propertyName) + '</li>');
+                    output.push('<li style="color:' + color + ';">' + text + '</li>');
                     doseData.push(element.tag, dataSet.string(propertyName));
                 }
             }
@@ -201,64 +202,46 @@ function doseDump(dataSet, output) {
         throw ex;
     }
 }
+
 let dose_object = {};
+// function : Parse dose data to Json
 function doseJson(doseData) {
+    let Number_of_Frames=0;
     let Image_Position=0;
     let Image_Orientation=0;
-    let Grid_Frame_Offset_Vector=0;
     let Dose_Grid_Scaling=0;
+    let Dose_Units =0;
+    let pixel_data =0;
 
+    // x00280008 - Number of frames / x00200032 - Image Position / x00200037 - Image Orientation
+    // x3004000e - Dose grid scaling / x30040002 - Dose Units (Gy)
+    // x7fe00010 - pixel data
     for (let i = 0; i < doseData.length; i++) {
-        if (doseData[i] === 'x00200032') {
+        if (doseData[i] === 'x00280008') {
+            Number_of_Frames = doseData[i + 1];
+        } else if (doseData[i] === 'x00200032') {
             Image_Position = doseData[i + 1];
         } else if (doseData[i] === 'x00200037') {
             Image_Orientation = doseData[i + 1];
-        } else if (doseData[i] === 'x3004000c') {
-            Grid_Frame_Offset_Vector = doseData[i + 1];
         } else if (doseData[i] === 'x3004000e') {
             Dose_Grid_Scaling = doseData[i + 1];
+        } else if (doseData[i] === 'x30040002') {
+            Dose_Units = doseData[i + 1];
+        } else if (doseData[i] === 'x7fe00010') {
+            pixel_data = doseData[i + 1];
         }
     }
 
-
+    dose_object.x00280008 = Number_of_Frames;
     dose_object.x00200032 = Image_Position;
     dose_object.x00200037 = Image_Orientation;
-    dose_object.x3004000c = Grid_Frame_Offset_Vector;
     dose_object.x3004000e = Dose_Grid_Scaling;
-
-}
-
-function sendDose(image){
-    drawDose(image,dose_object.x3004000c);
-
-}
+    dose_object.x30040002 = Dose_Units;
+    dose_object.x7fe00010 = pixel_data;
 
 
-function drawDose(image,struct) {
-    let px = pixelCal(image, struct);
-    let pi = px[0];
-    let pj = px[1];
-
-    let canvas = document.getElementById("myCanvas");
-    let ctx = canvas.getContext("2d");
-
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(pi[0], pj[1]);
-    for (let i = 1; i <= pi.length * 3; i++) {
-        if (i % 3 === 0) {
-            ctx.lineTo(pi[i], pj[i + 1]);
-
-        }
-    }
-    ctx.closePath();
-    ctx.fillStroke = '#00ffff';
-    ctx.globalAlpha = 0.5;
-    ctx.stroke();
-    ctx.fill();
-    ctx.restore();
 }
 
 
 
-export {doseFile,sendDose}
+export {doseFile}

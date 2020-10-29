@@ -17,7 +17,7 @@ function pixelCal(image, struct) {
             vPx[i] = str[i];
         } else if (i % 3 === 1) {
             vPy[i] = str[i];
-        } else if (i % 3 === 2) {
+        }else if (i % 3 === 2) {
             vPz[i] = str[i];
         }
     }
