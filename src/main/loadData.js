@@ -46,6 +46,9 @@ function imageIdList(e) {
         }
         cnt++;
     }
+
+    //Index 111 : RT DOSE FILE
+    //Index 112 : RT PLAN FILE
     //Index 113 : RT STRUCTURE FILE
 
     doseFile(dumpFiles[111]);
@@ -103,7 +106,7 @@ function updateTheImage(imageIds, imageIndex) {
             voxelCal(image);
             getImage(image);
             sendDrawImage(image);
-            sendDose(image);
+
             img = image;
         } else {
             alert("ERROR: Confirm this image's modality : CT , MRI ... ");
@@ -119,8 +122,9 @@ function handleFileChange(e) {
 
     let files = e.target.files;
     // this UI is only built for a single file so just dump the first one
-    structFile(files[0]);
-   // doseFile(files[0]);
+   // structFile(files[0]);
+    doseFile(files[0]);
+
     const imageId = cornerstoneWadoImageLoader.wadouri.fileManager.add(files[0]);
     loadData(imageId);
 }
@@ -136,9 +140,8 @@ function loadData(imageId) {
 
             dicomParse(image);
             voxelCal(image);
-            getImage(image);
-            sendDrawImage(image);
-            sendDose(image);
+          //  getImage(image);
+           // sendDrawImage(image);
 
             img = image;
 
@@ -168,8 +171,8 @@ function handleFileSelect(evt) {
     let files = evt.dataTransfer.files;
 
     // this UI is only built for a single file so just dump the first one
-    structFile(files[0]);
-   // doseFile(files[0]);
+    //structFile(files[0]);
+    doseFile(files[0]);
     const imageId = cornerstoneWadoImageLoader.wadouri.fileManager.add(files[0]);
     loadData(imageId);
 }

@@ -399,22 +399,23 @@ function getImage(image){
 function checkDrawImage(checkVal_check) {
     let Instance_UID = 0;
     Instance_UID = img.data.string('x00080018');
-        for (let i = 0; i < contour_data_Array.length; i++) {
-            if (contour_data_Array[i]['x30060084'] === checkVal_check) {
-                if (contour_data_Array[i]['x00081155'] === Instance_UID) {
-                    struct = contour_data_Array[i]['x30060050'];
-                    color = contour_data_Array[i]['x3006002a'];
 
-                    draw(img, struct, color,checkVal_check);
-                }
+    for (let i = 0; i < contour_data_Array.length; i++) {
+        if (contour_data_Array[i]['x30060084'] === checkVal_check) {
+            if (contour_data_Array[i]['x00081155'] === Instance_UID) {
+                struct = contour_data_Array[i]['x30060050'];
+                color = contour_data_Array[i]['x3006002a'];
+
+                draw(img, struct, color, checkVal_check);
             }
         }
-
+    }
 }
 
 function checkResetImage(checkVal_check) {
     let Instance_UID = 0;
     Instance_UID = img.data.string('x00080018');
+
     for (let i = 0; i < contour_data_Array.length; i++) {
         if (contour_data_Array[i]['x30060084'] === checkVal_check) {
             if (contour_data_Array[i]['x00081155'] === Instance_UID) {
@@ -435,8 +436,7 @@ function addROIset(evt) {
         checkVal_check = evt.target.value;
 
         checkDrawImage(checkVal_check);
-    }
-    else {
+    }else {
         let index = information.ROIs.indexOf(evt.target.value);
         if (index !== -1){
             information.ROIs.splice(index, 1);
