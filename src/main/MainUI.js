@@ -20,7 +20,9 @@ import {
     vflipOn,
     rotateOn
 } from "./buttonEventFunction.js"
-import {handleFileChange,handle, imageIdList, handleFileSelect, handleDragOver} from './loadData.js'
+import {imageIdList} from './Loader/loadData.js'
+import {handleFileSelect, handleDragOver} from "./Loader/dragAndDrop";
+import handleFileChange from "./Loader/doseImport";
 
 cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
@@ -40,57 +42,57 @@ class MainUIElements extends React.Component {
         dropZone.addEventListener('dragover', handleDragOver, false);
         dropZone.addEventListener('drop', handleFileSelect, false);
 
-           element.addEventListener('mousedown', function (e) {
-                 let lastX = e.pageX;
-                 let lastY = e.pageY;
-                 const mouseButton = e.which;
+        element.addEventListener('mousedown', function (e) {
+            let lastX = e.pageX;
+            let lastY = e.pageY;
+            const mouseButton = e.which;
 
 
-                 function mouseMoveHandler(e) {
-                     const deltaX = e.pageX - lastX;
-                     const deltaY = e.pageY - lastY;
-                     lastX = e.pageX;
-                     lastY = e.pageY;
+            function mouseMoveHandler(e) {
+                const deltaX = e.pageX - lastX;
+                const deltaY = e.pageY - lastY;
+                lastX = e.pageX;
+                lastY = e.pageY;
 
-                     if (mouseButton === 1) {
-                         let viewport = cornerstone.getViewport(element);
-                         viewport.translation.x += (deltaX / viewport.scale);
-                         viewport.translation.y += (deltaY / viewport.scale);
-                         cornerstone.setViewport(element, viewport);
+                if (mouseButton === 1) {
+                    let viewport = cornerstone.getViewport(element);
+                    viewport.translation.x += (deltaX / viewport.scale);
+                    viewport.translation.y += (deltaY / viewport.scale);
+                    cornerstone.setViewport(element, viewport);
 
-                     } else if (mouseButton === 2) {
-                         let viewport = cornerstone.getViewport(element);
-                         viewport.voi.windowWidth += (deltaX / viewport.scale);
-                         viewport.voi.windowCenter += (deltaY / viewport.scale);
-                         cornerstone.setViewport(element, viewport);
+                } else if (mouseButton === 2) {
+                    let viewport = cornerstone.getViewport(element);
+                    viewport.voi.windowWidth += (deltaX / viewport.scale);
+                    viewport.voi.windowCenter += (deltaY / viewport.scale);
+                    cornerstone.setViewport(element, viewport);
 
-                         document.getElementById('bottomleft').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth)
-                             + "/" + Math.round(viewport.voi.windowCenter);
+                    document.getElementById('bottomleft').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth)
+                        + "/" + Math.round(viewport.voi.windowCenter);
 
 
-                     } else if (mouseButton === 3) {
-                         let viewport = cornerstone.getViewport(element);
-                         viewport.scale += (deltaY / 100);
-                         cornerstone.setViewport(element, viewport);
-                         document.getElementById('bottomright').textContent = "Zoom:" + viewport.scale + "x";
-                     }
-                 }
+                } else if (mouseButton === 3) {
+                    let viewport = cornerstone.getViewport(element);
+                    viewport.scale += (deltaY / 100);
+                    cornerstone.setViewport(element, viewport);
+                    document.getElementById('bottomright').textContent = "Zoom:" + viewport.scale + "x";
+                }
+            }
 
-                 function mouseUpHandler() {
-                     document.removeEventListener('mousemove', mouseMoveHandler);
-                     document.removeEventListener('mouseup', mouseUpHandler);
-                 }
+            function mouseUpHandler() {
+                document.removeEventListener('mousemove', mouseMoveHandler);
+                document.removeEventListener('mouseup', mouseUpHandler);
+            }
 
-                 document.addEventListener('mousemove', mouseMoveHandler);
-                 document.addEventListener('mouseup', mouseUpHandler);
-             });
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
+        });
     }
 
     //Rendering
     render() {
         return (
             <div id="outsideWrapper" className={"outsideWrapper"}>
-                <div>File Select =>
+                <div>For Only Import Dose File =>
                     <input type="file" onChange={(e) => {
                         handleFileChange(e)
                     }}/>&nbsp;&nbsp;
@@ -169,18 +171,18 @@ class MainUIElements extends React.Component {
                         &nbsp;&nbsp;
                     </div>
                 </div>
-                    <div className={'right'}>
-                        <ul>
-                            <li>Left click drag - window/level</li>
-                            <li>Middle Mouse button drag - pan</li>
-                            <li>Right click drag - zoom</li>
-                            <li>Mouse wheel - scroll images</li>
-                            <li>Double Click - save pixel/voxel</li>
-                        </ul>
-                    </div>
+                <div className={'right'}>
+                    <ul>
+                        <li>Left click drag - window/level</li>
+                        <li>Middle Mouse button drag - pan</li>
+                        <li>Right click drag - zoom</li>
+                        <li>Mouse wheel - scroll images</li>
+                        <li>Double Click - save pixel/voxel</li>
+                    </ul>
+                </div>
                 <br></br> <br></br> <br></br>
                 <div class="left">
-                    <div >
+                    <div>
                         <div id="dicomImageWrapper" className="wrapper"
                              onContextMenu="return false" onWheel={(e) => {
                         }}>
@@ -189,6 +191,7 @@ class MainUIElements extends React.Component {
                                      this.element = input;
                                  }}>
                                 <canvas id="myCanvas" className={"canvas"} width={512} height={512}/>
+                                <div id="Canvas" className={"canvas"} width={512} height={512}/>
                             </div>
                             <div id="topleft" className="overlay" className="topleft">
                                 Patient Name:
@@ -205,7 +208,7 @@ class MainUIElements extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div >
+                    <div>
                         <div><span id="voxelCoords"></span></div>
                         <div><span id="voxelValue"></span></div>
 
@@ -216,7 +219,7 @@ class MainUIElements extends React.Component {
 
                     </div>
                 </div>
-                <div className = "right">
+                <div className="right">
                     <ul id="ul">Structure Set ROI Sequence</ul>
                 </div>
 
@@ -266,7 +269,7 @@ class MainUIElements extends React.Component {
                     </div>
                 </div>
                */}
-
+                {/*
                 <div>
                     <div className="left">
                         <div id="status1" className="alert alert-success">
@@ -288,7 +291,7 @@ class MainUIElements extends React.Component {
                         </div>
                     </div>
                     <br></br><br></br>
-                    {/*
+
                     <div className="right">
                         <div className="row2">
                             <div className="col-md-12">
@@ -300,7 +303,7 @@ class MainUIElements extends React.Component {
                             </div>
                         </div>
                     </div>*/}
-                </div>
+
             </div>
         );
     }

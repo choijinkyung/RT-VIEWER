@@ -1,247 +1,147 @@
 import $ from "jquery";
 import dicomParser from "dicom-parser";
+import * as cornerstone from "cornerstone-core";
+import dicomParse from "./dicomParse";
+import voxelCal from "./pixel2voxel";
+import {loadData} from "./Loader/loadData";
+import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
+import {reset} from "./ROI";
 
-function isASCII(str) {
-    return /^[\x00-\x7F]*$/.test(str);
+function doseFile(file){
+    const imageId = cornerstoneWadoImageLoader.wadouri.fileManager.add(file);
+    doseData(imageId);
 }
 
-let dataSet;
 
-// This function will read the file into memory and then start dumping it
-function doseFile(file) {
-    // clear any data currently being displayed as we parse this next file
-    document.getElementById('rtstruct').innerHTML = '';
+function doseData(imageId){
+    let el = document.getElementById('dicomImage');
+    cornerstone.enable(el);
 
-    $('#status').removeClass('alert-warning alert-success alert-danger').addClass('alert-info');
-    $('#warnings').empty();
-    document.getElementById('statusText').innerHTML = 'Status: Loading file, please wait..';
+    let pixelData;
+    let spacing = 0;
+    let pixelSpacing ;
+    let img ;
+    let dSz;
+    let doseCalVal;
+    cornerstone.loadImage(imageId).then(function (image) {
+        const viewport = cornerstone.getDefaultViewportForImage(el, image);
+        if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.481.2') {
+            cornerstone.displayImage(el, image, viewport);
+            pixelData = image.data.string('x7fe00010');
+            pixelSpacing = image.data.string('x00280030');
+            pixelSpacing = pixelSpacing.split('\\');
+            pixelSpacing = parseFloat(pixelSpacing[0]);
 
-    let reader = new FileReader();
-    reader.onload = function (file) {
-        let arrayBuffer = reader.result;
-        // Here we have the file data as an ArrayBuffer.  dicomParser requires as input a
-        // Uint8Array so we create that here
-        let byteArray = new Uint8Array(arrayBuffer);
-        let kb = byteArray.length / 1024;
-        let mb = kb / 1024;
-        let byteStr = mb > 1 ? mb.toFixed(3) + " MB" : kb.toFixed(0) + " KB";
+            doseCalVal = doseCal(image,spacing);
+            dSz = doseCalVal[0];
 
-        document.getElementById('statusText').innerHTML = 'Status: Parsing ' + byteStr + ' bytes, please wait..';
+            dicomParse(image);
+        }
+        img = image;
+    });
 
-        // set a short timeout to do the parse so the DOM has time to update itself with the above message
-        setTimeout(function () {
-
-            // Invoke the paresDicom function and get back a DataSet object with the contents
-            try {
-                let start = new Date().getTime();
-                dataSet = dicomParser.parseDicom(byteArray);
-                // Here we call dumpDataSet to recursively iterate through the DataSet and create an array
-                // of strings of the contents.
-
-                let output = [];
-
-                doseDump(dataSet, output);
-                doseJson(doseData);
-                // Combine the array of strings into one string and add it to the DOM
-                document.getElementById('rtstruct').innerHTML = '<ul>' + output.join('') + '</ul>';
-
-                let end = new Date().getTime();
-                let time = end - start;
-                if (dataSet.warnings.length > 0) {
-                    $('#status').removeClass('alert-success alert-info alert-danger').addClass('alert-warning');
-                    $('#statusText').html('Status: Warnings encountered while parsing file (file of size ' + byteStr + ' parsed in ' + time + 'ms)');
-
-                    dataSet.warnings.forEach(function (warning) {
-                        $("#warnings").append('<li>' + warning + '</li>');
-                    });
-                } else {
-                    let pixelData = dataSet.elements.x7fe00010;
-                    if (pixelData) {
-                        $('#status').removeClass('alert-warning alert-info alert-danger').addClass('alert-success');
-                        $('#statusText').html('Status: Ready (file of size ' + byteStr + ' parsed in ' + time + 'ms)');
-                    } else {
-                        $('#status').removeClass('alert-warning alert-info alert-danger').addClass('alert-success');
-                        $('#statusText').html('Status: Ready - no pixel data found (file of size ' + byteStr + ' parsed in ' + time + 'ms)');
-                    }
+    el.onwheel = wheelE;
+    let index = dSz;
+    function wheelE(e) {
+        // Firefox e.detail > 0 scroll back, < 0 scroll forward
+        // chrome/safari e.wheelDelta < 0 scroll back, > 0 scroll forward
+        e.stopPropagation();
+        e.preventDefault();
+        if (index >= -157.5 && index <= 120 ) {
+            if (e.deltaY < 0) {
+                if (index === dSz) {
+                    spacing = spacing + pixelSpacing;
+                    doseCalVal = doseCal(img,spacing);
+                    dSz = doseCalVal[0];
+                    index = dSz;
                 }
-
-            } catch (err) {
-                var message = err;
-                if (err.exception) {
-                    message = err.exception;
-                }
-                $('#status').removeClass('alert-success alert-info alert-warning').addClass('alert-danger');
-                document.getElementById('statusText').innerHTML = 'Status: Error - ' + message + ' (file of size ' + byteStr + ' )';
-
-                if (err.output) {
-                    document.getElementById('rtstruct').innerHTML = '<ul>' + output.join('') + '</ul>';
-                } else if (err.dataSet) {
-                    var output = [];
-                    doseDump(err.dataSet, output);
-                    document.getElementById('rtstruct').innerHTML = '<ul>' + output.join('') + '</ul>';
+            } else {
+                if (index === dSz) {
+                    spacing = spacing - pixelSpacing;
+                    doseCalVal = doseCal(img,spacing);
+                    dSz = doseCalVal[0];
+                    index = dSz;
                 }
             }
-        }, 10);
-
-    };
-    reader.readAsArrayBuffer(file);
-
-    return dataSet;
-}
-
-let doseData = [];
-
-function doseDump(dataSet, output) {
-    try {
-        for (let propertyName in dataSet.elements) {
-            let element = dataSet.elements[propertyName];
-            //00280008 - Number of frames /00200032 - Image Position / 00200037 - Image Orientation /
-            // 3004000e - Dose grid scaling / 30040002 - Dose Units (Gy)
-            //x7fe00010 - pixel data
-            if (element.tag === 'x00280008' ||element.tag==='x30040002'|| element.tag === 'x3004000e' || element.tag === 'x00200032' || element.tag === 'x00200037' ||element.tag === 'x7fe00010') {
-
-                let text = element.tag;
-                text += " length=" + element.length;
-
-                if (element.hadUndefinedLength) {
-                    text += " <strong>(-1)</strong>";
-                }
-                text += "; ";
-
-                if (element.vr) {
-                    text += " VR=" + element.vr + "; ";
-                }
-
-                let color = 'black';
-
-
-                if (element.items) { //item들을 표시
-                    let itemNumber = 0;
-                    element.items.forEach(function (item) {
-                        output.push('<li> Item #' + itemNumber++ + ' ' + item.tag + '</li>')
-                        output.push('<ul>');
-
-                        // each item contains its own data set so we iterate over the items and recursively call this function
-                        doseDump(item.dataSet, output);
-
-                        output.push('</ul>');
-                    });
-
-                    output.push('</ul>');
-                } else if (element.fragments) {
-                    output.push('<li>' + text + '</li>');
-                    output.push('<ul>');
-
-                    // each item contains its own data set so we iterate over the items and recursively call this function
-                    let itemNumber = 0;
-                    element.fragments.forEach(function (fragment) {
-                        let basicOffset;
-                        if (element.basicOffsetTable) {
-                            basicOffset = element.basicOffsetTable[itemNumber];
-                        }
-
-                        let str = '<li>Fragment #' + itemNumber++ + ' offset = ' + fragment.offset;
-                        str += '(' + basicOffset + ')';
-                        str += '; length = ' + fragment.length + '</li>';
-                        output.push(str);
-                    });
-                    output.push('</ul>');
-                } else {
-                    //문자열 길이가 128이하, 이상으로 나눠서 보여줌
-                    // 사용하기 어렵게 만드는 문자열 표시를 피하기 위해 사용
-                    if (element.length < 128) { //텍스트 = 태그 + 길이 + 내용
-                        //어떤 data type인지 확인하기 위함
-                        if (element.length === 2) { //propertyName은
-                            text += " (" + dataSet.uint16(propertyName) + ")";
-
-                        } else if (element.length === 4) {
-                            text += " (" + dataSet.uint32(propertyName) + ")";
-                        }
-
-                        //대부분은 문자열이지만 그렇지 않은 것들을 확인해서 표시하는 것을 위함
-                        let str = dataSet.string(propertyName);
-                        let stringIsAscii = isASCII(str);
-
-                        if (stringIsAscii) {
-                            //element는 있지만 data가 없는 경우 문자열은 정의되지 않음
-                            // 정의되지 않은 경우 아무것도 넣지 않음
-                            if (str !== undefined) {
-                                text += '"' + str + '"';
-                            }
-                        } else {
-                            if (element.length !== 2 && element.length !== 4) {
-                                color = '#C8C8C8';
-                                // If it is some other length and we have no string
-                                text += "<i>binary data</i>";
-                            }
-                        }
-                        if (element.length === 0) {
-                            color = '#C8C8C8';
-                        }
-                    }
-                    // contour data처럼 string 길이가 긴 것은 display x
-                    else {
-                        if (element.tag === 'x30060050') {
-                            color = '#C8C8C8';
-
-                            // Add text saying the data is too long to show...
-                            text += dataSet.string(propertyName);
-                        }
-                    }
-                    // finally we add the string to our output array surrounded by li elements so it shows up in the DOM as a list
-                    output.push('<li style="color:' + color + ';">' + text + '</li>');
-                    doseData.push(element.tag, dataSet.string(propertyName));
-                }
-            }
+        } else {
+            doseCalVal = doseCal(img,0);
+            dSz = doseCalVal[0];
+            index = dSz;
         }
-    } catch (err) {
-        let ex = {
-            exception: err,
-            output: output
-        }
-        throw ex;
     }
 }
 
-let dose_object = {};
-// function : Parse dose data to Json
-function doseJson(doseData) {
-    let Number_of_Frames=0;
-    let Image_Position=0;
-    let Image_Orientation=0;
-    let Dose_Grid_Scaling=0;
-    let Dose_Units =0;
-    let pixel_data =0;
 
-    // x00280008 - Number of frames / x00200032 - Image Position / x00200037 - Image Orientation
-    // x3004000e - Dose grid scaling / x30040002 - Dose Units (Gy)
-    // x7fe00010 - pixel data
-    for (let i = 0; i < doseData.length; i++) {
-        if (doseData[i] === 'x00280008') {
-            Number_of_Frames = doseData[i + 1];
-        } else if (doseData[i] === 'x00200032') {
-            Image_Position = doseData[i + 1];
-        } else if (doseData[i] === 'x00200037') {
-            Image_Orientation = doseData[i + 1];
-        } else if (doseData[i] === 'x3004000e') {
-            Dose_Grid_Scaling = doseData[i + 1];
-        } else if (doseData[i] === 'x30040002') {
-            Dose_Units = doseData[i + 1];
-        } else if (doseData[i] === 'x7fe00010') {
-            pixel_data = doseData[i + 1];
-        }
+function doseCal(image,spacing) {
+    let modality = image.data.string('x00080060');
+    let SOP_UID = image.data.string('x00080016');
+    let Sx,Sy,Sz;
+    if (modality === ('CT') || SOP_UID ==='1.2.840.10008.5.1.4.1.1.481.2' || modality === 'RTDOSE') {
+        let imgPos = image.data.string('x00200032');
+        let imgPosArr = imgPos.split("\\");
+
+         Sx = (parseFloat(imgPosArr[0]) * 10) / 10;
+         Sy = (parseFloat(imgPosArr[1]) * 10) / 10;
+         Sz = (parseFloat(imgPosArr[2]) * 10) / 10 + spacing;
+
+        let imgOri = image.data.string('x00200037');
+        imgOri = imgOri.toString();
+        let imgOriArr = imgOri.split("\\");
+
+        let Xx = (parseFloat(imgOriArr[0]) * 10) / 10;
+        let Xy = (parseFloat(imgOriArr[1]) * 10) / 10;
+        let Xz = (parseFloat(imgOriArr[2]) * 10) / 10;
+        let Yx = (parseFloat(imgOriArr[3]) * 10) / 10;
+        let Yy = (parseFloat(imgOriArr[4]) * 10) / 10;
+        let Yz = (parseFloat(imgOriArr[5]) * 10) / 10;
+
+        let pixelSpace = image.data.string('x00280030');
+        pixelSpace = pixelSpace.toString();
+        let pixelSpaceArr = pixelSpace.split("\\");
+
+        let Di = parseFloat((pixelSpaceArr[0]) * 10) / 10;
+        let Dj = parseFloat((pixelSpaceArr[1]) * 10) / 10;
+
+        let el = document.getElementById('dicomImage');
+
+        /*
+        document.getElementById('Sxyz').textContent = 'Sx : ' + Sx + ', Sy : ' + Sy + ', Sz : ' + Sz;
+        document.getElementById('Xxyz').textContent = 'Xx : ' + Xx + ', Xy : ' + Xy + ', Xz : ' + Xz;
+        document.getElementById('Yxyz').textContent = 'Yx : ' + Yx + ', Yy : ' + Yy + ', Yz : ' + Yz;
+        document.getElementById('Dij').textContent = 'Di : ' + Di + ', Dj : ' + Dj;
+        */
+
+        el.addEventListener('mousemove', function (event) {
+            const pixelCoords = cornerstone.pageToPixel(el, event.pageX, event.pageY);
+            //  document.getElementById('coords').textContent = "pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + pixelCoords.x + ", pixelY=" + pixelCoords.y;
+
+            let Px = (Xx * Di * pixelCoords.x) + (Yx * Dj * pixelCoords.y) + Sx;
+            let Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
+            let Pz = (Xz * Di * pixelCoords.x) + (Yz * Dj * pixelCoords.y) + Sz;
+
+            //Px = Math.floor(Px * 10) / 10;
+            // Py = Math.floor(Py * 10) / 10;
+            document.getElementById('voxelCoords').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
+        });
+
+        el.addEventListener('dblclick', function (event) {
+            const pixelCoords = cornerstone.pageToPixel(el, event.pageX, event.pageY);
+            //   document.getElementById('pixelValue').textContent = "pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + pixelCoords.x + ", pixelY=" + pixelCoords.y;
+
+            let Px = (Xx * Di * pixelCoords.x) + (Yx * Dj * pixelCoords.y) + Sx;
+            let Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
+            let Pz = (Xz * Di * pixelCoords.x) + (Yz * Dj * pixelCoords.y) + Sz;
+
+            // Px = Math.floor(Px * 10) / 10;
+            //  Py = Math.floor(Py * 10) / 10;
+
+            document.getElementById('voxelValue').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
+        });
     }
-
-    dose_object.x00280008 = Number_of_Frames;
-    dose_object.x00200032 = Image_Position;
-    dose_object.x00200037 = Image_Orientation;
-    dose_object.x3004000e = Dose_Grid_Scaling;
-    dose_object.x30040002 = Dose_Units;
-    dose_object.x7fe00010 = pixel_data;
-
-
+    else {
+        alert('NOT CT IMAGES')
+    }
+    return [Sz];
 }
 
-
-
-export {doseFile}
+export {doseFile, doseData }

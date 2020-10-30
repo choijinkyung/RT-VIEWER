@@ -1,15 +1,14 @@
-import dicomParse from "./dicomParse";
+import dicomParse from "../dicomParse";
 import dicomParser from "dicom-parser";
 import Hammer from "hammerjs";
 import * as cornerstone from "cornerstone-core";
 import * as cornerstoneTools from "cornerstone-tools";
 import * as cornerstoneMath from "cornerstone-math"
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
-import voxelCal from "./pixel2voxel";
-import readTextFile from "./openFile";
-import {structFile, reset, getImage, sendDrawImage} from "./ROI";
-import {doseFile,sendDose} from "./isodose";
-import {dumpFile} from './dumpFile'
+import voxelCal from "../pixel2voxel";
+import readTextFile from "../openFile";
+import {structFile, reset, getImage, sendDrawImage} from "../ROI";
+import {dumpFile} from '../dumpFile'
 
 cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
@@ -37,23 +36,26 @@ function imageIdList(e) {
      };
     */
     let cnt = 0;
-
+    let filename = [];
     for (let i = 0; i < max; i++) {
-        imageId[i] = cornerstoneWadoImageLoader.wadouri.fileManager.add(e.target.files[i]) //save file name in array
         dumpFiles[i] = e.target.files[i];
+        imageId[i] = cornerstoneWadoImageLoader.wadouri.fileManager.add(dumpFiles[i]) //save file name in array
+
         if (cnt > max) {
             alert('ERROR : There are Too many files.');
         }
         cnt++;
+
     }
+
 
     //Index 111 : RT DOSE FILE
     //Index 112 : RT PLAN FILE
     //Index 113 : RT STRUCTURE FILE
 
-    doseFile(dumpFiles[111]);
+    //doseFile(dumpFiles[111]);
     structFile(dumpFiles[113]);
-    updateTheImage(imageId,currentImageIndex);
+    updateTheImage(imageId, currentImageIndex);
 
     let el = document.getElementById('dicomImage');
     el.onwheel = wheelE;
@@ -93,13 +95,14 @@ function imageIdList(e) {
 let img;
 
 // show image #1 initially
-function updateTheImage(imageIds, imageIndex) {
+function updateTheImage(imageIds ,imageIndex) {
     let el = document.getElementById('dicomImage');
     cornerstone.enable(el)
+
     currentImageIndex = imageIndex;
-    cornerstone.loadImage(imageIds[currentImageIndex]).then(function (image) {
+    cornerstone.loadImage(imageIds[imageIndex]).then(function (image) {
         const viewport = cornerstone.getDefaultViewportForImage(el, image);
-        if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2'|| image.data.string('x00080016') ==='1.2.840.10008.5.1.4.1.1.481.2') {
+        if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2' || image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.481.2') {
             cornerstone.displayImage(el, image, viewport);
 
             dicomParse(image);
@@ -115,73 +118,29 @@ function updateTheImage(imageIds, imageIndex) {
     return img;
 }
 
-
-function handleFileChange(e) {
-    e.stopPropagation();
-    e.preventDefault();
-
-    let files = e.target.files;
-    // this UI is only built for a single file so just dump the first one
-   // structFile(files[0]);
-    doseFile(files[0]);
-
-    const imageId = cornerstoneWadoImageLoader.wadouri.fileManager.add(files[0]);
-    loadData(imageId);
-}
-
 //load one CT Image from local file
 function loadData(imageId) {
     let el = document.getElementById('dicomImage');
     cornerstone.enable(el)
     cornerstone.loadImage(imageId).then(function (image) {
         const viewport = cornerstone.getDefaultViewportForImage(el, image);
-        if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2'|| image.data.string('x00080016') ==='1.2.840.10008.5.1.4.1.1.481.2') {
+        if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2' || image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.481.2') {
             cornerstone.displayImage(el, image, viewport);
 
             dicomParse(image);
             voxelCal(image);
-          //  getImage(image);
-           // sendDrawImage(image);
+            getImage(image);
+            sendDrawImage(image);
 
             img = image;
 
-        }
-        else if (image.data.string('x0080016') ==='1.2.840.10008.5.1.4.1.1.481.2'){
+        } else if (image.data.string('x0080016') === '1.2.840.10008.5.1.4.1.1.481.2') {
             alert('dose file')
-        }
-        else {
+        } else {
             alert("ERROR: Confirm this image's modality : CT , MRI ... ");
         }
     });
     return img;
 }
 
-//open test file
-function handle() {
-    const imageId = 'dicomweb://s3.amazonaws.com/lury/PTCTStudy/1.3.6.1.4.1.25403.52237031786.3872.20100510032220.11.dcm';
-    loadData(imageId);
-}
-
-// this function gets called once the user drops the file onto the div
-function handleFileSelect(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
-
-    // Get the FileList object that contains the list of files that were dropped
-    let files = evt.dataTransfer.files;
-
-    // this UI is only built for a single file so just dump the first one
-    //structFile(files[0]);
-    doseFile(files[0]);
-    const imageId = cornerstoneWadoImageLoader.wadouri.fileManager.add(files[0]);
-    loadData(imageId);
-}
-
-//this function manage drag event
-function handleDragOver(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
-    evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-}
-
-export {handleFileChange, handle, loadData, imageIdList, handleFileSelect, handleDragOver}
+export {loadData, imageIdList}
