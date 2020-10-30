@@ -1,11 +1,11 @@
 import $ from "jquery";
 import dicomParser from "dicom-parser";
 import * as cornerstone from "cornerstone-core";
-import dicomParse from "./dicomParse";
-import voxelCal from "./pixel2voxel";
-import {loadData} from "./Loader/loadData";
+import dicomParse from "../dicomParse";
+import voxelCal from "../RT_STRUCTURE/pixel2voxel";
+import {loadCTImage} from "../Loader/loadCTImage";
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
-import {reset} from "./ROI";
+import {reset} from "../RT_STRUCTURE/ROI";
 
 function doseFile(file){
     const imageId = cornerstoneWadoImageLoader.wadouri.fileManager.add(file);

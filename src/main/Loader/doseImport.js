@@ -1,7 +1,7 @@
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 
 //dose파일 열어서 보기 function
-import {doseFile} from "../isodose";
+import {doseFile} from "../RT_DOSE/isodose";
 
 function handleFileChange(e) {
     e.stopPropagation();
