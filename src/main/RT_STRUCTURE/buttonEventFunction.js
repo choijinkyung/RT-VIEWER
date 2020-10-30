@@ -1,5 +1,5 @@
-import "./MainUI.css"
-import "./MainUI.js"
+import "../MainUI.css"
+import "../MainUI.js"
 import * as cornerstoneTools from "cornerstone-tools";
 import * as cornerstone from "cornerstone-core";
 

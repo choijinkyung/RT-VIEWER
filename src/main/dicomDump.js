@@ -13,7 +13,7 @@ cornerstoneTools.external.Hammer = Hammer;
 cornerstoneTools.external.cornerstoneMath = cornerstoneMath
 cornerstoneTools.init();
 
-export {dumpFile} ;
+export {dicomDump} ;
 
 function isASCII(str) {
     return /^[\x00-\x7F]*$/.test(str);
@@ -22,7 +22,7 @@ function isASCII(str) {
 let dataSet;
 
 // This function will read the file into memory and then start dumping it
-function dumpFile(file) {
+function dicomDump(file) {
     // clear any data currently being displayed as we parse this next file
     document.getElementById('rtstruct').innerHTML = '';
     document.getElementById('rtstruct3').innerHTML = '';

@@ -5,10 +5,10 @@ import * as cornerstone from "cornerstone-core";
 import * as cornerstoneTools from "cornerstone-tools";
 import * as cornerstoneMath from "cornerstone-math"
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
-import voxelCal from "../pixel2voxel";
-import readTextFile from "../openFile";
-import {structFile, reset, getImage, sendDrawImage} from "../ROI";
-import {dumpFile} from '../dumpFile'
+import voxelCal from "../RT_STRUCTURE/pixel2voxel";
+import readTextFile from "./openFile";
+import {structFile, reset, getImage, sendDrawImage} from "../RT_STRUCTURE/ROI";
+import {dicomDump} from '../dicomDump'
 
 cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
@@ -72,13 +72,13 @@ function imageIdList(e) {
                 if (index === currentImageIndex) {
                     updateTheImage(imageId, currentImageIndex + 1); //update images
                     reset();
-                    // dumpFile(dumpfiles[currentImageIndex ]); // update dump
+                    // dicomDump(dumpfiles[currentImageIndex ]); // update dump
                 }
             } else {
                 if (index === currentImageIndex) {
                     updateTheImage(imageId, currentImageIndex - 1); //update images
                     reset();
-                    //  dumpFile(dumpfiles[currentImageIndex]); // update dump
+                    //  dicomDump(dumpfiles[currentImageIndex]); // update dump
 
                 }
             }
@@ -119,7 +119,7 @@ function updateTheImage(imageIds ,imageIndex) {
 }
 
 //load one CT Image from local file
-function loadData(imageId) {
+function loadCTImage(imageId) {
     let el = document.getElementById('dicomImage');
     cornerstone.enable(el)
     cornerstone.loadImage(imageId).then(function (image) {
@@ -143,4 +143,4 @@ function loadData(imageId) {
     return img;
 }
 
-export {loadData, imageIdList}
+export {loadCTImage, imageIdList}
