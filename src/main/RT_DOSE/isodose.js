@@ -1,47 +1,132 @@
-import $ from "jquery";
-import dicomParser from "dicom-parser";
 import * as cornerstone from "cornerstone-core";
 import dicomParse from "../dicomParse";
-import voxelCal from "../RT_STRUCTURE/pixel2voxel";
-import {loadCTImage} from "../Loader/loadCTImage";
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
-import {reset} from "../RT_STRUCTURE/ROI";
+import dicomParser from "dicom-parser";
 
-function doseFile(file){
+let dataSet;
+
+function doseFile(file) {
     const imageId = cornerstoneWadoImageLoader.wadouri.fileManager.add(file);
-    doseData(imageId);
+
+    let reader = new FileReader();
+    reader.onload = function (file) {
+        let arrayBuffer = reader.result;
+        // Here we have the file data as an ArrayBuffer.  dicomParser requires as input a
+        // Uint8Array so we create that here
+        let byteArray = new Uint8Array(arrayBuffer);
+
+        // set a short timeout to do the parse so the DOM has time to update itself with the above message
+        setTimeout(function () {
+            // Invoke the paresDicom function and get back a DataSet object with the contents
+            try {
+
+                dataSet = dicomParser.parseDicom(byteArray);
+
+                doseData(imageId, dataSet);
+            } catch (err) {
+                var message = err;
+                if (err.exception) {
+                    message = err.exception;
+                }
+            }
+        }, 10);
+    };
+    reader.readAsArrayBuffer(file);
+
+    return dataSet;
+}
+let Rows, Columns, Number_of_Frames;
+
+function dose_pixel_Data_parse(image, dataSet) {
+    let pixelDataElement = dataSet.elements.x7fe00010;
+    let pixel_data = new Uint32Array(dataSet.byteArray.buffer, pixelDataElement.byteOffset, pixelDataElement.length / 4);
+
+
+    Rows = parseFloat(dataSet.uint16('x00280010'));
+    Columns = parseFloat(dataSet.uint16('x00280011'));
+    Number_of_Frames = parseFloat(image.data.string('x00280008'));
+
+    //초기화
+    let dose_grid = [];
+    for(let i=0;i<Number_of_Frames;i++){
+        dose_grid[i] = [];
+    }
+    for(let i=0;i<Number_of_Frames;i++){
+        for(let j=0;j<Columns;j++){
+            dose_grid[i][j] = [];
+        }
+    }
+
+    let count = 0;
+
+    for (let z = 0; z < Number_of_Frames; z++) {
+        for (let val = 0; val < Rows*Columns; val++) {
+                dose_grid[z][val] = pixel_data[count];
+                count++;
+        }
+    }
+
+    gridScaling(image , dose_grid);
+}
+
+function gridScaling(image, dose_grid){
+    let Dose_Grid_Scaling;
+    Dose_Grid_Scaling = image.data.string('x3004000e');
+
+    //초기화
+    let dose_value = [];
+    for(let i=0;i<Number_of_Frames;i++){
+        dose_value[i] = [];
+    }
+    for(let i=0;i<Number_of_Frames;i++){
+        for(let j=0;j<Columns*Rows;j++){
+            dose_value[i][j] = [];
+        }
+    }
+
+    //calculate dose value
+    for (let z = 0; z < Number_of_Frames; z++) {
+        for (let val = 0; val < Rows*Columns; val++) {
+            dose_value[z][val] = dose_grid[z][val] * Dose_Grid_Scaling / 1000 ;
+        }
+    }
+
 }
 
 
-function doseData(imageId){
+let dSz = 0;
+function doseData(imageId, dataSet) {
     let el = document.getElementById('dicomImage');
     cornerstone.enable(el);
 
-    let pixelData;
     let spacing = 0;
-    let pixelSpacing ;
-    let img ;
-    let dSz;
-    let doseCalVal;
+    let pixelSpacing = 0;
+    let img = 0;
+    let doseCalVal = 0;
+    let index=0;
+
     cornerstone.loadImage(imageId).then(function (image) {
         const viewport = cornerstone.getDefaultViewportForImage(el, image);
         if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.481.2') {
             cornerstone.displayImage(el, image, viewport);
-            pixelData = image.data.string('x7fe00010');
+
             pixelSpacing = image.data.string('x00280030');
             pixelSpacing = pixelSpacing.split('\\');
             pixelSpacing = parseFloat(pixelSpacing[0]);
 
-            doseCalVal = doseCal(image,spacing);
+            doseCalVal = doseAlign(image,spacing);
             dSz = doseCalVal[0];
-
+            index = dSz;
+            dose_pixel_Data_parse(image,dataSet);
             dicomParse(image);
+
         }
         img = image;
     });
 
     el.onwheel = wheelE;
-    let index = dSz;
+
+
     function wheelE(e) {
         // Firefox e.detail > 0 scroll back, < 0 scroll forward
         // chrome/safari e.wheelDelta < 0 scroll back, > 0 scroll forward
@@ -51,20 +136,20 @@ function doseData(imageId){
             if (e.deltaY < 0) {
                 if (index === dSz) {
                     spacing = spacing + pixelSpacing;
-                    doseCalVal = doseCal(img,spacing);
+                    doseCalVal = doseAlign(img,spacing);
                     dSz = doseCalVal[0];
                     index = dSz;
                 }
             } else {
                 if (index === dSz) {
                     spacing = spacing - pixelSpacing;
-                    doseCalVal = doseCal(img,spacing);
+                    doseCalVal = doseAlign(img,spacing);
                     dSz = doseCalVal[0];
                     index = dSz;
                 }
             }
         } else {
-            doseCalVal = doseCal(img,0);
+            doseCalVal = doseAlign(img,0);
             dSz = doseCalVal[0];
             index = dSz;
         }
@@ -72,17 +157,17 @@ function doseData(imageId){
 }
 
 
-function doseCal(image,spacing) {
+function doseAlign(image, spacing) {
     let modality = image.data.string('x00080060');
     let SOP_UID = image.data.string('x00080016');
-    let Sx,Sy,Sz;
-    if (modality === ('CT') || SOP_UID ==='1.2.840.10008.5.1.4.1.1.481.2' || modality === 'RTDOSE') {
+    let Sx, Sy, Sz;
+    if (modality === ('CT') || SOP_UID === '1.2.840.10008.5.1.4.1.1.481.2' || modality === 'RTDOSE') {
         let imgPos = image.data.string('x00200032');
         let imgPosArr = imgPos.split("\\");
 
-         Sx = (parseFloat(imgPosArr[0]) * 10) / 10;
-         Sy = (parseFloat(imgPosArr[1]) * 10) / 10;
-         Sz = (parseFloat(imgPosArr[2]) * 10) / 10 + spacing;
+        Sx = (parseFloat(imgPosArr[0]) * 10) / 10;
+        Sy = (parseFloat(imgPosArr[1]) * 10) / 10;
+        Sz = (parseFloat(imgPosArr[2]) * 10) / 10 + spacing;
 
         let imgOri = image.data.string('x00200037');
         imgOri = imgOri.toString();
@@ -104,44 +189,29 @@ function doseCal(image,spacing) {
 
         let el = document.getElementById('dicomImage');
 
-        /*
-        document.getElementById('Sxyz').textContent = 'Sx : ' + Sx + ', Sy : ' + Sy + ', Sz : ' + Sz;
-        document.getElementById('Xxyz').textContent = 'Xx : ' + Xx + ', Xy : ' + Xy + ', Xz : ' + Xz;
-        document.getElementById('Yxyz').textContent = 'Yx : ' + Yx + ', Yy : ' + Yy + ', Yz : ' + Yz;
-        document.getElementById('Dij').textContent = 'Di : ' + Di + ', Dj : ' + Dj;
-        */
-
         el.addEventListener('mousemove', function (event) {
             const pixelCoords = cornerstone.pageToPixel(el, event.pageX, event.pageY);
-            //  document.getElementById('coords').textContent = "pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + pixelCoords.x + ", pixelY=" + pixelCoords.y;
 
             let Px = (Xx * Di * pixelCoords.x) + (Yx * Dj * pixelCoords.y) + Sx;
             let Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
             let Pz = (Xz * Di * pixelCoords.x) + (Yz * Dj * pixelCoords.y) + Sz;
 
-            //Px = Math.floor(Px * 10) / 10;
-            // Py = Math.floor(Py * 10) / 10;
             document.getElementById('voxelCoords').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
         });
 
         el.addEventListener('dblclick', function (event) {
             const pixelCoords = cornerstone.pageToPixel(el, event.pageX, event.pageY);
-            //   document.getElementById('pixelValue').textContent = "pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + pixelCoords.x + ", pixelY=" + pixelCoords.y;
 
             let Px = (Xx * Di * pixelCoords.x) + (Yx * Dj * pixelCoords.y) + Sx;
             let Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
             let Pz = (Xz * Di * pixelCoords.x) + (Yz * Dj * pixelCoords.y) + Sz;
 
-            // Px = Math.floor(Px * 10) / 10;
-            //  Py = Math.floor(Py * 10) / 10;
-
             document.getElementById('voxelValue').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
         });
-    }
-    else {
+    } else {
         alert('NOT CT IMAGES')
     }
     return [Sz];
 }
 
-export {doseFile, doseData }
+export {doseFile, doseData}

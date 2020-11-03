@@ -41,7 +41,7 @@ function doseParse(file) {
                 let output = [];
 
                 doseDump(dataSet, output);
-                doseJson(doseData);
+                doseJson(dataSet,doseData);
                 // Combine the array of strings into one string and add it to the DOM
                 document.getElementById('rtstruct').innerHTML = '<ul>' + output.join('') + '</ul>';
 
@@ -98,7 +98,7 @@ function doseDump(dataSet, output) {
             //00280008 - Number of frames /00200032 - Image Position / 00200037 - Image Orientation /
             // 3004000e - Dose grid scaling / 30040002 - Dose Units (Gy)
             //x7fe00010 - pixel data
-            if (element.tag === 'x00280008' ||element.tag==='x30040002'|| element.tag === 'x3004000e' || element.tag === 'x00200032' || element.tag === 'x00200037' ||element.tag === 'x7fe00010') {
+            if (element.tag==='x00280010'|| element.tag==='x00280011'||element.tag === 'x00280008' ||element.tag==='x30040002'|| element.tag === 'x3004000e' || element.tag === 'x00200032' || element.tag === 'x00200037' ||element.tag === 'x7fe00010') {
 
                 let text = element.tag;
                 text += " length=" + element.length;
@@ -116,6 +116,8 @@ function doseDump(dataSet, output) {
 
 
                 if (element.items) { //item들을 표시
+                    output.push('<li>' + text + '</li>');
+                    output.push('<ul>');
                     let itemNumber = 0;
                     element.items.forEach(function (item) {
                         output.push('<li> Item #' + itemNumber++ + ' ' + item.tag + '</li>')
@@ -146,15 +148,16 @@ function doseDump(dataSet, output) {
                         output.push(str);
                     });
                     output.push('</ul>');
-                } else {
+                }
+                else {
                     //문자열 길이가 128이하, 이상으로 나눠서 보여줌
                     // 사용하기 어렵게 만드는 문자열 표시를 피하기 위해 사용
                     if (element.length < 128) { //텍스트 = 태그 + 길이 + 내용
                         //어떤 data type인지 확인하기 위함
-                        if (element.length === 2) { //propertyName은
+                        if (element.length === 2) {
                             text += " (" + dataSet.uint16(propertyName) + ")";
-
-                        } else if (element.length === 4) {
+                        }
+                        else if (element.length === 4) {
                             text += " (" + dataSet.uint32(propertyName) + ")";
                         }
 
@@ -167,33 +170,42 @@ function doseDump(dataSet, output) {
                             // 정의되지 않은 경우 아무것도 넣지 않음
                             if (str !== undefined) {
                                 text += '"' + str + '"';
+
                             }
                         } else {
                             if (element.length !== 2 && element.length !== 4) {
                                 color = '#C8C8C8';
+
                                 // If it is some other length and we have no string
-                                text += "<i>binary data</i>";
+                                text += dataSet.string(propertyName);
+                            }
+                            else{
+
+                                text += dataSet.string(propertyName);
                             }
                         }
                         if (element.length === 0) {
+
                             color = '#C8C8C8';
                         }
                     }
-                    // contour data처럼 string 길이가 긴 것은 display x
-                    else {
-                        if (element.tag === 'x30060050') {
-                            color = '#C8C8C8';
 
+                    else {
+                            color = '#C8C8C8';
                             // Add text saying the data is too long to show...
                             text += dataSet.string(propertyName);
-                        }
+
                     }
+
+
                     // finally we add the string to our output array surrounded by li elements so it shows up in the DOM as a list
                     output.push('<li style="color:' + color + ';">' + text + '</li>');
+
                     doseData.push(element.tag, dataSet.string(propertyName));
                 }
             }
         }
+
     } catch (err) {
         let ex = {
             exception: err,
@@ -205,13 +217,13 @@ function doseDump(dataSet, output) {
 
 let dose_object = {};
 // function : Parse dose data to Json
-function doseJson(doseData) {
+function doseJson(dataSet,doseData) {
     let Number_of_Frames=0;
     let Image_Position=0;
     let Image_Orientation=0;
     let Dose_Grid_Scaling=0;
     let Dose_Units =0;
-    let pixel_data =0;
+
 
     // x00280008 - Number of frames / x00200032 - Image Position / x00200037 - Image Orientation
     // x3004000e - Dose grid scaling / x30040002 - Dose Units (Gy)
@@ -227,17 +239,18 @@ function doseJson(doseData) {
             Dose_Grid_Scaling = doseData[i + 1];
         } else if (doseData[i] === 'x30040002') {
             Dose_Units = doseData[i + 1];
-        } else if (doseData[i] === 'x7fe00010') {
-            pixel_data = doseData[i + 1];
         }
     }
+
 
     dose_object.x00280008 = Number_of_Frames;
     dose_object.x00200032 = Image_Position;
     dose_object.x00200037 = Image_Orientation;
     dose_object.x3004000e = Dose_Grid_Scaling;
     dose_object.x30040002 = Dose_Units;
-    dose_object.x7fe00010 = pixel_data;
+  //  dose_object.x7fe00010 = pixel_data;
 
 
 }
+
+export {doseParse}
