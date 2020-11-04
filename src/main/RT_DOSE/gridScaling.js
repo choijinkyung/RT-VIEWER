@@ -53,6 +53,15 @@ function gridScaling(image, dose_grid){
             dose_value[z][val] = dose_grid[z][val] * Dose_Grid_Scaling / 1000 ;
         }
     }
+
+    drawDose(dose_value);
+}
+
+function drawDose(dose_value){
+    let canvas = document.getElementById('doseCanvas');
+    let  ctx = canvas.getContext('2d');
+
+
 }
 
 export { dose_pixel_Data_parse, gridScaling}

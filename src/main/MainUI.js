@@ -191,7 +191,7 @@ class MainUIElements extends React.Component {
                                      this.element = input;
                                  }}>
                                 <canvas id="myCanvas" className={"canvas"} width={512} height={512}/>
-                                <div id="Canvas" className={"canvas"} width={512} height={512}/>
+                                <canvas id="doseCanvas" className={"canvas"} width={512} height={512}/>
                             </div>
                             <div id="topleft" className="overlay" className="topleft">
                                 Patient Name:
