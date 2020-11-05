@@ -6,9 +6,9 @@ import * as cornerstoneTools from "cornerstone-tools";
 import * as cornerstoneMath from "cornerstone-math"
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import voxelCal from "../RT_STRUCTURE/pixel2voxel";
-import readTextFile from "./openFile";
 import {structFile, reset, getImage, sendDrawImage} from "../RT_STRUCTURE/ROI";
-import {dicomDump} from '../dicomDump'
+import {doseFile} from "../RT_DOSE/isodose";
+import {drawDose} from "../RT_DOSE/isodose";
 
 cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
@@ -36,7 +36,7 @@ function imageIdList(e) {
      };
     */
     let cnt = 0;
-    let filename = [];
+
     for (let i = 0; i < max; i++) {
         dumpFiles[i] = e.target.files[i];
         imageId[i] = cornerstoneWadoImageLoader.wadouri.fileManager.add(dumpFiles[i]) //save file name in array
@@ -45,15 +45,12 @@ function imageIdList(e) {
             alert('ERROR : There are Too many files.');
         }
         cnt++;
-
     }
-
 
     //Index 111 : RT DOSE FILE
     //Index 112 : RT PLAN FILE
     //Index 113 : RT STRUCTURE FILE
-
-    //doseFile(dumpFiles[111]);
+    doseFile(dumpFiles[111]);
     structFile(dumpFiles[113]);
     updateTheImage(imageId, currentImageIndex);
 
@@ -71,19 +68,19 @@ function imageIdList(e) {
             if (e.deltaY < 0) {
                 if (index === currentImageIndex) {
                     updateTheImage(imageId, currentImageIndex + 1); //update images
+                    drawDose(dose_value[currentImageIndex + 1]); //draw dose
                     reset();
-                    // dicomDump(dumpfiles[currentImageIndex ]); // update dump
                 }
             } else {
                 if (index === currentImageIndex) {
                     updateTheImage(imageId, currentImageIndex - 1); //update images
+                    drawDose(dose_value[currentImageIndex + 1]); //draw dose
                     reset();
-                    //  dicomDump(dumpfiles[currentImageIndex]); // update dump
-
                 }
             }
         } else {
             updateTheImage(imageId, currentImageIndex); //update images
+            drawDose(dose_value[currentImageIndex]);
             reset();
         }
         // Prevent page fom scrolling
@@ -91,11 +88,43 @@ function imageIdList(e) {
     }
 }
 
+let dose_value = [];
+//calculate Dose value
+function gridScaling(image, dose_grid, Rows, Columns, Number_of_Frames) {
+    let Dose_Grid_Scaling;
+    Dose_Grid_Scaling = image.data.string('x3004000e');
+
+    //초기화
+    for (let i = 0; i < Number_of_Frames; i++) {
+        dose_value[i] = [];
+    }
+    for (let i = 0; i < Number_of_Frames; i++) {
+        for (let j = 0; j < Columns; j++) {
+            dose_value[i][j] = [];
+        }
+    }
+    for (let i = 0; i < Number_of_Frames; i++) {
+        for (let j = 0; j < Columns; j++) {
+            for (let k = 0; k < Rows; k++) {
+                dose_value[i][j][k] = [];
+            }
+        }
+    }
+
+    //calculate dose value
+    for (let z = 0; z < Number_of_Frames; z++) {
+        for (let y = 0; y < Columns; y++) {
+            for (let x = 0; x < Rows; x++) {
+                dose_value[z][y][x] = dose_grid[z][y][x] * Dose_Grid_Scaling / 1000;
+            }
+        }
+    }
+    drawDose(dose_value[currentImageIndex]);
+}
 
 let img;
-
 // show image #1 initially
-function updateTheImage(imageIds ,imageIndex) {
+function updateTheImage(imageIds, imageIndex) {
     let el = document.getElementById('dicomImage');
     cornerstone.enable(el)
 
@@ -143,4 +172,4 @@ function loadCTImage(imageId) {
     return img;
 }
 
-export {loadCTImage, imageIdList}
+export {loadCTImage, imageIdList, gridScaling}
