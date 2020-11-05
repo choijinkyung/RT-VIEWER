@@ -1,11 +1,10 @@
 import * as cornerstone from "cornerstone-core";
-import dicomParse from "../dicomParse";
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import dicomParser from "dicom-parser";
-import {dose_pixel_Data_parse} from "./gridScaling";
+import {dose_pixel_Data_parse} from "./dosePixelDataParse";
 
 let dataSet;
-
+let Rows, Columns, Number_of_Frames;
 function doseFile(file) {
     const imageId = cornerstoneWadoImageLoader.wadouri.fileManager.add(file);
 
@@ -22,6 +21,9 @@ function doseFile(file) {
             try {
 
                 dataSet = dicomParser.parseDicom(byteArray);
+                Rows = parseFloat(dataSet.uint16('x00280010'));
+                Columns = parseFloat(dataSet.uint16('x00280011'));
+                Number_of_Frames = parseFloat(dataSet.string('x00280008'));
 
                 doseData(imageId, dataSet);
             } catch (err) {
@@ -37,71 +39,27 @@ function doseFile(file) {
     return dataSet;
 }
 
-
-let dSz = 0;
 function doseData(imageId, dataSet) {
-    let el = document.getElementById('dicomImage');
-    cornerstone.enable(el);
-
-    let spacing = 0;
-    let pixelSpacing = 0;
+    let dose_pixelSpacing = 0;
     let img = 0;
-    let doseCalVal = 0;
-    let index=0;
 
     cornerstone.loadImage(imageId).then(function (image) {
-        const viewport = cornerstone.getDefaultViewportForImage(el, image);
         if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.481.2') {
-            cornerstone.displayImage(el, image, viewport);
 
-            pixelSpacing = image.data.string('x00280030');
-            pixelSpacing = pixelSpacing.split('\\');
-            pixelSpacing = parseFloat(pixelSpacing[0]);
+            dose_pixelSpacing = image.data.string('x00280030');
+            dose_pixelSpacing = dose_pixelSpacing.split('\\');
+            dose_pixelSpacing = parseFloat(dose_pixelSpacing[0]);
 
-            doseCalVal = doseAlign(image,spacing);
-            dSz = doseCalVal[0];
-            index = dSz;
+            doseAlign(image);
+
             dose_pixel_Data_parse(image,dataSet);
-            dicomParse(image);
-
         }
         img = image;
     });
 
-    el.onwheel = wheelE;
-
-
-    function wheelE(e) {
-        // Firefox e.detail > 0 scroll back, < 0 scroll forward
-        // chrome/safari e.wheelDelta < 0 scroll back, > 0 scroll forward
-        e.stopPropagation();
-        e.preventDefault();
-        if (index >= -157.5 && index <= 120 ) {
-            if (e.deltaY < 0) {
-                if (index === dSz) {
-                    spacing = spacing + pixelSpacing;
-                    doseCalVal = doseAlign(img,spacing);
-                    dSz = doseCalVal[0];
-                    index = dSz;
-                }
-            } else {
-                if (index === dSz) {
-                    spacing = spacing - pixelSpacing;
-                    doseCalVal = doseAlign(img,spacing);
-                    dSz = doseCalVal[0];
-                    index = dSz;
-                }
-            }
-        } else {
-            doseCalVal = doseAlign(img,0);
-            dSz = doseCalVal[0];
-            index = dSz;
-        }
-    }
 }
 
-
-function doseAlign(image, spacing) {
+function doseAlign(image) {
     let modality = image.data.string('x00080060');
     let SOP_UID = image.data.string('x00080016');
     let Sx, Sy, Sz;
@@ -111,7 +69,7 @@ function doseAlign(image, spacing) {
 
         Sx = (parseFloat(imgPosArr[0]) * 10) / 10;
         Sy = (parseFloat(imgPosArr[1]) * 10) / 10;
-        Sz = (parseFloat(imgPosArr[2]) * 10) / 10 + spacing;
+        Sz = (parseFloat(imgPosArr[2]) * 10) / 10;
 
         let imgOri = image.data.string('x00200037');
         imgOri = imgOri.toString();
@@ -140,7 +98,7 @@ function doseAlign(image, spacing) {
             let Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
             let Pz = (Xz * Di * pixelCoords.x) + (Yz * Dj * pixelCoords.y) + Sz;
 
-            document.getElementById('voxelCoords').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
+            //document.getElementById('voxelCoords').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
         });
 
         el.addEventListener('dblclick', function (event) {
@@ -150,7 +108,7 @@ function doseAlign(image, spacing) {
             let Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
             let Pz = (Xz * Di * pixelCoords.x) + (Yz * Dj * pixelCoords.y) + Sz;
 
-            document.getElementById('voxelValue').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
+           // document.getElementById('voxelValue').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
         });
     } else {
         alert('NOT CT IMAGES')
@@ -158,4 +116,26 @@ function doseAlign(image, spacing) {
     return [Sz];
 }
 
-export {doseFile, doseData}
+function drawDose(dose_value) {
+    let canvas = document.getElementById('doseCanvas');
+    let ctx = canvas.getContext('2d');
+    let point = [];
+    let count = 0;
+
+    ctx.beginPath();
+
+    for(let i=0;i<Columns;i++){
+
+
+        for(let j=0;j<Rows;j++){
+            if(80<dose_value[i][j]&&dose_value[i][j]<100){
+                ctx.lineTo(j, i);
+            }
+        }
+    }
+    ctx.closePath();
+    ctx.fillStyle = '#00ffff';
+    ctx.stroke();
+    ctx.fill();
+}
+export {doseFile, doseData, drawDose}
