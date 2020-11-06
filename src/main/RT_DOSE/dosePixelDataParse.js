@@ -28,7 +28,7 @@ function dose_pixel_Data_parse(image, dataSet) {
         }
     }
     let count = 0;
-    let dosemax=0;
+
     for (let z = 0; z < Number_of_Frames; z++) {
         for (let y = 0; y < Columns; y++) {
             for (let x = 0; x < Rows; x++) {
@@ -38,7 +38,6 @@ function dose_pixel_Data_parse(image, dataSet) {
             }
         }
     }
-
 
     gridScaling(image, dose_grid, Rows, Columns, Number_of_Frames);
 }
