@@ -1,6 +1,6 @@
 import $ from "jquery";
 import dicomParser from "dicom-parser";
-import {addCheckbox,checkEvent} from "./checkbox";
+import {ROI_addCheckbox,ROI_checkEvent} from "./checkbox";
 import pixelCal from "./voxel2pixel";
 import fullColorHex from "./rgbToHex.js";
 import * as cornerstone from "cornerstone-core";
@@ -49,7 +49,7 @@ function structFile(file) {
                 roiJson(roi_List);
                 contourJson(contourList);
 
-                checkEvent();
+                ROI_checkEvent();
 
                 // Combine the array of strings into one string and add it to the DOM
                // document.getElementById('rtstruct').innerHTML = '<ul>' + output1.join('') + '</ul>';
@@ -297,7 +297,7 @@ function roiJson(roi_List) {
 
             ROI_LIST_Array.push(ROI_object);
         }
-        addCheckbox(ROI_LIST_Array);
+        ROI_addCheckbox(ROI_LIST_Array);
     });
 
 }

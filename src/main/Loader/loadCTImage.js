@@ -7,8 +7,8 @@ import * as cornerstoneMath from "cornerstone-math"
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import voxelCal from "../RT_STRUCTURE/pixel2voxel";
 import {structFile, reset, getImage, sendDrawImage} from "../RT_STRUCTURE/ROI";
-import {doseFile} from "../RT_DOSE/isodose";
-import {drawDose} from "../RT_DOSE/isodose";
+import {doseFile,getDoseValue} from "../RT_DOSE/isodose";
+import {Dose_Checkbox, Dose_checkEvent} from "../RT_DOSE/doseCheckbox";
 
 cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
@@ -68,19 +68,19 @@ function imageIdList(e) {
             if (e.deltaY < 0) {
                 if (index === currentImageIndex) {
                     updateTheImage(imageId, currentImageIndex + 1); //update images
-                    drawDose(dose_value[currentImageIndex + 1]); //draw dose
+
                     reset();
                 }
             } else {
                 if (index === currentImageIndex) {
                     updateTheImage(imageId, currentImageIndex - 1); //update images
-                    drawDose(dose_value[currentImageIndex + 1]); //draw dose
+
                     reset();
                 }
             }
         } else {
             updateTheImage(imageId, currentImageIndex); //update images
-            drawDose(dose_value[currentImageIndex]);
+         //   drawDose(dose_value[currentImageIndex]);
             reset();
         }
         // Prevent page fom scrolling
@@ -93,7 +93,7 @@ let dose_value = [];
 function gridScaling(image, dose_grid, Rows, Columns, Number_of_Frames) {
     let Dose_Grid_Scaling;
     Dose_Grid_Scaling = image.data.string('x3004000e');
-
+    let dosemax=0;
     //초기화
     for (let i = 0; i < Number_of_Frames; i++) {
         dose_value[i] = [];
@@ -115,11 +115,16 @@ function gridScaling(image, dose_grid, Rows, Columns, Number_of_Frames) {
     for (let z = 0; z < Number_of_Frames; z++) {
         for (let y = 0; y < Columns; y++) {
             for (let x = 0; x < Rows; x++) {
-                dose_value[z][y][x] = dose_grid[z][y][x] * Dose_Grid_Scaling / 1000;
+                dose_value[z][y][x] = dose_grid[z][y][x] * Dose_Grid_Scaling / 1000 ;
+                dosemax = Math.max(dose_value[z][y][x]);
+
             }
         }
     }
-    drawDose(dose_value[currentImageIndex]);
+
+    Dose_Checkbox(dosemax);
+    Dose_checkEvent();
+    getDoseValue(dose_value);
 }
 
 let img;
