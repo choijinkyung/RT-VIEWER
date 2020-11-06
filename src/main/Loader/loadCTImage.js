@@ -7,8 +7,9 @@ import * as cornerstoneMath from "cornerstone-math"
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import voxelCal from "../RT_STRUCTURE/pixel2voxel";
 import {structFile, reset, getImage, sendDrawImage} from "../RT_STRUCTURE/ROI";
-import {doseFile,getDoseValue} from "../RT_DOSE/isodose";
+import {doseFile, getCheckValue} from "../RT_DOSE/isodose";
 import {Dose_Checkbox, Dose_checkEvent} from "../RT_DOSE/doseCheckbox";
+import {checkAndDraw} from "../RT_DOSE/isodose";
 
 cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
@@ -52,7 +53,7 @@ function imageIdList(e) {
     //Index 113 : RT STRUCTURE FILE
     doseFile(dumpFiles[111]);
     structFile(dumpFiles[113]);
-    updateTheImage(imageId, currentImageIndex);
+    loadCTImage(imageId[currentImageIndex]);
 
     let el = document.getElementById('dicomImage');
     el.onwheel = wheelE;
@@ -68,19 +69,19 @@ function imageIdList(e) {
             if (e.deltaY < 0) {
                 if (index === currentImageIndex) {
                     updateTheImage(imageId, currentImageIndex + 1); //update images
-
+                    checkAndDraw(dose_value[currentImageIndex + 1]);
                     reset();
                 }
             } else {
                 if (index === currentImageIndex) {
                     updateTheImage(imageId, currentImageIndex - 1); //update images
-
+                    checkAndDraw(dose_value[currentImageIndex - 1]);
                     reset();
                 }
             }
         } else {
             updateTheImage(imageId, currentImageIndex); //update images
-         //   drawDose(dose_value[currentImageIndex]);
+            checkAndDraw(dose_value[currentImageIndex]);
             reset();
         }
         // Prevent page fom scrolling
@@ -124,8 +125,10 @@ function gridScaling(image, dose_grid, Rows, Columns, Number_of_Frames) {
 
     Dose_Checkbox(dosemax);
     Dose_checkEvent();
-    getDoseValue(dose_value);
+
 }
+
+
 
 let img;
 // show image #1 initially
@@ -152,6 +155,7 @@ function updateTheImage(imageIds, imageIndex) {
     return img;
 }
 
+
 //load one CT Image from local file
 function loadCTImage(imageId) {
     let el = document.getElementById('dicomImage');
@@ -165,7 +169,9 @@ function loadCTImage(imageId) {
             voxelCal(image);
             getImage(image);
             sendDrawImage(image);
+            checkAndDraw(dose_value[currentImageIndex]);
 
+            getCheckValue([]);
             img = image;
 
         } else if (image.data.string('x0080016') === '1.2.840.10008.5.1.4.1.1.481.2') {
@@ -178,3 +184,5 @@ function loadCTImage(imageId) {
 }
 
 export {loadCTImage, imageIdList, gridScaling}
+
+

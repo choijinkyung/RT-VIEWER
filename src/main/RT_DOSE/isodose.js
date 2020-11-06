@@ -120,40 +120,58 @@ function doseAlign(image) {
     return [Sz];
 }
 
-let dose_data = [];
+let checkVal_check_dose = [];
 
-function getDoseValue(dose_value) {
-    dose_data = dose_value;
+function getCheckValue(checkVal_check) {
+    checkVal_check_dose = checkVal_check;
 }
 
-function drawDose(checkVal_check) {
+function checkAndDraw(dose_value) {
+    let color = [];
+    color[0] = '#00ffff';
+    color[1] = '#ff00ff';
+    color[2] = '#ffff00';
+    color[3] = '#44ff00';
+    color[4] = '#ffcc33';
+    color[5] = '#2100ff'
+
+    for (let i = 0; i < checkVal_check_dose.length; i++) {
+        if (checkVal_check_dose[i] === '121') {
+            drawDose(dose_value, checkVal_check_dose[i], color[0]);
+        } else if (checkVal_check_dose[i] === '100') {
+            drawDose(dose_value, checkVal_check_dose[i], color[1]);
+        } else if (checkVal_check_dose[i] === '90') {
+            drawDose(dose_value, checkVal_check_dose[i], color[2]);
+        } else if (checkVal_check_dose[i] === '70') {
+            drawDose(dose_value, checkVal_check_dose[i], color[3]);
+        } else if (checkVal_check_dose[i] === '50') {
+            drawDose(dose_value, checkVal_check_dose[i], color[4]);
+        } else if (checkVal_check_dose[i] === '30') {
+            drawDose(dose_value, checkVal_check_dose[i], color[5]);
+        }
+    }
+}
+
+function drawDose(dose_value, checkVal_check, color) {
     let canvas = document.getElementById('doseCanvas');
     let ctx = canvas.getContext('2d');
 
+    //draw path
     ctx.beginPath();
 
     for (let y = 0; y < Columns; y++) {
-        dose_data[y] = [];
-    }
-    for (let y = 0; y < Columns; y++) {
         for (let x = 0; x < Rows; x++) {
-            dose_data[y][x] = [];
-        }
-
-    }
-    for (let y = 0; y < Columns; y++) {
-        for (let x = 0; x < Rows; x++) {
-            if (dose_data[y][x] < checkVal_check) {
+            if (dose_value[y][x] < checkVal_check) {
                 ctx.lineTo(x, y);
             }
         }
     }
     ctx.closePath();
-    ctx.fillStyle = '#00ffff';
+    ctx.fillStyle = color;
     ctx.globalAlpha = 0.5;
     ctx.stroke();
     ctx.fill();
 
 }
 
-export {doseFile, doseData, drawDose, getDoseValue}
+export {doseFile, doseData, drawDose, getCheckValue, checkAndDraw}

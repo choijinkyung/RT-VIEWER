@@ -1,5 +1,5 @@
 import $ from "jquery";
-import {drawDose} from "./isodose";
+import {getCheckValue} from "./isodose";
 
 function Dose_Checkbox(dosemax) {
     let level = [];
@@ -52,16 +52,14 @@ function addDoseSet(evt) {
 
     if (evt.target.checked == true) {
         information.Dose.push(evt.target.value);
-        checkVal_check = evt.target.value;
-
-        drawDose(checkVal_check);
+        getCheckValue(information.Dose);
     }else {
         let index = information.Dose.indexOf(evt.target.value);
         if (index !== -1){
             information.Dose.splice(index, 1);
         }
         checkVal_check = evt.target.value;
-
+        //getCheckValue(checkVal_check);
     }
 }
 export {Dose_Checkbox,Dose_checkEvent};
