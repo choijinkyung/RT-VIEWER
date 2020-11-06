@@ -48,6 +48,16 @@ div.left {
     float: left;
     overflow: auto;
 }
+div.lefthalf {
+    width: 50%;
+    float: left;
+    overflow: auto;
+}
+div.righthalf {
+    width: 50%;
+    float: right;
+    overflow: auto;
+}
 
 div.right {
     width: 50%;

@@ -1,7 +1,7 @@
 import $ from "jquery";
 import {addROIset} from "./ROI";
 
-function addCheckbox(ROI_LIST_Array) {
+function ROI_addCheckbox(ROI_LIST_Array) {
     ROI_LIST_Array.forEach(function (n) {
         let ul = document.getElementById('ul');
         let li = document.createElement('li');
@@ -20,7 +20,7 @@ function addCheckbox(ROI_LIST_Array) {
 
 }
 
-function checkEvent(){
+function ROI_checkEvent(){
     /*Event Listener*/
     $(document).ready(function(){
         let roi = document.getElementsByName("roi");
@@ -36,4 +36,4 @@ function checkEvent(){
     })
 
 }
-export {addCheckbox,checkEvent};
+export {ROI_addCheckbox,ROI_checkEvent};

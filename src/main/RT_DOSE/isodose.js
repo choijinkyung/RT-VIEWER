@@ -2,9 +2,11 @@ import * as cornerstone from "cornerstone-core";
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import dicomParser from "dicom-parser";
 import {dose_pixel_Data_parse} from "./dosePixelDataParse";
+import {Dose_checkEvent} from "./doseCheckbox";
 
 let dataSet;
 let Rows, Columns, Number_of_Frames;
+
 function doseFile(file) {
     const imageId = cornerstoneWadoImageLoader.wadouri.fileManager.add(file);
 
@@ -24,6 +26,7 @@ function doseFile(file) {
                 Rows = parseFloat(dataSet.uint16('x00280010'));
                 Columns = parseFloat(dataSet.uint16('x00280011'));
                 Number_of_Frames = parseFloat(dataSet.string('x00280008'));
+
 
                 doseData(imageId, dataSet);
             } catch (err) {
@@ -52,7 +55,7 @@ function doseData(imageId, dataSet) {
 
             doseAlign(image);
 
-            dose_pixel_Data_parse(image,dataSet);
+            dose_pixel_Data_parse(image, dataSet);
         }
         img = image;
     });
@@ -101,6 +104,7 @@ function doseAlign(image) {
             //document.getElementById('voxelCoords').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
         });
 
+
         el.addEventListener('dblclick', function (event) {
             const pixelCoords = cornerstone.pageToPixel(el, event.pageX, event.pageY);
 
@@ -108,7 +112,7 @@ function doseAlign(image) {
             let Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
             let Pz = (Xz * Di * pixelCoords.x) + (Yz * Dj * pixelCoords.y) + Sz;
 
-           // document.getElementById('voxelValue').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
+            // document.getElementById('voxelValue').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
         });
     } else {
         alert('NOT CT IMAGES')
@@ -116,26 +120,40 @@ function doseAlign(image) {
     return [Sz];
 }
 
-function drawDose(dose_value) {
+let dose_data = [];
+
+function getDoseValue(dose_value) {
+    dose_data = dose_value;
+}
+
+function drawDose(checkVal_check) {
     let canvas = document.getElementById('doseCanvas');
     let ctx = canvas.getContext('2d');
-    let point = [];
-    let count = 0;
 
     ctx.beginPath();
 
-    for(let i=0;i<Columns;i++){
+    for (let y = 0; y < Columns; y++) {
+        dose_data[y] = [];
+    }
+    for (let y = 0; y < Columns; y++) {
+        for (let x = 0; x < Rows; x++) {
+            dose_data[y][x] = [];
+        }
 
-
-        for(let j=0;j<Rows;j++){
-            if(80<dose_value[i][j]&&dose_value[i][j]<100){
-                ctx.lineTo(j, i);
+    }
+    for (let y = 0; y < Columns; y++) {
+        for (let x = 0; x < Rows; x++) {
+            if (dose_data[y][x] < checkVal_check) {
+                ctx.lineTo(x, y);
             }
         }
     }
     ctx.closePath();
     ctx.fillStyle = '#00ffff';
+    ctx.globalAlpha = 0.5;
     ctx.stroke();
     ctx.fill();
+
 }
-export {doseFile, doseData, drawDose}
+
+export {doseFile, doseData, drawDose, getDoseValue}
