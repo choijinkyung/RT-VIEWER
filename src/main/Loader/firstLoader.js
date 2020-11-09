@@ -52,7 +52,7 @@ function imageIdList(e) {
     //Index 112 : RT PLAN FILE
     //Index 113 : RT STRUCTURE FILE
 
-    loadCTImage(imageId[currentImageIndex]);
+    firstLoader(imageId[currentImageIndex]);
     structFile(dumpFiles[113]);
     doseFile(dumpFiles[111]);
 
@@ -160,7 +160,7 @@ function updateTheImage(imageIds, imageIndex) {
 
 
 //load one CT Image from local file
-function loadCTImage(imageId) {
+function firstLoader(imageId) {
     let el = document.getElementById('dicomImage');
     cornerstone.enable(el)
     cornerstone.loadImage(imageId).then(function (image) {
@@ -187,6 +187,6 @@ function loadCTImage(imageId) {
     return img;
 }
 
-export {loadCTImage, imageIdList, gridScaling}
+export {firstLoader, imageIdList, gridScaling}
 
 
