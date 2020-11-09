@@ -1,4 +1,4 @@
-import {doseFile} from "../RT_DOSE/isodose";
+import {doseFile} from "../RT_DOSE/doseDataParser";
 
 function handleFileChange(e) {
     e.stopPropagation();

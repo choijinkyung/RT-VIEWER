@@ -6,10 +6,10 @@ import * as cornerstoneTools from "cornerstone-tools";
 import * as cornerstoneMath from "cornerstone-math"
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import voxelCal from "../RT_STRUCTURE/pixel2voxel";
-import {structFile, reset, getImage, sendDrawImage} from "../RT_STRUCTURE/ROI";
-import {doseFile, getCheckValue} from "../RT_DOSE/isodose";
+import {structFile, reset, getImage, sendDrawImage} from "../RT_STRUCTURE/drawROI";
+import {doseFile} from "../RT_DOSE/doseDataParser";
 import {Dose_Checkbox, Dose_checkEvent} from "../RT_DOSE/doseCheckbox";
-import {checkAndDraw} from "../RT_DOSE/isodose";
+import {checkAndDraw,getCheckValue} from "../RT_DOSE/drawDose";
 
 cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
