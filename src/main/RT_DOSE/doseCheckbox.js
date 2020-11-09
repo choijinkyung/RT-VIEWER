@@ -61,7 +61,7 @@ function addDoseSet(evt) {
             information.Dose.splice(index, 1);
         }
         checkVal_check = evt.target.value;
-        //getCheckValue(checkVal_check);
+        getCheckValue(checkVal_check);
     }
 }
 
