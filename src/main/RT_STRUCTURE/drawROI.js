@@ -1,6 +1,6 @@
 import $ from "jquery";
 import dicomParser from "dicom-parser";
-import {ROI_addCheckbox,ROI_checkEvent} from "./checkbox";
+import {ROI_addCheckbox,ROI_checkEvent} from "./ROIcheckbox";
 import pixelCal from "./voxel2pixel";
 import fullColorHex from "./rgbToHex.js";
 import * as cornerstone from "cornerstone-core";

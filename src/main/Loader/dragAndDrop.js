@@ -1,5 +1,5 @@
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
-import {doseFile} from "../RT_DOSE/isodose";
+import {doseFile} from "../RT_DOSE/doseDataParser";
 
 // this function gets called once the user drops the file onto the div
 //for drag and drop import doseFile
