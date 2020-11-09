@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "19c64d1b95be83e185f20d307a0c5dae",
+    "revision": "04ae138969a481220a9be70d0fffad75",
     "url": "/DICOM-RT-VIEWER/index.html"
   },
   {
-    "revision": "1574bc4a8a853c82afa4",
+    "revision": "e205d0178cac64d3bf99",
     "url": "/DICOM-RT-VIEWER/static/css/main.8c8eb5ca.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/DICOM-RT-VIEWER/static/js/2.c713bd8e.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "1574bc4a8a853c82afa4",
-    "url": "/DICOM-RT-VIEWER/static/js/main.37efd3dd.chunk.js"
+    "revision": "e205d0178cac64d3bf99",
+    "url": "/DICOM-RT-VIEWER/static/js/main.45f97121.chunk.js"
   },
   {
     "revision": "a149297b2fcb06485375",
