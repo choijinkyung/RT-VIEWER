@@ -116,7 +116,7 @@ function gridScaling(image, dose_grid, Rows, Columns, Number_of_Frames) {
     for (let z = 0; z < Number_of_Frames; z++) {
         for (let y = 0; y < Columns; y++) {
             for (let x = 0; x < Rows; x++) {
-                dose_value[z][y][x] = dose_grid[z][y][x] * Dose_Grid_Scaling / 1000 ;
+                dose_value[z][y][x] = dose_grid[z][y][x] * Dose_Grid_Scaling * 100 * 40;
                 dosemax = Math.max(dose_value[z][y][x]);
 
             }
@@ -125,7 +125,6 @@ function gridScaling(image, dose_grid, Rows, Columns, Number_of_Frames) {
 
     Dose_Checkbox(dosemax);
     Dose_checkEvent();
-
 }
 
 
