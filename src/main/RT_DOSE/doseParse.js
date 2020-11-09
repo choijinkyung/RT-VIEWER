@@ -197,7 +197,6 @@ function doseDump(dataSet, output) {
 
                     }
 
-
                     // finally we add the string to our output array surrounded by li elements so it shows up in the DOM as a list
                     output.push('<li style="color:' + color + ';">' + text + '</li>');
 
