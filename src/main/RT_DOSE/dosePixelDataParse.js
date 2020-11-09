@@ -1,4 +1,4 @@
-import {gridScaling} from "../Loader/loadCTImage";
+import {gridScaling} from "../Loader/firstLoader";
 
 let Rows, Columns, Number_of_Frames;
 function dose_pixel_Data_parse(image, dataSet) {

@@ -20,7 +20,7 @@ import {
     vflipOn,
     rotateOn
 } from "./RT_STRUCTURE/buttonEventFunction.js"
-import {imageIdList} from './Loader/loadCTImage.js'
+import {imageIdList} from './Loader/firstLoader.js'
 import {handleFileSelect, handleDragOver} from "./Loader/dragAndDrop";
 import handleFileChange from "./Loader/doseImport";
 
