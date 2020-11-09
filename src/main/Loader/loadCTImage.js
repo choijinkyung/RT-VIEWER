@@ -51,9 +51,10 @@ function imageIdList(e) {
     //Index 111 : RT DOSE FILE
     //Index 112 : RT PLAN FILE
     //Index 113 : RT STRUCTURE FILE
-    doseFile(dumpFiles[111]);
-    structFile(dumpFiles[113]);
+
     loadCTImage(imageId[currentImageIndex]);
+    structFile(dumpFiles[113]);
+    doseFile(dumpFiles[111]);
 
     let el = document.getElementById('dicomImage');
     el.onwheel = wheelE;
@@ -90,6 +91,7 @@ function imageIdList(e) {
 }
 
 let dose_value = [];
+
 //calculate Dose value
 function gridScaling(image, dose_grid, Rows, Columns, Number_of_Frames) {
     let Dose_Grid_Scaling;
@@ -123,8 +125,10 @@ function gridScaling(image, dose_grid, Rows, Columns, Number_of_Frames) {
         }
     }
 
+
     Dose_Checkbox(dosemax);
     Dose_checkEvent();
+
 }
 
 
@@ -168,7 +172,8 @@ function loadCTImage(imageId) {
             voxelCal(image);
             getImage(image);
             sendDrawImage(image);
-            checkAndDraw(dose_value[currentImageIndex]);
+
+
 
             getCheckValue([]);
             img = image;
