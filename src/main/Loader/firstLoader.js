@@ -9,7 +9,7 @@ import voxelCal from "../RT_STRUCTURE/pixel2voxel";
 import {structFile, reset, getImage, sendDrawImage} from "../RT_STRUCTURE/drawROI";
 import {doseFile} from "../RT_DOSE/doseDataParser";
 import {Dose_Checkbox, Dose_checkEvent} from "../RT_DOSE/doseCheckbox";
-import {checkAndDraw,getCheckValue} from "../RT_DOSE/drawDose";
+import {checkAndDraw} from "../RT_DOSE/drawDose";
 
 cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
@@ -52,7 +52,7 @@ function imageIdList(e) {
     //Index 112 : RT PLAN FILE
     //Index 113 : RT STRUCTURE FILE
 
-    firstLoader(imageId[currentImageIndex]);
+    firstLoader(imageId, currentImageIndex);
     structFile(dumpFiles[113]);
     doseFile(dumpFiles[111]);
 
@@ -70,24 +70,27 @@ function imageIdList(e) {
             if (e.deltaY < 0) {
                 if (index === currentImageIndex) {
                     updateTheImage(imageId, currentImageIndex + 1); //update images
-                    checkAndDraw(dose_value[currentImageIndex + 1]);
                     reset();
                 }
             } else {
                 if (index === currentImageIndex) {
                     updateTheImage(imageId, currentImageIndex - 1); //update images
-                    checkAndDraw(dose_value[currentImageIndex - 1]);
                     reset();
                 }
             }
         } else {
             updateTheImage(imageId, currentImageIndex); //update images
-            checkAndDraw(dose_value[currentImageIndex]);
             reset();
         }
         // Prevent page fom scrolling
         return false;
     }
+}
+
+let checkVal_check_dose = [];
+
+function getCheckValue(checkVal_check) {
+    checkVal_check_dose = checkVal_check;
 }
 
 let dose_value = [];
@@ -96,7 +99,7 @@ let dose_value = [];
 function gridScaling(image, dose_grid, Rows, Columns, Number_of_Frames) {
     let Dose_Grid_Scaling;
     Dose_Grid_Scaling = image.data.string('x3004000e');
-    let dosemax=0;
+    let dosemax = 0;
     //초기화
     for (let i = 0; i < Number_of_Frames; i++) {
         dose_value[i] = [];
@@ -124,16 +127,13 @@ function gridScaling(image, dose_grid, Rows, Columns, Number_of_Frames) {
             }
         }
     }
-
-
     Dose_Checkbox(dosemax);
     Dose_checkEvent();
-
 }
 
 
-
 let img;
+
 // show image #1 initially
 function updateTheImage(imageIds, imageIndex) {
     let el = document.getElementById('dicomImage');
@@ -149,6 +149,7 @@ function updateTheImage(imageIds, imageIndex) {
             voxelCal(image);
             getImage(image);
             sendDrawImage(image);
+            checkAndDraw(dose_value[currentImageIndex], checkVal_check_dose);
 
             img = image;
         } else {
@@ -160,10 +161,10 @@ function updateTheImage(imageIds, imageIndex) {
 
 
 //load one CT Image from local file
-function firstLoader(imageId) {
+function firstLoader(imageIds, imageIndex) {
     let el = document.getElementById('dicomImage');
     cornerstone.enable(el)
-    cornerstone.loadImage(imageId).then(function (image) {
+    cornerstone.loadImage(imageIds[imageIndex]).then(function (image) {
         const viewport = cornerstone.getDefaultViewportForImage(el, image);
         if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2' || image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.481.2') {
             cornerstone.displayImage(el, image, viewport);
@@ -172,8 +173,7 @@ function firstLoader(imageId) {
             voxelCal(image);
             getImage(image);
             sendDrawImage(image);
-
-
+            checkAndDraw(dose_value[imageIndex], checkVal_check_dose);
 
             getCheckValue([]);
             img = image;
@@ -187,6 +187,6 @@ function firstLoader(imageId) {
     return img;
 }
 
-export {firstLoader, imageIdList, gridScaling}
+export {firstLoader, imageIdList, gridScaling, getCheckValue}
 
 

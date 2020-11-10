@@ -1,5 +1,5 @@
 import $ from "jquery";
-import {getCheckValue} from "./drawDose";
+import {getCheckValue} from "../Loader/firstLoader";
 
 function Dose_Checkbox(dosemax) {
     let level = [];

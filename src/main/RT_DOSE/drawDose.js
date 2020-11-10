@@ -1,12 +1,6 @@
 import {findXY} from "./doseDataParser";
 
-let checkVal_check_dose = [];
-
-function getCheckValue(checkVal_check) {
-    checkVal_check_dose = checkVal_check;
-}
-
-function checkAndDraw(dose_value) {
+function checkAndDraw(dose_value,checkVal_check_dose) {
     let color = [];
     color[0] = '#00ffff';
     color[1] = '#ff00ff';
@@ -54,4 +48,4 @@ function drawDose(Px, Py, color) {
 
 }
 
-export {drawDose, checkAndDraw, getCheckValue}
+export {drawDose, checkAndDraw}

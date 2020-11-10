@@ -80,7 +80,7 @@ function findXY(dose_value, checkVal_check, color) {
 
     for (let y = 0; y < Columns; y++) {
         for (let x = 0; x < Rows; x++) {
-            if (dose_value[y][x] < checkVal_check) {
+            if (dose_value[y][x] > checkVal_check) {
                 Vi[cnt] = x;
                 Vj[cnt] = y;
                 cnt++;
@@ -119,4 +119,4 @@ function doseAlign(Vi, Vj, color) {
 }
 
 
-export {doseFile, doseData,findXY}
+export {doseFile, doseData, findXY}
