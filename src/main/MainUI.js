@@ -310,6 +310,28 @@ class MainUIElements extends React.Component {
 
                 </div>
                 */}
+                <div className="right">
+                    <div className="row2">
+                        <div className="col-md-12">
+                            <div id="dose">
+                                <div className="text-center">
+                                    <h3>dose</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="left">
+                    <div className="row2">
+                        <div className="col-md-12">
+                            <div id="dose2">
+                                <div className="text-center">
+                                    <h3>dose</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <img id={"image"} src={""}/>
             </div>
         );
