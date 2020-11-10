@@ -77,16 +77,28 @@ function doseData(imageId, dataSet) {
 function findXY(dose_value, checkVal_check, color) {
     let Vi = [], Vj = [];
     let cnt = 0;
+    let output2=[];
 
     for (let y = 0; y < Columns; y++) {
         for (let x = 0; x < Rows; x++) {
             if (dose_value[y][x] > checkVal_check) {
+                output2.push(dose_value[y][x]);
                 Vi[cnt] = x;
                 Vj[cnt] = y;
                 cnt++;
             }
         }
     }
+    document.getElementById('dose2').innerHTML='<ul>'+output2.join(',')+'</ul>';
+    let output=[];
+    Vi.sort(function(a,b){
+        return a-b;
+    });
+    for(let i=0;i<Vi.length;i++){
+     output.push('('+Vi[i]+','+Vj[i]+')');
+    }
+
+    document.getElementById('dose').innerHTML = '<ul>'+output.join('')+'</ul>';
     doseAlign(Vi, Vj, color);
 }
 

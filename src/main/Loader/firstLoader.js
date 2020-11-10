@@ -99,6 +99,8 @@ let dose_value = [];
 function gridScaling(image, dose_grid, Rows, Columns, Number_of_Frames) {
     let Dose_Grid_Scaling;
     Dose_Grid_Scaling = image.data.string('x3004000e');
+    Dose_Grid_Scaling = parseFloat(Dose_Grid_Scaling);
+
     let dosemax = 0;
     //초기화
     for (let i = 0; i < Number_of_Frames; i++) {
@@ -116,17 +118,24 @@ function gridScaling(image, dose_grid, Rows, Columns, Number_of_Frames) {
             }
         }
     }
-
+    let dose_sort = [];
     //calculate dose value
     for (let z = 0; z < Number_of_Frames; z++) {
         for (let y = 0; y < Columns; y++) {
             for (let x = 0; x < Rows; x++) {
                 dose_value[z][y][x] = dose_grid[z][y][x] * Dose_Grid_Scaling * 100 * 40;
-                dosemax = Math.max(dose_value[z][y][x]);
 
+                dose_sort.push(dose_value[z][y][x]);
             }
         }
     }
+
+    dose_sort.sort(function (a, b) {
+        return b - a;
+    })
+
+    dosemax = dose_sort[0];
+
     Dose_Checkbox(dosemax);
     Dose_checkEvent();
 }
