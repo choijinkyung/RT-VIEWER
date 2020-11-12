@@ -4,6 +4,7 @@ import dicomParser from "dicom-parser";
 import {dose_pixel_Data_parse} from "./dosePixelDataParse";
 import {drawDose} from "./drawDose";
 
+
 let dataSet;
 let Rows, Columns, Number_of_Frames;
 
@@ -77,57 +78,123 @@ function doseData(imageId, dataSet) {
 function findXY(dose_value, checkVal_check, color) {
     let Vi = [], Vj = [];
     let cnt = 0;
-    let output2=[];
+
+    let output2 = [];
 
     for (let y = 0; y < Columns; y++) {
         for (let x = 0; x < Rows; x++) {
-            if (dose_value[y][x] > checkVal_check) {
+            if (dose_value[y][x] < (checkVal_check + 800) && dose_value[y][x] > checkVal_check) {
                 output2.push(dose_value[y][x]);
+
                 Vi[cnt] = x;
                 Vj[cnt] = y;
                 cnt++;
             }
         }
     }
-    document.getElementById('dose2').innerHTML='<ul>'+output2.join(',')+'</ul>';
-    let output=[];
-    Vi.sort(function(a,b){
-        return a-b;
-    });
-    for(let i=0;i<Vi.length;i++){
-     output.push('('+Vi[i]+','+Vj[i]+')');
+
+
+    document.getElementById('dose2').innerHTML = '<ul>' + output2.join(',') + '</ul>';
+    let output = [];
+
+    for (let i = 0; i < Vj.length; i++) {
+        output.push('[' + Vi[i] + ',' + Vj[i] + ']');
+    }
+    document.getElementById('dose').innerHTML = '<ul>' + output.join(',') + '</ul>';
+
+    let coords = [];
+    for (let i = 0; i < Vi.length; i++) {
+        coords[i] = [];
+    }
+    for (let i = 0; i < Vi.length; i++) {
+        coords[i][0] = Vi[i];
+        coords[i][1] = Vj[i];
     }
 
-    document.getElementById('dose').innerHTML = '<ul>'+output.join('')+'</ul>';
-    doseAlign(Vi, Vj, color);
+    let ch = [];
+    for (let i = 0; i < ch.length; i++) {
+        ch[i] = [];
+    }
+    ch = require('graham-scan-convex-hull')(coords);
+
+    let ch_x = [];
+    let ch_y = [];
+
+    for (let i = 0; i < ch.length; i++) {
+        ch_x[i] = [];
+        ch_y[i] = [];
+    }
+
+    for (let i = 0; i < ch.length; i++) {
+        ch_x[i] = ch[i][0];
+        ch_y[i] = ch[i][1];
+    }
+
+    drawDose(ch_x, ch_y, color);
+    // doseAlign(Vi, Vj, color);
 }
 
 function doseAlign(Vi, Vj, color) {
-    let Sx = (parseFloat(imgPosArr[0]) * 10) / 10;
-    let Sy = (parseFloat(imgPosArr[1]) * 10) / 10;
-    let Sz = (parseFloat(imgPosArr[2]) * 10) / 10;
+    let Sx = parseFloat(imgPosArr[0]);
+    let Sy = parseFloat(imgPosArr[1]);
 
-    let Xx = (parseFloat(imgOriArr[0]) * 10) / 10;
-    let Xy = (parseFloat(imgOriArr[1]) * 10) / 10;
-    let Xz = (parseFloat(imgOriArr[2]) * 10) / 10;
-    let Yx = (parseFloat(imgOriArr[3]) * 10) / 10;
-    let Yy = (parseFloat(imgOriArr[4]) * 10) / 10;
-    let Yz = (parseFloat(imgOriArr[5]) * 10) / 10;
+    let Xx = parseFloat(imgOriArr[0]);
+    let Xy = parseFloat(imgOriArr[1]);
+    let Yx = parseFloat(imgOriArr[3]);
+    let Yy = parseFloat(imgOriArr[4]);
 
-    let Di = parseFloat((pixelSpaceArr[0]) * 10) / 10;
-    let Dj = parseFloat((pixelSpaceArr[1]) * 10) / 10;
+    let Di = parseFloat(pixelSpaceArr[0]);
+    let Dj = parseFloat(pixelSpaceArr[1]);
 
     let Px = [];
     let Py = [];
-    let Pz = [];
 
     for (let i = 0; i < Vi.length; i++) {
-        Px[i] = (Xx * Di * Vi[i]) + (Yx * Dj * Vj[i]) + Sx;
-        Py[i] = (Xy * Di * Vi[i]) + (Yy * Dj * Vj[i]) + Sy;
-        Pz[i] = (Xz * Di * Vi[i]) + (Yz * Dj * Vj[i]) + Sz;
+        Px[i] = ((Xx * Di * Vi[i]) + (Yx * Dj * Vj[i]) + Sx);
+    }
+    for (let i = 0; i < Vj.length; i++) {
+        Py[i] = ((Xy * Di * Vi[i]) + (Yy * Dj * Vj[i]) + Sy);
     }
 
-    drawDose(Px, Py, color);
+    let output = [];
+    Px.sort(function (a, b) {
+        return a - b;
+    });
+    for (let i = 0; i < Px.length; i++) {
+        output.push('[' + Px[i] + ',' + Py[i] + ']');
+    }
+
+    document.getElementById('dose').innerHTML = '<ul>' + output.join(',') + '</ul>';
+
+    let coords = [];
+    for (let i = 0; i < Px.length; i++) {
+        coords[i] = [];
+    }
+    for (let i = 0; i < Px.length; i++) {
+        coords[i][0] = Px[i];
+        coords[i][1] = Py[i];
+    }
+
+    let ch = require('graham-scan-convex-hull');
+    for (let i = 0; i < ch.length; i++) {
+        ch[i] = [];
+    }
+    ch(coords);
+
+    let ch_x = [];
+    let ch_y = [];
+
+    for (let i = 0; i < ch.length; i++) {
+        ch_x[i] = [];
+        ch_y[i] = [];
+    }
+
+    for (let i = 0; i < ch.length; i++) {
+        ch_x[i] = ch[i][0];
+        ch_y[i] = ch[i][1];
+    }
+
+    drawDose(ch_x, ch_y, color);
 }
 
 

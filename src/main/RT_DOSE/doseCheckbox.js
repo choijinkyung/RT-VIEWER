@@ -10,6 +10,7 @@ function Dose_Checkbox(dosemax) {
     level[3] = pres * 0.6;
     level[4] = pres * 0.4;
     level[5] = pres * 0.2;
+    level[6] = pres * 0;
 
     level.forEach(function (n) {
         let ul = document.getElementById('ul2');
