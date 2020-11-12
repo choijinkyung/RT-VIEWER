@@ -93,49 +93,50 @@ function getCheckValue(checkVal_check) {
     checkVal_check_dose = checkVal_check;
 }
 
-let dose_value = [];
+
+let dose = [];
 
 //calculate Dose value
-function gridScaling(image, dose_grid, Rows, Columns, Number_of_Frames) {
+function gridScaling(image, pixel_data, Rows, Columns, Number_of_Frames) {
     let Dose_Grid_Scaling;
     Dose_Grid_Scaling = image.data.string('x3004000e');
     Dose_Grid_Scaling = parseFloat(Dose_Grid_Scaling);
-
+    let dose_value = [];
     let dosemax = 0;
     //초기화
     for (let i = 0; i < Number_of_Frames; i++) {
         dose_value[i] = [];
     }
-    for (let i = 0; i < Number_of_Frames; i++) {
-        for (let j = 0; j < Columns; j++) {
-            dose_value[i][j] = [];
-        }
-    }
-    for (let i = 0; i < Number_of_Frames; i++) {
-        for (let j = 0; j < Columns; j++) {
-            for (let k = 0; k < Rows; k++) {
-                dose_value[i][j][k] = [];
-            }
-        }
-    }
-    let dose_sort = [];
+
     //calculate dose value
+    for (let z = 0; z < pixel_data.length; z++) {
+        dose_value[z] = pixel_data[z] * Dose_Grid_Scaling * 100 * 40;
+    }
+
+
+    dose_value.sort(function (a, b) {
+        return b - a;
+    });
+    let cnt = 0;
+    dosemax = dose_value[0];
+
+
+    for (let i = 0; i < Number_of_Frames; i++) {
+        dose[i] = [];
+    }
+    for (let z = 0; z < Number_of_Frames; z++) {
+        for (let xy = 0; xy < Rows * Columns; xy++) {
+            dose[z][xy] = [];
+        }
+    }
     for (let z = 0; z < Number_of_Frames; z++) {
         for (let y = 0; y < Columns; y++) {
             for (let x = 0; x < Rows; x++) {
-                dose_value[z][y][x] = dose_grid[z][y][x] * Dose_Grid_Scaling * 100 * 40;
-
-                dose_sort.push(dose_value[z][y][x]);
+                dose[z][y][x] = dose_value[cnt];
+                cnt++;
             }
         }
     }
-
-    dose_sort.sort(function (a, b) {
-        return b - a;
-    })
-
-    dosemax = dose_sort[0];
-
     Dose_Checkbox(dosemax);
     Dose_checkEvent();
 }
@@ -158,7 +159,7 @@ function updateTheImage(imageIds, imageIndex) {
             voxelCal(image);
             getImage(image);
             sendDrawImage(image);
-            checkAndDraw(dose_value[currentImageIndex], checkVal_check_dose);
+            checkAndDraw(dose[currentImageIndex], checkVal_check_dose);
 
             img = image;
         } else {
@@ -182,7 +183,8 @@ function firstLoader(imageIds, imageIndex) {
             voxelCal(image);
             getImage(image);
             sendDrawImage(image);
-            checkAndDraw(dose_value[imageIndex], checkVal_check_dose);
+
+            //checkAndDraw(dose_value[imageIndex], checkVal_check_dose);
 
             getCheckValue([]);
             img = image;
