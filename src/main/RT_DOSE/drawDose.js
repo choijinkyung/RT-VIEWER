@@ -1,6 +1,7 @@
 import {findXY} from "./doseDataParser";
 
 function checkAndDraw(dose_value,checkVal_check_dose) {
+
     let color = [];
     color[0] = '#00ffff';
     color[1] = '#ff00ff';
@@ -8,10 +9,12 @@ function checkAndDraw(dose_value,checkVal_check_dose) {
     color[3] = '#44ff00';
     color[4] = '#ffcc33';
     color[5] = '#2100ff';
+    color[6] = '#f00';
 
     for (let i = 0; i < checkVal_check_dose.length; i++) {
         checkVal_check_dose[i] = parseInt(checkVal_check_dose[i]);
     }
+
     for (let i = 0; i < checkVal_check_dose.length; i++) {
         if (checkVal_check_dose[i] === 4677) {
             findXY(dose_value, checkVal_check_dose[i], color[0]);
@@ -25,6 +28,8 @@ function checkAndDraw(dose_value,checkVal_check_dose) {
             findXY(dose_value, checkVal_check_dose[i], color[4]);
         } else if (checkVal_check_dose[i] === 800) {
             findXY(dose_value, checkVal_check_dose[i], color[5]);
+        } else if (checkVal_check_dose[i] === 0) {
+            findXY(dose_value, checkVal_check_dose[i], color[6]);
         }
     }
 
