@@ -6,11 +6,14 @@ function Dose_Checkbox(dosemax) {
     let pres = 40 * 100; //cGy
     level[0] = parseInt(dosemax);
     level[1] = pres;
-    level[2] = pres * 0.8;
-    level[3] = pres * 0.6;
-    level[4] = pres * 0.4;
-    level[5] = pres * 0.2;
-    level[6] = pres * 0;
+    level[2] = pres * 0.98;
+    level[3] = pres * 0.95;
+    level[4] = pres * 0.9;
+    level[5] = pres * 0.8;
+    level[6] = pres * 0.7;
+    level[7] = pres * 0.5;
+    level[8] = pres * 0.3;
+    level[9] = 0;
 
     level.forEach(function (n) {
         let ul = document.getElementById('ul2');
@@ -23,7 +26,7 @@ function Dose_Checkbox(dosemax) {
 
         li.append(checkbox);
 
-        let text = parseInt(n / pres * 100) + '% / ' + n + 'cGy';
+        let text = `${parseInt((n / pres) * 100)}% / ${n}cGy`;
         li.append(document.createTextNode(text));
         ul.append(li);
     });
@@ -51,7 +54,6 @@ let information = {
 }
 
 function addDoseSet(evt) {
-    let checkVal_check = [];
 
     if (evt.target.checked === true) {
         information.Dose.push(evt.target.value);
@@ -61,8 +63,7 @@ function addDoseSet(evt) {
         if (index !== -1) {
             information.Dose.splice(index, 1);
         }
-        checkVal_check = evt.target.value;
-        getCheckValue(checkVal_check);
+        getCheckValue(information.Dose);
     }
 }
 
