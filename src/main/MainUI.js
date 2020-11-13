@@ -221,10 +221,10 @@ class MainUIElements extends React.Component {
                 </div>
                 <div className={'right'}>
                     <div className="lefthalf">
-                        <ul id="ul">Structure Set ROI Sequence</ul>
+                        <ul id="ul">Structures</ul>
                     </div>
                     <div className="righthalf">
-                        <ul id="ul2">isodose</ul>
+                        <ul id="ul2">Isodoses</ul>
                     </div>
                 </div>
                 <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
