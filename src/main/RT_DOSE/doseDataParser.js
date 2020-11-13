@@ -83,7 +83,8 @@ function findXY(dose_value, checkVal_check, color) {
 
     for (let y = 0; y < Columns; y++) {
         for (let x = 0; x < Rows; x++) {
-            if (dose_value[y][x] < (checkVal_check + 800) && dose_value[y][x] > checkVal_check) {
+            if (dose_value[y][x] >= parseInt(checkVal_check)) {
+
                 output2.push(dose_value[y][x]);
 
                 Vi[cnt] = x;
@@ -92,21 +93,14 @@ function findXY(dose_value, checkVal_check, color) {
             }
         }
     }
-
-
     document.getElementById('dose2').innerHTML = '<ul>' + output2.join(',') + '</ul>';
-    let output = [];
 
-    for (let i = 0; i < Vj.length; i++) {
-        output.push('[' + Vi[i] + ',' + Vj[i] + ']');
-    }
-    document.getElementById('dose').innerHTML = '<ul>' + output.join(',') + '</ul>';
 
     let coords = [];
-    for (let i = 0; i < Vi.length; i++) {
+    for (let i = 0; i < cnt; i++) {
         coords[i] = [];
     }
-    for (let i = 0; i < Vi.length; i++) {
+    for (let i = 0; i < cnt; i++) {
         coords[i][0] = Vi[i];
         coords[i][1] = Vj[i];
     }
@@ -130,8 +124,9 @@ function findXY(dose_value, checkVal_check, color) {
         ch_y[i] = ch[i][1];
     }
 
-    drawDose(ch_x, ch_y, color);
-    // doseAlign(Vi, Vj, color);
+    //drawDose(ch_x, ch_y, color);
+
+    doseAlign(ch_x, ch_y, color);
 }
 
 function doseAlign(Vi, Vj, color) {
@@ -157,44 +152,15 @@ function doseAlign(Vi, Vj, color) {
     }
 
     let output = [];
-    Px.sort(function (a, b) {
-        return a - b;
-    });
+
     for (let i = 0; i < Px.length; i++) {
         output.push('[' + Px[i] + ',' + Py[i] + ']');
     }
 
     document.getElementById('dose').innerHTML = '<ul>' + output.join(',') + '</ul>';
 
-    let coords = [];
-    for (let i = 0; i < Px.length; i++) {
-        coords[i] = [];
-    }
-    for (let i = 0; i < Px.length; i++) {
-        coords[i][0] = Px[i];
-        coords[i][1] = Py[i];
-    }
 
-    let ch = require('graham-scan-convex-hull');
-    for (let i = 0; i < ch.length; i++) {
-        ch[i] = [];
-    }
-    ch(coords);
-
-    let ch_x = [];
-    let ch_y = [];
-
-    for (let i = 0; i < ch.length; i++) {
-        ch_x[i] = [];
-        ch_y[i] = [];
-    }
-
-    for (let i = 0; i < ch.length; i++) {
-        ch_x[i] = ch[i][0];
-        ch_y[i] = ch[i][1];
-    }
-
-    drawDose(ch_x, ch_y, color);
+    drawDose(Px, Py, color);
 }
 
 
