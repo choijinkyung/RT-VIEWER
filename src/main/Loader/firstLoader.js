@@ -18,43 +18,53 @@ cornerstoneTools.external.Hammer = Hammer;
 cornerstoneTools.external.cornerstoneMath = cornerstoneMath
 cornerstoneTools.init();
 
-let currentImageIndex = 62;
+let currentImageIndex = 110; //for dose z coords setting
+let fileJsonArray = [];
 
 //Import a list of file names from a selected folder
 function imageIdList(e) {
     let imageId = []; //image ID list from file name list
-    let dumpFiles = [];
-    let max = 1000000;
-    /*
-      let output = document.getElementById("listing");
-      let files = e.target.files;
+    let temp_imageId = [];
 
-   // show file list
-     for (let i=0; i<files.length; i++) {
-         let item = document.createElement("li");
-         item.innerHTML = files[i].webkitRelativePath;
-         output.appendChild(item);
-     };
-    */
-    let cnt = 0;
+    let files = e.target.files;
+    let fileName = [];
 
-    for (let i = 0; i < max; i++) {
-        dumpFiles[i] = e.target.files[i];
-        imageId[i] = cornerstoneWadoImageLoader.wadouri.fileManager.add(dumpFiles[i]) //save file name in array
+    for (let i = 0; i < files.length; i++) {
+        let fileJson = {};
+        fileName[i] = parseFloat(files[i].webkitRelativePath.toString().split('.')[11]);
+        temp_imageId[i] = cornerstoneWadoImageLoader.wadouri.fileManager.add(files[i])
 
-        if (cnt > max) {
-            alert('ERROR : There are Too many files.');
-        }
-        cnt++;
+        fileJson.fileName = fileName[i];
+        fileJson.imageId = temp_imageId[i];
+
+        fileJsonArray.push(fileJson);
     }
+
+    //file name sorting
+    fileJsonArray.sort(function (a, b) {
+        return a.fileName - b.fileName;
+    })
+
+    //assign imageId value
+    for (let i = 0; i < files.length; i++) {
+        imageId[i] = fileJsonArray[i].imageId;
+    }
+
+    /*  // show file list
+        let output = document.getElementById("listing");
+        for (let i = 0; i < files.length; i++) {
+            let item = document.createElement("li");
+            item.innerHTML = fileName[i];
+            output.appendChild(item);
+        }
+     */
 
     //Index 111 : RT DOSE FILE
     //Index 112 : RT PLAN FILE
     //Index 113 : RT STRUCTURE FILE
-
     firstLoader(imageId, currentImageIndex);
-    structFile(dumpFiles[113]);
-    doseFile(dumpFiles[111]);
+    structFile(files[113]);
+    doseFile(files[111]);
 
     let el = document.getElementById('dicomImage');
     el.onwheel = wheelE;
@@ -64,7 +74,9 @@ function imageIdList(e) {
         // chrome/safari e.wheelDelta < 0 scroll back, > 0 scroll forward
         e.stopPropagation();
         e.preventDefault();
+
         let index = currentImageIndex;
+
 
         if (index >= 0 || index < imageId.length) {
             if (e.deltaY < 0) {
@@ -98,9 +110,7 @@ let dose_value = [];
 
 //calculate Dose value
 function gridScaling(image, pixel_data, Rows, Columns, Number_of_Frames) {
-    let Dose_Grid_Scaling;
-    Dose_Grid_Scaling = image.data.string('x3004000e');
-    Dose_Grid_Scaling = parseFloat(Dose_Grid_Scaling);
+    let Dose_Grid_Scaling = parseFloat(image.data.string('x3004000e'));
     let dose_value_temp = [];
 
 
@@ -111,23 +121,35 @@ function gridScaling(image, pixel_data, Rows, Columns, Number_of_Frames) {
 
     //calculate dose value
     for (let i = 0; i < pixel_data.length; i++) {
-        dose_value_temp[i] = pixel_data[i] * Dose_Grid_Scaling * 100*40;
+        dose_value_temp[i] = pixel_data[i] * Dose_Grid_Scaling * 100 * 40;
     }
 
     let cnt = 0;
 
-    for (let z = 0; z < Number_of_Frames; z++) {
+    for (let z = 110; z > 110 - Number_of_Frames; z--) {
+
         dose_value[z] = [];
+
     }
-    for (let z = 0; z < Number_of_Frames; z++) {
-        for (let xy = 0; xy < Rows * Columns; xy++) {
-            dose_value[z][xy] = [];
+    for (let z = 110; z > 110 - Number_of_Frames; z--) {
+        for (let y = 0; y < Columns; y++) {
+            dose_value[z][y] = [];
         }
     }
-    //convert array to 3 dimension
-    for (let z = 0; z < Number_of_Frames; z++) {
+    for (let z = 110; z > 110 - Number_of_Frames; z--) {
         for (let y = 0; y < Columns; y++) {
             for (let x = 0; x < Rows; x++) {
+
+                dose_value[z][y][x] = [];
+            }
+        }
+    }
+
+    //convert array to 3 dimension
+    for (let z = 110; z > 110 - Number_of_Frames; z--) {
+        for (let y = 0; y < Columns; y++) {
+            for (let x = 0; x < Rows; x++) {
+
                 dose_value[z][y][x] = dose_value_temp[cnt];
                 cnt++;
             }
@@ -136,8 +158,10 @@ function gridScaling(image, pixel_data, Rows, Columns, Number_of_Frames) {
 
     //find max dose value
     let max = []; //max dose z array
-    for (let z = 0; z < Number_of_Frames; z++) {
-        max[z] = (Math.max.apply(...dose_value[z]));
+    let count=0;
+    for (let z = 110; z > 110 - Number_of_Frames; z--) {
+        max[count] = (Math.max.apply(...dose_value[z]));
+        count++;
     }
 
     let dosemax = 0;
@@ -154,7 +178,6 @@ let img;
 function updateTheImage(imageIds, imageIndex) {
     let el = document.getElementById('dicomImage');
     cornerstone.enable(el)
-
     currentImageIndex = imageIndex;
     cornerstone.loadImage(imageIds[imageIndex]).then(function (image) {
         const viewport = cornerstone.getDefaultViewportForImage(el, image);
@@ -191,8 +214,6 @@ function firstLoader(imageIds, imageIndex) {
             getImage(image);
             sendDrawImage(image);
 
-            //checkAndDraw(dose_value[imageIndex], checkVal_check_dose);
-
             getCheckValue([]);
             img = image;
 
@@ -202,6 +223,7 @@ function firstLoader(imageIds, imageIndex) {
             alert("ERROR: Confirm this image's modality : CT , MRI ... ");
         }
     });
+
     return img;
 }
 
