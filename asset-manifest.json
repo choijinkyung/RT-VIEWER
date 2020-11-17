@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/DICOM-RT-VIEWER/static/css/main.6dc9f0e6.chunk.css",
-    "main.js": "/DICOM-RT-VIEWER/static/js/main.bf01ee80.chunk.js",
-    "main.js.map": "/DICOM-RT-VIEWER/static/js/main.bf01ee80.chunk.js.map",
+    "main.js": "/DICOM-RT-VIEWER/static/js/main.658630e6.chunk.js",
+    "main.js.map": "/DICOM-RT-VIEWER/static/js/main.658630e6.chunk.js.map",
     "runtime-main.js": "/DICOM-RT-VIEWER/static/js/runtime-main.7bdf560c.js",
     "runtime-main.js.map": "/DICOM-RT-VIEWER/static/js/runtime-main.7bdf560c.js.map",
     "static/js/2.50824b56.chunk.js": "/DICOM-RT-VIEWER/static/js/2.50824b56.chunk.js",
     "static/js/2.50824b56.chunk.js.map": "/DICOM-RT-VIEWER/static/js/2.50824b56.chunk.js.map",
     "index.html": "/DICOM-RT-VIEWER/index.html",
-    "precache-manifest.ea8e91d8e5de300fbe3571937af6099c.js": "/DICOM-RT-VIEWER/precache-manifest.ea8e91d8e5de300fbe3571937af6099c.js",
+    "precache-manifest.b219cd90f7ed37e7b707497800dc7de2.js": "/DICOM-RT-VIEWER/precache-manifest.b219cd90f7ed37e7b707497800dc7de2.js",
     "service-worker.js": "/DICOM-RT-VIEWER/service-worker.js",
     "static/css/main.6dc9f0e6.chunk.css.map": "/DICOM-RT-VIEWER/static/css/main.6dc9f0e6.chunk.css.map",
     "static/js/2.50824b56.chunk.js.LICENSE.txt": "/DICOM-RT-VIEWER/static/js/2.50824b56.chunk.js.LICENSE.txt",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.7bdf560c.js",
     "static/js/2.50824b56.chunk.js",
     "static/css/main.6dc9f0e6.chunk.css",
-    "static/js/main.bf01ee80.chunk.js"
+    "static/js/main.658630e6.chunk.js"
   ]
 }
