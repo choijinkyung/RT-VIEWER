@@ -3,7 +3,7 @@ import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import dicomParser from "dicom-parser";
 import {dose_pixel_Data_parse} from "./dosePixelDataParse";
 import {drawDose} from "./drawDose";
-
+import voxelCal from "../RT_STRUCTURE/pixel2voxel";
 
 let dataSet;
 let Rows, Columns, Number_of_Frames;
@@ -48,7 +48,6 @@ let imgPosArr = [];
 let pixelSpaceArr = [];
 
 function doseData(imageId, dataSet) {
-
     let img = 0;
 
     cornerstone.loadImage(imageId).then(function (image) {
@@ -75,7 +74,7 @@ function doseData(imageId, dataSet) {
 
 }
 
-function findXY(dose_value, checkVal_check, color) {
+function findXY(dose_value, checkVal_check_dose, color) {
     let Vi = [], Vj = [];
     let cnt = 0;
 
@@ -83,7 +82,7 @@ function findXY(dose_value, checkVal_check, color) {
 
     for (let y = 0; y < Columns; y++) {
         for (let x = 0; x < Rows; x++) {
-            if (dose_value[y][x] >= parseInt(checkVal_check)) {
+            if (dose_value[y][x] >= parseInt(checkVal_check_dose)) {
 
                 output2.push(dose_value[y][x]);
 
@@ -129,6 +128,68 @@ function findXY(dose_value, checkVal_check, color) {
     doseAlign(ch_x, ch_y, color);
 }
 
+let Sx, Sy, Di, Dj;
+let CT_Sx, CT_Sy, CT_Di, CT_Dj, CT_Xx, CT_Xy, CT_Yx, CT_Yy ;
+
+function getVoxelCalValue(Sx, Sy, Di, Dj, Xx, Xy, Xz, Yx, Yy, Yz) {
+    CT_Sx = Sx;
+    CT_Sy = Sy;
+    CT_Di = Di;
+    CT_Dj = Dj;
+    CT_Xx = Xx;
+    CT_Xy = Xy;
+    CT_Yx = Yx;
+    CT_Yy = Yy;
+
+}
+
+function doseAlign(Vi, Vj, color) {
+    Sx = parseFloat(imgPosArr[0]);
+    Sy = parseFloat(imgPosArr[1]);
+
+    let Xx = parseFloat(imgOriArr[0]);
+    let Xy = parseFloat(imgOriArr[1]);
+    let Yx = parseFloat(imgOriArr[3]);
+    let Yy = parseFloat(imgOriArr[4]);
+
+    Di = parseFloat(pixelSpaceArr[0]);
+    Dj = parseFloat(pixelSpaceArr[1]);
+
+    let Px = [];
+    let Py = [];
+
+    for (let i = 0; i < Vi.length; i++) {
+        Px[i] = ((Xx * Di * Vi[i]) + (Yx * Dj * Vj[i]) + Sx);
+    }
+    for (let i = 0; i < Vj.length; i++) {
+        Py[i] = ((Xy * Di * Vi[i]) + (Yy * Dj * Vj[i]) + Sy);
+    }
+
+    let CT_Px = [], CT_Py = [];
+
+
+    for (let i = 0; i < Vi.length; i++) {
+        CT_Px[i] = (CT_Xx * CT_Di * Vi[i]) + (CT_Yx * CT_Dj * Vj[i]) + CT_Sx;
+
+    }
+    for (let i = 0; i < Vj.length; i++) {
+        CT_Py[i] = (CT_Xy * CT_Di * Vi[i]) + (CT_Yy * CT_Dj * Vj[i]) + CT_Sy;
+    }
+
+    let output = [];
+
+    for (let i = 0; i < CT_Px.length; i++) {
+        output.push('[' + CT_Px[i] + ',' + CT_Py[i] + ']');
+    }
+
+    document.getElementById('dose').innerHTML = '<ul>' + output.join(',') + '</ul>';
+
+    drawDose(CT_Px, CT_Py, color);
+
+
+}
+
+/*
 function doseAlign(Vi, Vj, color) {
     let Sx = parseFloat(imgPosArr[0]);
     let Sy = parseFloat(imgPosArr[1]);
@@ -162,6 +223,6 @@ function doseAlign(Vi, Vj, color) {
 
     drawDose(Px, Py, color);
 }
+ */
 
-
-export {doseFile, doseData, findXY}
+export {doseFile, doseData, findXY, getVoxelCalValue}
