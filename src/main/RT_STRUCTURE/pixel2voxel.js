@@ -67,7 +67,7 @@ function voxelCal(image) {
 
             document.getElementById('voxelValue').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
         });
-        getVoxelCalValue(Sx, Sy, Di, Dj, Xx, Xy, Xz, Yx, Yy, Yz);
+
         return [Sx, Sy, Di, Dj]
     } else {
         alert('NOT CT IMAGES')
