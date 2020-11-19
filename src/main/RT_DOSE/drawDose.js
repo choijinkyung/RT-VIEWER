@@ -29,11 +29,11 @@ function checkAndDraw(dose_value, checkVal_check_dose) {
             findXY(dose_value, checkVal_check_dose[i], color[5]);
         } else if (parseInt(checkVal_check_dose[i]) === 2800) {
             findXY(dose_value, checkVal_check_dose[i], color[6]);
-        }else if (parseInt(checkVal_check_dose[i]) === 2000) {
+        } else if (parseInt(checkVal_check_dose[i]) === 2000) {
             findXY(dose_value, checkVal_check_dose[i], color[7]);
-        }else if (parseInt(checkVal_check_dose[i]) === 1200) {
+        } else if (parseInt(checkVal_check_dose[i]) === 1200) {
             findXY(dose_value, checkVal_check_dose[i], color[8]);
-        }else if (parseInt(checkVal_check_dose[i]) === 0) {
+        } else if (parseInt(checkVal_check_dose[i]) === 0) {
             findXY(dose_value, checkVal_check_dose[i], color[9]);
         }
     }
@@ -46,10 +46,13 @@ function drawDose(Px, Py, color) {
     let ctx = canvas.getContext('2d');
 
     ctx.save();
-    ctx.translate(150,150);
+    ctx.translate(216,216);
     //draw path
+
     ctx.beginPath();
+
     ctx.moveTo(Px[0], Py[0]);
+
     for (let i = 1; i < Px.length; i++) {
         ctx.lineTo(Px[i], Py[i]);
     }
