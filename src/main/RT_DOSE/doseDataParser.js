@@ -82,12 +82,12 @@ function findXY(dose_value, checkVal_check_dose, color) {
 
     for (let y = 0; y < Columns; y++) {
         for (let x = 0; x < Rows; x++) {
-            if (dose_value[y][x] >= parseInt(checkVal_check_dose)) {
+            if (parseInt(checkVal_check_dose)<=dose_value[y][x]) {
 
                 output2.push(dose_value[y][x]);
 
-                Vi[cnt] = x;
-                Vj[cnt] = y;
+                Vi[cnt] = x ;
+                Vj[cnt] = y ;
                 cnt++;
             }
         }
@@ -129,20 +129,6 @@ function findXY(dose_value, checkVal_check_dose, color) {
 }
 
 let Sx, Sy, Di, Dj;
-let CT_Sx, CT_Sy, CT_Di, CT_Dj, CT_Xx, CT_Xy, CT_Yx, CT_Yy ;
-
-function getVoxelCalValue(Sx, Sy, Di, Dj, Xx, Xy, Xz, Yx, Yy, Yz) {
-    CT_Sx = Sx;
-    CT_Sy = Sy;
-    CT_Di = Di;
-    CT_Dj = Dj;
-    CT_Xx = Xx;
-    CT_Xy = Xy;
-    CT_Yx = Yx;
-    CT_Yy = Yy;
-
-}
-
 function doseAlign(Vi, Vj, color) {
     Sx = parseFloat(imgPosArr[0]);
     Sy = parseFloat(imgPosArr[1]);
@@ -159,58 +145,12 @@ function doseAlign(Vi, Vj, color) {
     let Py = [];
 
     for (let i = 0; i < Vi.length; i++) {
-        Px[i] = ((Xx * Di * Vi[i]) + (Yx * Dj * Vj[i]) + Sx);
+        Px[i] = Math.floor(((Xx * Di * Vi[i]) + (Yx * Dj * Vj[i]) + Sx)*100)/100;
     }
     for (let i = 0; i < Vj.length; i++) {
-        Py[i] = ((Xy * Di * Vi[i]) + (Yy * Dj * Vj[i]) + Sy);
+        Py[i] = Math.floor(((Xy * Di * Vi[i]) + (Yy * Dj * Vj[i]) + Sy)*100)/100;
     }
 
-    let CT_Px = [], CT_Py = [];
-
-
-    for (let i = 0; i < Vi.length; i++) {
-        CT_Px[i] = (CT_Xx * CT_Di * Vi[i]) + (CT_Yx * CT_Dj * Vj[i]) + CT_Sx;
-
-    }
-    for (let i = 0; i < Vj.length; i++) {
-        CT_Py[i] = (CT_Xy * CT_Di * Vi[i]) + (CT_Yy * CT_Dj * Vj[i]) + CT_Sy;
-    }
-
-    let output = [];
-
-    for (let i = 0; i < CT_Px.length; i++) {
-        output.push('[' + CT_Px[i] + ',' + CT_Py[i] + ']');
-    }
-
-    document.getElementById('dose').innerHTML = '<ul>' + output.join(',') + '</ul>';
-
-    drawDose(CT_Px, CT_Py, color);
-
-
-}
-
-/*
-function doseAlign(Vi, Vj, color) {
-    let Sx = parseFloat(imgPosArr[0]);
-    let Sy = parseFloat(imgPosArr[1]);
-
-    let Xx = parseFloat(imgOriArr[0]);
-    let Xy = parseFloat(imgOriArr[1]);
-    let Yx = parseFloat(imgOriArr[3]);
-    let Yy = parseFloat(imgOriArr[4]);
-
-    let Di = parseFloat(pixelSpaceArr[0]);
-    let Dj = parseFloat(pixelSpaceArr[1]);
-
-    let Px = [];
-    let Py = [];
-
-    for (let i = 0; i < Vi.length; i++) {
-        Px[i] = ((Xx * Di * Vi[i]) + (Yx * Dj * Vj[i]) + Sx);
-    }
-    for (let i = 0; i < Vj.length; i++) {
-        Py[i] = ((Xy * Di * Vi[i]) + (Yy * Dj * Vj[i]) + Sy);
-    }
 
     let output = [];
 
@@ -220,9 +160,8 @@ function doseAlign(Vi, Vj, color) {
 
     document.getElementById('dose').innerHTML = '<ul>' + output.join(',') + '</ul>';
 
-
     drawDose(Px, Py, color);
 }
- */
 
-export {doseFile, doseData, findXY, getVoxelCalValue}
+
+export {doseFile, doseData, findXY}
