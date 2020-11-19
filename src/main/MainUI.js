@@ -332,7 +332,6 @@ class MainUIElements extends React.Component {
                         </div>
                     </div>
                 </div>
-                <img id={"image"} src={""}/>
             </div>
         );
     }
