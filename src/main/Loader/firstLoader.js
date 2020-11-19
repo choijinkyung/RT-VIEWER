@@ -121,7 +121,7 @@ function gridScaling(image, pixel_data, Rows, Columns, Number_of_Frames) {
 
     //calculate dose value
     for (let i = 0; i < pixel_data.length; i++) {
-        dose_value_temp[i] = pixel_data[i] * Dose_Grid_Scaling * 100 * 40;
+        dose_value_temp[i] = pixel_data[i] * Dose_Grid_Scaling*100;
     }
 
     let cnt = 0;
@@ -145,27 +145,26 @@ function gridScaling(image, pixel_data, Rows, Columns, Number_of_Frames) {
         }
     }
 
+    let dose_sort=[];
     //convert array to 3 dimension
     for (let z = 110; z > 110 - Number_of_Frames; z--) {
         for (let y = 0; y < Columns; y++) {
             for (let x = 0; x < Rows; x++) {
 
+
                 dose_value[z][y][x] = dose_value_temp[cnt];
+                dose_sort.push(dose_value[z][y][x]);
                 cnt++;
             }
         }
     }
 
-    //find max dose value
-    let max = []; //max dose z array
-    let count=0;
-    for (let z = 110; z > 110 - Number_of_Frames; z--) {
-        max[count] = (Math.max.apply(...dose_value[z]));
-        count++;
-    }
+    dose_sort.sort(function (a, b) {
+        return b - a;
+    })
 
-    let dosemax = 0;
-    dosemax = Math.max(...max); //dose max
+    let dosemax=0;
+    dosemax = dose_sort[0];
 
     Dose_Checkbox(dosemax);
     Dose_checkEvent();
