@@ -209,8 +209,11 @@ class MainUIElements extends React.Component {
                         </div>
                     </div>
                     <div>
+                        <div><span id="coords"></span></div>
+                        <div><span id="pixelValue"></span></div>
                         <div><span id="voxelCoords"></span></div>
                         <div><span id="voxelValue"></span></div>
+                        <div><span id="doseCoords">a</span></div>
 
                         <div><span id="patient">Patient ID : </span></div>
                         <div><span id="modality">Modality : </span></div>
