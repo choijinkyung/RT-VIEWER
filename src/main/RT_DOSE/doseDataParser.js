@@ -28,7 +28,6 @@ function doseFile(file) {
                 Columns = parseFloat(dataSet.uint16('x00280011'));
                 Number_of_Frames = parseFloat(dataSet.string('x00280008'));
 
-
                 doseData(imageId, dataSet);
             } catch (err) {
                 var message = err;
@@ -71,29 +70,22 @@ function doseData(imageId, dataSet) {
         }
         img = image;
     });
-
 }
 
 function findXY(dose_value, checkVal_check_dose, color) {
     let Vi = [], Vj = [];
     let cnt = 0;
 
-    let output2 = [];
-
     for (let y = 0; y < Columns; y++) {
         for (let x = 0; x < Rows; x++) {
-            if (parseInt(checkVal_check_dose)<=dose_value[y][x]) {
+            if (parseInt(checkVal_check_dose) <= dose_value[y][x]) {
+                Vi[cnt] = x;
+                Vj[cnt] = y;
 
-                output2.push(dose_value[y][x]);
-
-                Vi[cnt] = x ;
-                Vj[cnt] = y ;
                 cnt++;
             }
         }
     }
-    document.getElementById('dose2').innerHTML = '<ul>' + output2.join(',') + '</ul>';
-
 
     let coords = [];
     for (let i = 0; i < cnt; i++) {
@@ -123,13 +115,12 @@ function findXY(dose_value, checkVal_check_dose, color) {
         ch_y[i] = ch[i][1];
     }
 
-    //drawDose(ch_x, ch_y, color);
-
     doseAlign(ch_x, ch_y, color);
 }
 
 let Sx, Sy, Di, Dj;
-function doseAlign(Vi, Vj, color) {
+
+function doseAlign(ch_x, ch_y, color) {
     Sx = parseFloat(imgPosArr[0]);
     Sy = parseFloat(imgPosArr[1]);
 
@@ -144,21 +135,30 @@ function doseAlign(Vi, Vj, color) {
     let Px = [];
     let Py = [];
 
-    for (let i = 0; i < Vi.length; i++) {
-        Px[i] = Math.floor(((Xx * Di * Vi[i]) + (Yx * Dj * Vj[i]) + Sx)*100)/100;
+    for (let i = 0; i < ch_x.length; i++) {
+        Px[i] = (Xx * Di * ch_x[i]) + (Yx * Dj * ch_y[i]) + Sx;
     }
-    for (let i = 0; i < Vj.length; i++) {
-        Py[i] = Math.floor(((Xy * Di * Vi[i]) + (Yy * Dj * Vj[i]) + Sy)*100)/100;
+    for (let i = 0; i < ch_y.length; i++) {
+        Py[i] =(Xy * Di * ch_x[i]) + (Yy * Dj * ch_y[i]) + Sy;
     }
-
 
     let output = [];
-
     for (let i = 0; i < Px.length; i++) {
         output.push('[' + Px[i] + ',' + Py[i] + ']');
     }
-
     document.getElementById('dose').innerHTML = '<ul>' + output.join(',') + '</ul>';
+
+
+    let el = document.getElementById('dicomImage');
+    el.addEventListener('mousemove', function (event) {
+        const pixelCoords = cornerstone.pageToPixel(el, event.pageX, event.pageY);
+        document.getElementById('coords').textContent = "pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + pixelCoords.x + ", pixelY=" + pixelCoords.y;
+
+        let Px = (Xx * Di * pixelCoords.x) + (Yx * Dj * pixelCoords.y) + Sx;
+        let Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
+
+        document.getElementById('doseCoords').textContent = "Px = " + Px + ", Py = " + Py ;
+    });
 
     drawDose(Px, Py, color);
 }
