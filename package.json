@@ -19,6 +19,7 @@
     "jquery": "^3.5.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
+    "react-map-interaction": "^2.0.0",
     "react-scripts": "^3.4.3",
     "vtk.js": "^14.17.2",
     "webkit": "^0.0.0"

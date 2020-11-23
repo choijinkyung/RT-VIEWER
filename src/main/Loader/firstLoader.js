@@ -1,4 +1,4 @@
-import dicomParse from "../dicomParse";
+import patientInformation from "../patientInformation";
 import dicomParser from "dicom-parser";
 import Hammer from "hammerjs";
 import * as cornerstone from "cornerstone-core";
@@ -77,7 +77,6 @@ function imageIdList(e) {
 
         let index = currentImageIndex;
 
-
         if (index >= 0 || index < imageId.length) {
             if (e.deltaY < 0) {
                 if (index === currentImageIndex) {
@@ -105,9 +104,7 @@ function getCheckValue(checkVal_check) {
     checkVal_check_dose = checkVal_check;
 }
 
-
 let dose_value = [];
-
 //calculate Dose value
 function gridScaling(image, pixel_data, Rows, Columns, Number_of_Frames) {
     let Dose_Grid_Scaling = parseFloat(image.data.string('x3004000e'));
@@ -167,11 +164,7 @@ function gridScaling(image, pixel_data, Rows, Columns, Number_of_Frames) {
     Dose_checkEvent();
 }
 
-
-
-
 let img;
-
 // show image #1 initially
 function updateTheImage(imageIds, imageIndex) {
     let el = document.getElementById('dicomImage');
@@ -182,7 +175,7 @@ function updateTheImage(imageIds, imageIndex) {
         if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2' || image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.481.2') {
             cornerstone.displayImage(el, image, viewport);
 
-            dicomParse(image);
+            patientInformation(image);
             voxelCal(image);
             getImage(image);
             sendDrawImage(image);
@@ -197,7 +190,6 @@ function updateTheImage(imageIds, imageIndex) {
     return img;
 }
 
-
 //load one CT Image from local file
 function firstLoader(imageIds, imageIndex) {
     let el = document.getElementById('dicomImage');
@@ -207,7 +199,7 @@ function firstLoader(imageIds, imageIndex) {
         if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2' || image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.481.2') {
             cornerstone.displayImage(el, image, viewport);
 
-            dicomParse(image);
+            patientInformation(image);
             voxelCal(image);
             getImage(image);
             sendDrawImage(image);

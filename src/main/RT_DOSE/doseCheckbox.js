@@ -3,7 +3,7 @@ import {getCheckValue} from "../Loader/firstLoader";
 
 function Dose_Checkbox(dosemax) {
     let level = [];
-    let pres = 40 * 100; //cGy
+    let pres = 40 * 100; //prescription : 4000cGy
     level[0] = parseInt(dosemax);
     level[1] = pres;
     level[2] = pres * 0.98;
@@ -15,8 +15,9 @@ function Dose_Checkbox(dosemax) {
     level[8] = pres * 0.3;
     level[9] = 0;
 
+    //create checkbox list
     level.forEach(function (n) {
-        let ul = document.getElementById('ul2');
+        let ul = document.getElementById('dose_checkbox_ul');
         let li = document.createElement('li');
 
         let checkbox = document.createElement('input');
@@ -45,16 +46,13 @@ function Dose_checkEvent() {
                 dose[i].attachEvent("onchange", addDoseSet);
             }
         }
-    })
-
+    });
 }
 
 let information = {
     Dose: []
 }
-
 function addDoseSet(evt) {
-
     if (evt.target.checked === true) {
         information.Dose.push(evt.target.value);
         getCheckValue(information.Dose);

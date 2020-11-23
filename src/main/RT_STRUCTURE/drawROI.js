@@ -3,7 +3,6 @@ import dicomParser from "dicom-parser";
 import {ROI_addCheckbox,ROI_checkEvent} from "./ROIcheckbox";
 import pixelCal from "./voxel2pixel";
 import fullColorHex from "./rgbToHex.js";
-import * as cornerstone from "cornerstone-core";
 
 function isASCII(str) {
     return /^[\x00-\x7F]*$/.test(str);
@@ -27,18 +26,10 @@ function structFile(file) {
         // Uint8Array so we create that here
         let byteArray = new Uint8Array(arrayBuffer);
 
-        let kb = byteArray.length / 1024;
-        let mb = kb / 1024;
-        let byteStr = mb > 1 ? mb.toFixed(3) + " MB" : kb.toFixed(0) + " KB";
-
-        //document.getElementById('statusText2').innerHTML = 'Status: Parsing ' + byteStr + ' bytes, please wait..';
-
-
         // set a short timeout to do the parse so the DOM has time to update itself with the above message
         setTimeout(function () {
             // Invoke the paresDicom function and get back a DataSet object with the contents
             try {
-                let start = new Date().getTime();
                 dataSet = dicomParser.parseDicom(byteArray);
 
                 let output1 = [];
@@ -51,49 +42,15 @@ function structFile(file) {
 
                 ROI_checkEvent();
 
-                // Combine the array of strings into one string and add it to the DOM
-               // document.getElementById('rtstruct').innerHTML = '<ul>' + output1.join('') + '</ul>';
-                //document.getElementById('rtstruct3').innerHTML = '<ul>' + output3.join('') + '</ul>';
-
-                let end = new Date().getTime();
-                let time = end - start;
-                if (dataSet.warnings.length > 0) {
-                    $('#status1').removeClass('alert-success alert-info alert-danger').addClass('alert-warning');
-                   // $('#statusText2').html('Status: Warnings encountered while parsing file (file of size ' + byteStr + ' parsed in ' + time + 'ms)');
-
-                    dataSet.warnings.forEach(function (warning) {
-                        $("#warnings").append('<li>' + warning + '</li>');
-                    });
-                } else {
-                    let pixelData = dataSet.elements.x7fe00010;
-                    if (pixelData) {
-                        $('#status1').removeClass('alert-warning alert-info alert-danger').addClass('alert-success');
-                     //   $('#statusText2').html('Status: Ready (file of size ' + byteStr + ' parsed in ' + time + 'ms)');
-                    } else {
-                        $('#status1').removeClass('alert-warning alert-info alert-danger').addClass('alert-success');
-                      //  $('#statusText2').html('Status: Ready - no pixel data found (file of size ' + byteStr + ' parsed in ' + time + 'ms)');
-                    }
-                }
-
             } catch (err) {
-                let message = err;
-                if (err.exception) {
-                    message = err.exception;
-                }
-                $('#status').removeClass('alert-success alert-info alert-warning').addClass('alert-danger');
-               // document.getElementById('statusText2').innerHTML = 'Status: Error - ' + message + ' (file of size ' + byteStr + ' )';
-
                 if (err.output1 || err.output3) {
-                  //  document.getElementById('rtstruct').innerHTML = '<ul>' + output1.join('') + '</ul>';
-                  //  document.getElementById('rtstruct3').innerHTML = '<ul>' + output3.join('') + '</ul>';
+
                 } else if (err.dataSet) {
                     var output1 = [];
                     var output3 = [];
 
                     ROIList(err.dataSet);
                     contour(err.dataSet, output1, output3);
-                  //  document.getElementById('rtstruct').innerHTML = '<ul>' + output1.join('') + '</ul>';
-                   // document.getElementById('rtstruct3').innerHTML = '<ul>' + output3.join('') + '</ul>';
                 }
             }
         }, 10);
@@ -110,7 +67,6 @@ function ROIList(dataSet) {
         for (let propertyName in dataSet.elements) {
 
             let element = dataSet.elements[propertyName];
-
             //show ROI List
             if (element.tag === 'x30060020' || (element.tag === 'x30060022') || element.tag === 'x30060026') {
                 let text = element.tag;
@@ -396,7 +352,7 @@ function getImage(image){
     return img;
 }
 
-function checkDrawImage(checkVal_check) {
+function checkAndDraw(checkVal_check) {
     let Instance_UID = 0;
     Instance_UID = img.data.string('x00080018');
 
@@ -412,7 +368,7 @@ function checkDrawImage(checkVal_check) {
     }
 }
 
-function checkResetImage(checkVal_check) {
+function checkAndReset(checkVal_check) {
     let Instance_UID = 0;
     Instance_UID = img.data.string('x00080018');
 
@@ -435,14 +391,14 @@ function addROIset(evt) {
         information.ROIs.push(evt.target.value);
         checkVal_check = evt.target.value;
 
-        checkDrawImage(checkVal_check);
+        checkAndDraw(checkVal_check);
     }else {
         let index = information.ROIs.indexOf(evt.target.value);
         if (index !== -1){
             information.ROIs.splice(index, 1);
         }
         checkVal_check = evt.target.value;
-        checkResetImage(checkVal_check);
+        checkAndReset(checkVal_check);
     }
 }
 

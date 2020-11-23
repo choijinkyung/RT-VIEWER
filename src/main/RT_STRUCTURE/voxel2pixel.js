@@ -11,7 +11,6 @@ function pixelCal(image, struct) {
     let vPy = []; //contour Data Py (voxel point y )
     let vPz = []; //contour Data Pz (voxel point z )
 
-    //document.getElementById('str').textContent = "str : " + str;
     for (let i = 0; i < str.length; i++) {
         if (i % 3 === 0) {
             vPx[i] = str[i];
@@ -21,8 +20,6 @@ function pixelCal(image, struct) {
             vPz[i] = str[i];
         }
     }
-    //document.getElementById('vPx').textContent = "vPx : " + vPx;
-    // document.getElementById('vPy').textContent = "vPy : " + vPy;
 
     let voxel = voxelCal(image);
     let Sx = voxel[0];
@@ -34,7 +31,6 @@ function pixelCal(image, struct) {
     let pj = [];
 
     //convert voxel vPx,vPy to pixel pi,pj
-
     for (let i = 0; i < str.length; i++) {
         if (i % 3 === 0) {
             pi[i] = Math.floor(((vPx[i] - Sx) / (Di)) * 10) / 10;
@@ -43,13 +39,6 @@ function pixelCal(image, struct) {
         }
     }
 
-    /*
-    document.getElementById('vPx').textContent = "vPx : " + vPx;
-    document.getElementById('vPy').textContent = "vPy : " + vPy;
-
-    document.getElementById('pi').textContent = "Pi : " + pi;
-    document.getElementById('pj').textContent = "Pj : " + pj;
-    */
     return [pi, pj]
 };
 export default pixelCal

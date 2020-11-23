@@ -22,7 +22,6 @@ import {
 } from "./RT_STRUCTURE/buttonEventFunction.js"
 import {imageIdList} from './Loader/firstLoader.js'
 import {handleFileSelect, handleDragOver} from "./Loader/dragAndDrop";
-import handleFileChange from "./Loader/doseImport";
 
 cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
@@ -92,12 +91,7 @@ class MainUIElements extends React.Component {
     render() {
         return (
             <div id="outsideWrapper" className={"outsideWrapper"}>
-                <div>For Only Import Dose File =>
-                    <input type="file" onChange={(e) => {
-                        handleFileChange(e)
-                    }}/>&nbsp;&nbsp;
-                </div>
-                <div>Directory Select =>
+                <div> Open patient =>
                     <input type="file" id="filepicker" name="fileList" webkitdirectory={""} directory={""} multiple
                            onChange={(e) => {
                                imageIdList(e);
@@ -213,7 +207,7 @@ class MainUIElements extends React.Component {
                         <div><span id="pixelValue"></span></div>
                         <div><span id="voxelCoords"></span></div>
                         <div><span id="voxelValue"></span></div>
-                        <div><span id="doseCoords">a</span></div>
+                        <div><span id="doseCoords"></span></div>
 
                         <div><span id="patient">Patient ID : </span></div>
                         <div><span id="modality">Modality : </span></div>
@@ -224,10 +218,10 @@ class MainUIElements extends React.Component {
                 </div>
                 <div className={'right'}>
                     <div className="lefthalf">
-                        <ul id="ul">Structures</ul>
+                        <ul id="structure_checkbox_ul">Structures</ul>
                     </div>
                     <div className="righthalf">
-                        <ul id="ul2">Isodoses</ul>
+                        <ul id="dose_checkbox_ul">Isodoses</ul>
                     </div>
                 </div>
                 <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
