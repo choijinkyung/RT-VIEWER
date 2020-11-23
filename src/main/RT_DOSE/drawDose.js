@@ -1,7 +1,6 @@
 import {findXY} from "./doseDataParser";
 
 function checkAndDraw(dose_value, checkVal_check_dose) {
-
     let color = [];
     color[0] = '#780000';
     color[1] = '#EE4500';
@@ -41,29 +40,23 @@ function checkAndDraw(dose_value, checkVal_check_dose) {
 }
 
 function drawDose(Px, Py, color) {
-
     let canvas = document.getElementById('doseCanvas');
     let ctx = canvas.getContext('2d');
 
     ctx.save();
     ctx.translate(216,216);
     //draw path
-
     ctx.beginPath();
-
     ctx.moveTo(Px[0], Py[0]);
-
     for (let i = 1; i < Px.length; i++) {
         ctx.lineTo(Px[i], Py[i]);
     }
     ctx.closePath();
-
     ctx.fillStyle = color;
     ctx.globalAlpha = 0.5;
     ctx.stroke();
     ctx.fill();
     ctx.restore();
-
 }
 
 export {drawDose, checkAndDraw}

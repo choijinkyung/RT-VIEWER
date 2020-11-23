@@ -3,7 +3,7 @@ import {addROIset} from "./drawROI";
 
 function ROI_addCheckbox(ROI_LIST_Array) {
     ROI_LIST_Array.forEach(function (n) {
-        let ul = document.getElementById('ul');
+        let ul = document.getElementById('structure_checkbox_ul');
         let li = document.createElement('li');
 
         let checkbox = document.createElement('input');

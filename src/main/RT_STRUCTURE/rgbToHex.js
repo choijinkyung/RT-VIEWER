@@ -1,5 +1,5 @@
 var rgbToHex = function (color) {
-    var hex = Number(color).toString(16);
+    let hex = Number(color).toString(16);
     if (hex.length < 2) {
         hex = "0" + hex;
     }
@@ -13,9 +13,9 @@ var fullColorHex = function (rgb) {
     let g = rgb[1];
     let b = rgb[2];
 
-    var red = rgbToHex(r);
-    var green = rgbToHex(g);
-    var blue = rgbToHex(b);
+    let red = rgbToHex(r);
+    let green = rgbToHex(g);
+    let blue = rgbToHex(b);
 
     return "#" + red + green + blue;
 };

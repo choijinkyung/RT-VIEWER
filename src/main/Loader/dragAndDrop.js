@@ -11,7 +11,6 @@ function handleFileSelect(evt) {
     let files = evt.dataTransfer.files;
 
     doseFile(files[0]);
-    const imageId = cornerstoneWadoImageLoader.wadouri.fileManager.add(files[0]);
 }
 
 //this function manage drag event
