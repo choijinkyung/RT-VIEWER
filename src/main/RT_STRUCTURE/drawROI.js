@@ -158,7 +158,7 @@ function contour(dataSet, output1, output3) {
                 // items will not be set in the element object for elements that don't have SQ VR type.
                 //  Note that implicit little endian sequences will are currently not parsed.
                 if (element.items) { //item들을 표시
-                    let itemNumber = 0;
+                    // itemNumber = 0;
                     element.items.forEach(function (item) {
                         // each item contains its own data set so we iterate over the items and recursively call this function
                         //   output1.push('<li class = "item">Item #' + itemNumber++ + ' ' + item.tag + '</li>')
@@ -227,9 +227,9 @@ function roiJson(roi_List) {
     let ROI_Name = [];
 
     for (let i = 0; i < roi_List.length; i++) {
-        if (roi_List[i] == 'x30060022') {
+        if (roi_List[i] === 'x30060022') {
             ROI_Number[i] = roi_List[i + 1];
-        } else if (roi_List[i] == 'x30060026') {
+        } else if (roi_List[i] === 'x30060026') {
             ROI_Name[i] = roi_List[i + 1];
         }
     }
@@ -244,10 +244,10 @@ function roiJson(roi_List) {
 
     //parsing to JSON
     $(function () {
-        var ROI_LIST_Array = new Array();
+        let ROI_LIST_Array = [];
 
         for (let i = 0; i < ROI_Name.length; i++) {
-            let ROI_object = new Object();
+            let ROI_object = {};
             ROI_object.x30060022 = ROI_Number[i];
             ROI_object.x30060026 = ROI_Name[i];
 
@@ -258,7 +258,7 @@ function roiJson(roi_List) {
 
 }
 
-let contour_data_Array = new Array();
+let contour_data_Array = [];
 
 function contourJson(contourList) {
     let Referenced_Instance_UID = [];
@@ -329,8 +329,7 @@ let struct, color;
 let checkVal_send = information.ROIs;
 
 function sendDrawImage(image) {
-    let Instance_UID = 0;
-    Instance_UID = image.data.string('x00080018');
+    let Instance_UID = image.data.string('x00080018');
 
     for(let j=0;j<checkVal_send.length;j++){
         for (let i = 0; i < contour_data_Array.length; i++) {
@@ -353,32 +352,27 @@ function getImage(image){
 }
 
 function checkAndDraw(checkVal_check) {
-    let Instance_UID = 0;
-    Instance_UID = img.data.string('x00080018');
-
+    let Instance_UID = img.data.string('x00080018');
     for (let i = 0; i < contour_data_Array.length; i++) {
         if (contour_data_Array[i]['x30060084'] === checkVal_check) {
             if (contour_data_Array[i]['x00081155'] === Instance_UID) {
                 struct = contour_data_Array[i]['x30060050'];
                 color = contour_data_Array[i]['x3006002a'];
 
-                draw(img, struct, color, checkVal_check);
+                draw(img, struct, color);
             }
         }
     }
 }
 
 function checkAndReset(checkVal_check) {
-    let Instance_UID = 0;
-    Instance_UID = img.data.string('x00080018');
-
+    let Instance_UID = img.data.string('x00080018');
     for (let i = 0; i < contour_data_Array.length; i++) {
         if (contour_data_Array[i]['x30060084'] === checkVal_check) {
             if (contour_data_Array[i]['x00081155'] === Instance_UID) {
                 struct = contour_data_Array[i]['x30060050'];
                 color = contour_data_Array[i]['x3006002a'];
 
-                resetCanvas(checkVal_check);
             }
         }
     }
@@ -387,7 +381,7 @@ function checkAndReset(checkVal_check) {
 /*Function*/
 function addROIset(evt) {
     let checkVal_check;
-    if (evt.target.checked == true) {
+    if (evt.target.checked === true) {
         information.ROIs.push(evt.target.value);
         checkVal_check = evt.target.value;
 
@@ -402,8 +396,7 @@ function addROIset(evt) {
     }
 }
 
-let canvas_obj = [];
-function draw(image,struct,color,checkVal_check) {
+function draw(image,struct,color) {
     let px = pixelCal(image, struct);
     let pi = px[0];
     let pj = px[1];
@@ -426,7 +419,7 @@ function draw(image,struct,color,checkVal_check) {
     ctx.stroke();
     ctx.fill();
     ctx.restore();
-    canvas_obj[checkVal_check] = canvas;
+
 }
 
 function reset() {
@@ -439,9 +432,6 @@ function reset() {
     ctx2.clearRect(0,0,512,512);
 }
 
-function resetCanvas(checkVal_check) {
-    canvas_obj[checkVal_check].style.fillStyle='#ffffff';
-    canvas_obj[checkVal_check].style.globalAlpha=0;
-}
+
 
 export {structFile, draw, reset , sendDrawImage, getImage , addROIset}
