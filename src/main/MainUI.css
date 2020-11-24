@@ -4,6 +4,7 @@
     position: relative;
     top: 0px;
     left: 0px;
+    margin-left: 80px;
 }
 
 #dropZone {
@@ -17,8 +18,6 @@
     background: #00ff0000;
     position: absolute;
     border: 1px;
-    height: 512px;
-    width: 512px;
 }
 
 .overlay {
@@ -35,12 +34,20 @@
     /* ignore pointer event on overlay */
     pointer-events: none;
 }
-
-.wrapper {
+.dicomImageWrapper{
     width: 512px;
     height: 512px;
     position: relative;
+    color: #00000f;
+}
+.wrapper {
+    padding-left: 30px;
+    width: 700px;
+    height: 512px;
+    position: relative;
     color: #61dafb;
+    stroke : #F0F0F0;
+    background-color: #060606;
 }
 
 div.left {
