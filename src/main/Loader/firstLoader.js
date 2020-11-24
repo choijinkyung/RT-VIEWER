@@ -18,8 +18,9 @@ cornerstoneTools.external.Hammer = Hammer;
 cornerstoneTools.external.cornerstoneMath = cornerstoneMath
 cornerstoneTools.init();
 
-let currentImageIndex = 110; //for dose z coords setting
+let currentImageIndex = 111; //for dose z coords setting
 let fileJsonArray = [];
+let fileLength = 0;
 
 //Import a list of file names from a selected folder
 function imageIdList(e) {
@@ -40,13 +41,14 @@ function imageIdList(e) {
         fileJsonArray.push(fileJson);
     }
 
+    fileLength = files.length;
     //file name sorting
     fileJsonArray.sort(function (a, b) {
         return a.fileName - b.fileName;
     })
 
     //assign imageId value
-    for (let i = 0; i < files.length; i++) {
+    for (let i = 0; i < fileLength; i++) {
         imageId[i] = fileJsonArray[i].imageId;
     }
 
@@ -63,8 +65,8 @@ function imageIdList(e) {
     //Index 112 : RT PLAN FILE
     //Index 113 : RT STRUCTURE FILE
     firstLoader(imageId, currentImageIndex);
-    structFile(files[113]);
-    doseFile(files[111]);
+    structFile(files[114]);
+    doseFile(files[112]);
 
     let el = document.getElementById('dicomImage');
     el.onwheel = wheelE;
@@ -76,21 +78,25 @@ function imageIdList(e) {
         e.preventDefault();
 
         let index = currentImageIndex;
-
         if (index >= 0 || index < imageId.length) {
             if (e.deltaY < 0) {
                 if (index === currentImageIndex) {
                     updateTheImage(imageId, currentImageIndex + 1); //update images
+                    document.getElementById('topleft1').textContent = 'Image : ' + (currentImageIndex+1) + '/' + (fileLength - 3);
                     reset();
                 }
             } else {
                 if (index === currentImageIndex) {
+
                     updateTheImage(imageId, currentImageIndex - 1); //update images
+                    document.getElementById('topleft1').textContent = 'Image : ' + (currentImageIndex+1) + '/' + (fileLength - 3);
                     reset();
                 }
             }
         } else {
+
             updateTheImage(imageId, currentImageIndex); //update images
+            document.getElementById('topleft1').textContent = 'Image : ' + currentImageIndex+ '/' + (fileLength - 3);
             reset();
         }
         // Prevent page fom scrolling
@@ -105,11 +111,11 @@ function getCheckValue(checkVal_check) {
 }
 
 let dose_value = [];
-//calculate Dose value
-function gridScaling(image, pixel_data, Rows, Columns, Number_of_Frames) {
-    let Dose_Grid_Scaling = parseFloat(image.data.string('x3004000e'));
-    let dose_value_temp = [];
 
+//calculate Dose value
+function gridScaling(dose_image, dose_pixel_data, Rows, Columns, Number_of_Frames) {
+    let Dose_Grid_Scaling = parseFloat(dose_image.data.string('x3004000e'));
+    let dose_value_temp = [];
 
     //초기화
     for (let i = 0; i < Number_of_Frames; i++) {
@@ -117,8 +123,8 @@ function gridScaling(image, pixel_data, Rows, Columns, Number_of_Frames) {
     }
 
     //calculate dose value
-    for (let i = 0; i < pixel_data.length; i++) {
-        dose_value_temp[i] = pixel_data[i] * Dose_Grid_Scaling * 100;
+    for (let i = 0; i < dose_pixel_data.length; i++) {
+        dose_value_temp[i] = dose_pixel_data[i] * Dose_Grid_Scaling * 100;
     }
 
     let cnt = 0;
@@ -140,7 +146,7 @@ function gridScaling(image, pixel_data, Rows, Columns, Number_of_Frames) {
         }
     }
 
-    let dose_sort=[];
+    let dose_sort = [];
     //convert array to 3 dimension
     for (let z = 110; z > 110 - Number_of_Frames; z--) {
         for (let y = 0; y < Columns; y++) {
@@ -152,37 +158,41 @@ function gridScaling(image, pixel_data, Rows, Columns, Number_of_Frames) {
         }
     }
 
-    let dosemax=0;
+
 
     dose_sort.sort(function (a, b) {
         return b - a;
     })
 
-    dosemax = dose_sort[0];
+    let dosemax = dose_sort[0];
 
     Dose_Checkbox(dosemax);
     Dose_checkEvent();
 }
 
 let img;
+
 // show image #1 initially
-function updateTheImage(imageIds, imageIndex) {
+function updateTheImage(CTimageIds, imageIndex) {
     let el = document.getElementById('dicomImage');
     cornerstone.enable(el)
     currentImageIndex = imageIndex;
-    cornerstone.loadImage(imageIds[imageIndex]).then(function (image) {
-        const viewport = cornerstone.getDefaultViewportForImage(el, image);
-        if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2' || image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.481.2') {
-            cornerstone.displayImage(el, image, viewport);
+    cornerstone.loadImage(CTimageIds[imageIndex]).then(function (CT_image) {
+        const viewport = cornerstone.getDefaultViewportForImage(el, CT_image);
+        if (CT_image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2') {
+            cornerstone.displayImage(el, CT_image, viewport);
 
-            patientInformation(image);
-            voxelCal(image);
-            getImage(image);
-            sendDrawImage(image);
 
+            patientInformation(CT_image);
+            voxelCal(CT_image);
+            getImage(CT_image);
+            sendDrawImage(CT_image);
             checkAndDraw(dose_value[currentImageIndex], checkVal_check_dose);
 
-            img = image;
+            let position = CT_image.data.string('x00200032').split('\\')[2];
+            document.getElementById('topleft2').textContent = 'Position : ' + position;
+
+            img = CT_image;
         } else {
             alert("ERROR: Confirm this image's modality : CT , MRI ... ");
         }
@@ -191,23 +201,29 @@ function updateTheImage(imageIds, imageIndex) {
 }
 
 //load one CT Image from local file
-function firstLoader(imageIds, imageIndex) {
+function firstLoader(CTimageIds, imageIndex) {
     let el = document.getElementById('dicomImage');
     cornerstone.enable(el)
-    cornerstone.loadImage(imageIds[imageIndex]).then(function (image) {
-        const viewport = cornerstone.getDefaultViewportForImage(el, image);
-        if (image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2' || image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.481.2') {
-            cornerstone.displayImage(el, image, viewport);
+    cornerstone.loadImage(CTimageIds[imageIndex]).then(function (CT_image) {
+        const viewport = cornerstone.getDefaultViewportForImage(el, CT_image);
+        if (CT_image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2') {
+            cornerstone.displayImage(el, CT_image, viewport);
 
-            patientInformation(image);
-            voxelCal(image);
-            getImage(image);
-            sendDrawImage(image);
+            patientInformation(CT_image);
+            voxelCal(CT_image);
+            getImage(CT_image);
+            sendDrawImage(CT_image);
 
             getCheckValue([]);
-            img = image;
 
-        } else if (image.data.string('x0080016') === '1.2.840.10008.5.1.4.1.1.481.2') {
+            document.getElementById('topleft1').textContent = 'Image : ' + (currentImageIndex+1) + '/' + (fileLength - 3);
+
+            let position = CT_image.data.string('x00200032').split('\\')[2];
+            document.getElementById('topleft2').textContent = 'Position : ' + position;
+
+            img = CT_image;
+
+        } else if (CT_image.data.string('x0080016') === '1.2.840.10008.5.1.4.1.1.481.2') {
             alert('dose file')
         } else {
             alert("ERROR: Confirm this image's modality : CT , MRI ... ");
