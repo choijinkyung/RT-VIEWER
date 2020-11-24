@@ -1,6 +1,4 @@
-import React from "react";
 import * as cornerstone from "cornerstone-core";
-import {getVoxelCalValue} from "../RT_DOSE/doseDataParser";
 
 //caculate voxel from pixel
 function voxelCal(image) {
@@ -12,7 +10,6 @@ function voxelCal(image) {
 
         let Sx = (parseFloat(imgPosArr[0]) * 10) / 10;
         let Sy = (parseFloat(imgPosArr[1]) * 10) / 10;
-        let Sz = (parseFloat(imgPosArr[2]) * 10) / 10;
 
         let imgOri = image.data.string('x00200037');
         imgOri = imgOri.toString();
@@ -20,10 +17,10 @@ function voxelCal(image) {
 
         let Xx = (parseFloat(imgOriArr[0]) * 10) / 10;
         let Xy = (parseFloat(imgOriArr[1]) * 10) / 10;
-        let Xz = (parseFloat(imgOriArr[2]) * 10) / 10;
+
         let Yx = (parseFloat(imgOriArr[3]) * 10) / 10;
         let Yy = (parseFloat(imgOriArr[4]) * 10) / 10;
-        let Yz = (parseFloat(imgOriArr[5]) * 10) / 10;
+
 
         let pixelSpace = image.data.string('x00280030');
         pixelSpace = pixelSpace.toString();
@@ -34,38 +31,30 @@ function voxelCal(image) {
 
         let el = document.getElementById('dicomImage');
 
-        /*
-        document.getElementById('Sxyz').textContent = 'Sx : ' + Sx + ', Sy : ' + Sy + ', Sz : ' + Sz;
-        document.getElementById('Xxyz').textContent = 'Xx : ' + Xx + ', Xy : ' + Xy + ', Xz : ' + Xz;
-        document.getElementById('Yxyz').textContent = 'Yx : ' + Yx + ', Yy : ' + Yy + ', Yz : ' + Yz;
-        document.getElementById('Dij').textContent = 'Di : ' + Di + ', Dj : ' + Dj;
-        */
-
         el.addEventListener('mousemove', function (event) {
             const pixelCoords = cornerstone.pageToPixel(el, event.pageX, event.pageY);
-            document.getElementById('coords').textContent = "pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + pixelCoords.x + ", pixelY=" + pixelCoords.y;
+
+            document.getElementById('coords').textContent = "X: " +  (Math.round(pixelCoords.x * 10) / 10) + "px  Y: " + (Math.round(pixelCoords.y * 10) / 10) + 'px';
 
             let Px = (Xx * Di * pixelCoords.x) + (Yx * Dj * pixelCoords.y) + Sx;
             let Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
-            let Pz = (Xz * Di * pixelCoords.x) + (Yz * Dj * pixelCoords.y) + Sz;
 
-            //Px = Math.floor(Px * 10) / 10;
-            // Py = Math.floor(Py * 10) / 10;
-            document.getElementById('voxelCoords').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
+            Px = Math.round(Px * 10) / 10;
+            Py = Math.round(Py * 10) / 10;
+            document.getElementById('voxelCoords').textContent = "X: " + Px + "mm   Y: " + Py +'mm';
         });
 
         el.addEventListener('dblclick', function (event) {
             const pixelCoords = cornerstone.pageToPixel(el, event.pageX, event.pageY);
-             document.getElementById('pixelValue').textContent = "pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + pixelCoords.x + ", pixelY=" + pixelCoords.y;
+            document.getElementById('pixelValue').textContent = "X: " +  (Math.round(pixelCoords.x * 10) / 10) + "px  Y: " + (Math.round(pixelCoords.y * 10) / 10) + 'px';
 
             let Px = (Xx * Di * pixelCoords.x) + (Yx * Dj * pixelCoords.y) + Sx;
             let Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
-            let Pz = (Xz * Di * pixelCoords.x) + (Yz * Dj * pixelCoords.y) + Sz;
 
-            // Px = Math.floor(Px * 10) / 10;
-            //  Py = Math.floor(Py * 10) / 10;
+             Px = Math.round(Px * 10) / 10;
+             Py = Math.round(Py * 10) / 10;
 
-            document.getElementById('voxelValue').textContent = "Px = " + Px + ", Py = " + Py + ", Pz = " + Pz;
+            document.getElementById('voxelValue').textContent = "X: " + Px + "mm   Y: " + Py +'mm';
         });
 
         return [Sx, Sy, Di, Dj]
