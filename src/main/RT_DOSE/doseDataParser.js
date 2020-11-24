@@ -107,24 +107,7 @@ function doseAlign(Vi, Vj, color) {
         Py[i] =(Xy * Di * Vi[i]) + (Yy * Dj * Vj[i]) + Sy;
     }
 
-    let output = [];
-    for (let i = 0; i < Px.length; i++) {
-        output.push('[' + Px[i] + ',' + Py[i] + ']');
-    }
-    document.getElementById('dose').innerHTML = '<ul>' + output.join(',') + '</ul>';
-
-
-    let el = document.getElementById('dicomImage');
-    el.addEventListener('mousemove', function (event) {
-        const pixelCoords = cornerstone.pageToPixel(el, event.pageX, event.pageY);
-
-        let Px = (Xx * Di * pixelCoords.x) + (Yx * Dj * pixelCoords.y) + Sx;
-        let Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
-
-        document.getElementById('doseCoords').textContent = "Px = " + Px + ", Py = " + Py ;
-    });
-
-    drawDose(Px, Py, color);
+    drawDose(Vi, Vj, color);
 }
 
 
