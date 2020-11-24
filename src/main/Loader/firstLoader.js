@@ -82,21 +82,21 @@ function imageIdList(e) {
             if (e.deltaY < 0) {
                 if (index === currentImageIndex) {
                     updateTheImage(imageId, currentImageIndex + 1); //update images
-                    document.getElementById('topleft1').textContent = 'Image : ' + (currentImageIndex+1) + '/' + (fileLength - 3);
+                    document.getElementById('topleft1').textContent = 'Image : ' + (currentImageIndex + 1) + '/' + (fileLength - 3);
                     reset();
                 }
             } else {
                 if (index === currentImageIndex) {
 
                     updateTheImage(imageId, currentImageIndex - 1); //update images
-                    document.getElementById('topleft1').textContent = 'Image : ' + (currentImageIndex+1) + '/' + (fileLength - 3);
+                    document.getElementById('topleft1').textContent = 'Image : ' + (currentImageIndex + 1) + '/' + (fileLength - 3);
                     reset();
                 }
             }
         } else {
 
             updateTheImage(imageId, currentImageIndex); //update images
-            document.getElementById('topleft1').textContent = 'Image : ' + currentImageIndex+ '/' + (fileLength - 3);
+            document.getElementById('topleft1').textContent = 'Image : ' + currentImageIndex + '/' + (fileLength - 3);
             reset();
         }
         // Prevent page fom scrolling
@@ -159,7 +159,6 @@ function gridScaling(dose_image, dose_pixel_data, Rows, Columns, Number_of_Frame
     }
 
 
-
     dose_sort.sort(function (a, b) {
         return b - a;
     })
@@ -190,7 +189,8 @@ function updateTheImage(CTimageIds, imageIndex) {
             checkAndDraw(dose_value[currentImageIndex], checkVal_check_dose);
 
             let position = CT_image.data.string('x00200032').split('\\')[2];
-            document.getElementById('topleft2').textContent = 'Position : ' + position;
+            document.getElementById('topleft2').textContent = 'Position : ' + position + 'mm';
+
 
             img = CT_image;
         } else {
@@ -216,10 +216,10 @@ function firstLoader(CTimageIds, imageIndex) {
 
             getCheckValue([]);
 
-            document.getElementById('topleft1').textContent = 'Image : ' + (currentImageIndex+1) + '/' + (fileLength - 3);
+            document.getElementById('topleft1').textContent = 'Image : ' + (currentImageIndex + 1) + '/' + (fileLength - 3);
 
             let position = CT_image.data.string('x00200032').split('\\')[2];
-            document.getElementById('topleft2').textContent = 'Position : ' + position;
+            document.getElementById('topleft2').textContent = 'Position : ' + position + 'mm';
 
             img = CT_image;
 
