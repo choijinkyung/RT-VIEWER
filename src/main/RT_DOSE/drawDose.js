@@ -44,7 +44,6 @@ function drawDose(Px, Py, color) {
     let ctx = canvas.getContext('2d');
 
     ctx.save();
-    ctx.translate(216,216);
     //draw path
     ctx.beginPath();
     ctx.moveTo(Px[0], Py[0]);
