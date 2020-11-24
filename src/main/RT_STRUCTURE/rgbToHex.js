@@ -1,4 +1,4 @@
-var rgbToHex = function (color) {
+let rgbToHex = function (color) {
     let hex = Number(color).toString(16);
     if (hex.length < 2) {
         hex = "0" + hex;
@@ -6,7 +6,7 @@ var rgbToHex = function (color) {
     return hex;
 };
 
-var fullColorHex = function (rgb) {
+let fullColorHex = function (rgb) {
     rgb = rgb.split('\\');
 
     let r = rgb[0];
