@@ -9,8 +9,6 @@ export {
     eraserOn,
     drawCircle,
     drawRectangle,
-    reductionOn,
-    expansionOn,
     invertOn,
     interpolationOn,
     hflipOn,
@@ -21,9 +19,7 @@ export {
 function angleOn() {
     const AngleTool = cornerstoneTools.AngleTool;
     cornerstoneTools.addTool(AngleTool)
-    cornerstoneTools.setToolActive('Angle', {mouseButtonMask: 1})
-
-
+    cornerstoneTools.setToolActive('Angle', {mouseButtonMask: 1});
 }
 
 function lengthOn() {
@@ -36,21 +32,6 @@ function eraserOn() {
     const EraserTool = cornerstoneTools.EraserTool;
     cornerstoneTools.addTool(EraserTool);
     cornerstoneTools.setToolActive("Eraser", {mouseButtonMask: 1})
-}
-
-function reductionOn() {
-    const element = document.getElementById('dicomImage')
-    element.style.width = '256px';
-    element.style.height = '256px';
-    cornerstone.resize(element);
-}
-
-function expansionOn() {
-    const element = document.getElementById('dicomImage')
-    element.style.width = '512px';
-    element.style.height = '512px';
-    cornerstone.resize(element);
-
 }
 
 function invertOn() {
