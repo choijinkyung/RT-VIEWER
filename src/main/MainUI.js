@@ -12,8 +12,6 @@ import {
     eraserOn,
     drawCircle,
     drawRectangle,
-    reductionOn,
-    expansionOn,
     invertOn,
     interpolationOn,
     hflipOn,
@@ -22,6 +20,7 @@ import {
 } from "./RT_STRUCTURE/buttonEventFunction.js"
 import {imageIdList} from './Loader/firstLoader.js'
 import {handleFileSelect, handleDragOver} from "./Loader/dragAndDrop";
+import Controlled from "./mouseControl";
 
 cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
@@ -31,16 +30,14 @@ cornerstoneTools.external.cornerstoneMath = cornerstoneMath
 cornerstoneTools.init();
 dicomParser.toString().bold()
 
-
 class MainUIElements extends React.Component {
     componentDidMount() {
-        const element = this.element;
-
-        // Setup the dnd listeners.
+        // Setup dropZon  and listeners.
         let dropZone = document.getElementById('dicomImage');
         dropZone.addEventListener('dragover', handleDragOver, false);
         dropZone.addEventListener('drop', handleFileSelect, false);
 
+    const element = document.getElementById('dicomImage');
         element.addEventListener('mousedown', function (e) {
             let lastX = e.pageX;
             let lastY = e.pageY;
@@ -53,28 +50,29 @@ class MainUIElements extends React.Component {
                 lastX = e.pageX;
                 lastY = e.pageY;
 
-                if (mouseButton === 1) {
+                /*if (mouseButton === 1) {
                     let viewport = cornerstone.getViewport(element);
                     viewport.translation.x += (deltaX / viewport.scale);
                     viewport.translation.y += (deltaY / viewport.scale);
                     cornerstone.setViewport(element, viewport);
 
-                } else if (mouseButton === 2) {
+                } else*/
+                if (mouseButton === 2) {
                     let viewport = cornerstone.getViewport(element);
                     viewport.voi.windowWidth += (deltaX / viewport.scale);
                     viewport.voi.windowCenter += (deltaY / viewport.scale);
                     cornerstone.setViewport(element, viewport);
 
-                    document.getElementById('bottomleft').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth)
+                    document.getElementById('topright1').textContent = "WW/WC:" + Math.round(viewport.voi.windowWidth)
                         + "/" + Math.round(viewport.voi.windowCenter);
-
-
-                } else if (mouseButton === 3) {
+                }/* else if (mouseButton === 3) {
                     let viewport = cornerstone.getViewport(element);
                     viewport.scale += (deltaY / 100);
                     cornerstone.setViewport(element, viewport);
-                    document.getElementById('bottomright').textContent = "Zoom:" + viewport.scale + "x";
+
+                    document.getElementById('topright2').textContent = "Zoom:" + viewport.scale + "x";
                 }
+                */
             }
 
             function mouseUpHandler() {
@@ -85,6 +83,7 @@ class MainUIElements extends React.Component {
             document.addEventListener('mousemove', mouseMoveHandler);
             document.addEventListener('mouseup', mouseUpHandler);
         });
+
     }
 
     //Rendering
@@ -126,16 +125,6 @@ class MainUIElements extends React.Component {
                         }}>Erase
                         </button>
                         &nbsp;&nbsp;
-                        <button onClick={() => {
-                            reductionOn()
-                        }}>256x256
-                        </button>
-                        &nbsp;&nbsp;
-                        <button onClick={() => {
-                            expansionOn()
-                        }}>512x512
-                        </button>
-                        &nbsp;&nbsp;
                     </div>
                     <div>
                         <button onClick={() => {
@@ -167,54 +156,66 @@ class MainUIElements extends React.Component {
                 </div>
                 <div className={'right'}>
                     <ul>
-                        <li>Left click drag - window/level</li>
-                        <li>Middle Mouse button drag - pan</li>
-                        <li>Right click drag - zoom</li>
-                        <li>Mouse wheel - scroll images</li>
+                        <li>mouse click drag - pan</li>
+                        <li>Mouse wheel - scroll images / zoom in, out</li>
                         <li>Double Click - save pixel/voxel</li>
                     </ul>
                 </div>
                 <br></br> <br></br> <br></br>
                 <div class="left">
                     <div>
+                        <div>
+                            <span id="patientName">Patient Name : </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span id="patientID">Patient ID : </span>
+                        </div>
+                        <div>
+                            <span id="gender">Gender : </span>
+                        </div>
+                    </div>
+                    <div>
                         <div id="dicomImageWrapper" className="wrapper"
                              onContextMenu="return false" onWheel={(e) => {
                         }}>
-                            <div id="dicomImage" className="viewportElement"
-                                 ref={input => {
-                                     this.element = input;
-                                 }}>
-                                <canvas id="myCanvas" className={"canvas"} width={512} height={512}/>
-                                <canvas id="doseCanvas" className={"canvas"} width={512} height={512}/>
+                            <div>
+                                <Controlled/>
                             </div>
-                            <div id="topleft" className="overlay" className="topleft">
-                                Patient Name:
-                                Patient Sex:
+                            <div id='topleft' className="overlay" className="topleft">
+                                <div id="topleft1" >
+                                    Image :
+                                </div>
+                                <div id="topleft2" >
+                                    Position:
+                                </div>
                             </div>
-                            <div id="topright" className="overlay" className="topright">
-                                Modality :
-                            </div>
-                            <div id="bottomleft" className="overlay" className="bottomleft">
-                                WW/WC:
-                            </div>
-                            <div id="bottomright" className="overlay" className="bottomright">
-                                Zoom:
+                            <div className="overlay" className="topright">
+                                <div id="topright1" >
+                                    WW/WC:
+                                </div>
+                                <div id="topright2">
+                                    Zoom:
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <div><span id="coords"></span></div>
-                        <div><span id="pixelValue"></span></div>
-                        <div><span id="voxelCoords"></span></div>
-                        <div><span id="voxelValue"></span></div>
-                        <div><span id="doseCoords"></span></div>
+                        <div>
+                            <span id="coords"></span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span id="voxelCoords"></span>
+                        </div>
+                        <div>
+                            <span id="pixelValue"></span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span id="voxelValue"></span>
+                        </div>
+                        <div>
+                            <span id="doseCoords"></span>
 
-                        <div><span id="patient">Patient ID : </span></div>
-                        <div><span id="modality">Modality : </span></div>
-                        <div><span id="instanceUID">Instance UID : </span></div>
-
-
+                        </div>
                     </div>
+                    <br></br><br></br><br></br><br></br><br></br><br></br><br></br>
                 </div>
                 <div className={'right'}>
                     <div className="lefthalf">
@@ -226,50 +227,6 @@ class MainUIElements extends React.Component {
                 </div>
                 <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
                 <br></br><br></br><br></br><br></br><br></br><br></br><br></br>
-
-                {/*
-                < div class = "patient INFO">
-                    <div id="info">
-                        <div><span id="studyUID">Study UID :</span></div>
-                        <div><span id="seriesUID">Series UID :</span></div>
-                        <div><span id="instanceUID">Instance UID : </span></div>
-                        <div><span id="frameUID">Frame of Reference UID : </span></div>
-                    </div>
-
-                    <br></br>
-                    <div id="voxel">
-                        <div><span id="imageOrientation">Image Orientation :</span></div>
-                        <div><span id="pixelSpacing">Pixel Spacing :</span></div>
-                        <div><span id="imagePosition">Image Position : </span></div>
-                    </div>
-                    <br></br>
-                    <div id="voxelCal">
-                        <div><span id="Sxyz"></span></div>
-                        <div><span id="Xxyz"></span></div>
-                        <div><span id="Yxyz"></span></div>
-                        <div><span id="Dij"></span></div>
-
-                    </div>
-                    <br></br>
-                    <div id="pixelCal">
-                        <div><span id="struct">Struct :</span></div>
-                        <br></br>
-                        <div><span id="str">str :</span></div>
-                        <br></br>
-                        <div><span id="vPx">vPx : </span></div>
-                        <br></br>
-                        <div><span id="vPy">vPy : </span></div>
-                    </div>
-                    <br></br>
-                    <div><span id="contour">contour data :</span></div>
-
-                    <div id="point">
-                        <div id="pi">Pi :</div>
-                        <br></br>
-                        <div id="pj">Pj :</div>
-                    </div>
-                </div>
-               */}
                 {/*
                 <div>
                     <div className="left">
@@ -306,7 +263,7 @@ class MainUIElements extends React.Component {
                     </div>
 
                 </div>
-                */}
+
                 <div className="right">
                     <div className="row2">
                         <div className="col-md-12">
@@ -329,9 +286,11 @@ class MainUIElements extends React.Component {
                         </div>
                     </div>
                 </div>
+                 */}
             </div>
         );
     }
 }
+
 
 export default MainUIElements
