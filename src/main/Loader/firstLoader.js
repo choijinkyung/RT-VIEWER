@@ -6,8 +6,8 @@ import * as cornerstoneTools from "cornerstone-tools";
 import * as cornerstoneMath from "cornerstone-math"
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import voxelCal from "../RT_STRUCTURE/pixel2voxel";
-import {structFile, reset, getImage, sendDrawImage} from "../RT_STRUCTURE/drawROI";
-import {doseFile} from "../RT_DOSE/doseDataParser";
+import {structFile, reset, getCTImage, sendDrawImage} from "../RT_STRUCTURE/drawROI";
+import {CT2Patient,doseFile} from "../RT_DOSE/doseDataParser";
 import {Dose_Checkbox, Dose_checkEvent} from "../RT_DOSE/doseCheckbox";
 import {checkAndDraw} from "../RT_DOSE/drawDose";
 
@@ -184,7 +184,8 @@ function updateTheImage(CTimageIds, imageIndex) {
 
             patientInformation(CT_image);
             voxelCal(CT_image);
-            getImage(CT_image);
+            getCTImage(CT_image);
+            CT2Patient(CT_image);
             sendDrawImage(CT_image);
             checkAndDraw(dose_value[currentImageIndex], checkVal_check_dose);
 
@@ -211,9 +212,9 @@ function firstLoader(CTimageIds, imageIndex) {
 
             patientInformation(CT_image);
             voxelCal(CT_image);
-            getImage(CT_image);
+            getCTImage(CT_image);
             sendDrawImage(CT_image);
-
+            CT2Patient(CT_image);
             getCheckValue([]);
 
             document.getElementById('topleft1').textContent = 'Image : ' + (currentImageIndex + 1) + '/' + (fileLength - 3);

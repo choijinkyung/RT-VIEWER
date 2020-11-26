@@ -1,7 +1,7 @@
 import {gridScaling} from "../Loader/firstLoader";
 
 let Rows, Columns, Number_of_Frames;
-function dose_pixel_Data_parse(dose_image, dataSet) {
+function importPixelData(dose_image, dataSet) {
         let pixelDataElement = dataSet.elements.x7fe00010;
         let dose_pixel_data = new Uint32Array(dataSet.byteArray.buffer.slice(pixelDataElement.dataOffset),0,pixelDataElement.length/4);
 
@@ -12,4 +12,4 @@ function dose_pixel_Data_parse(dose_image, dataSet) {
         gridScaling(dose_image, dose_pixel_data, Rows, Columns, Number_of_Frames);
 }
 
-export {dose_pixel_Data_parse}
+export {importPixelData}

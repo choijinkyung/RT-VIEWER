@@ -275,6 +275,7 @@ class MainUIElements extends React.Component {
                         </div>
                     </div>
                 </div>
+                */}
                 <div className="left">
                     <div className="row2">
                         <div className="col-md-12">
@@ -286,7 +287,7 @@ class MainUIElements extends React.Component {
                         </div>
                     </div>
                 </div>
-                 */}
+
             </div>
         );
     }

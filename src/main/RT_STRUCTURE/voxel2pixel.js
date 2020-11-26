@@ -26,9 +26,9 @@ function pixelCal(image, struct) {
     //convert voxel vPx,vPy to pixel pi,pj
     for (let i = 0; i < str.length; i++) {
         if (i % 3 === 0) {
-            pi[i] = Math.floor(((vPx[i] - Sx) / (Di)) * 10) / 10;
+            pi[i] = Math.round(((vPx[i] - Sx) / (Di)) * 10) / 10;
         } else if (i % 3 === 1) {
-            pj[i] = Math.floor(((vPy[i] - Sy) / (Dj)) * 10) / 10;
+            pj[i] = Math.round(((vPy[i] - Sy) / (Dj)) * 10) / 10;
         }
     }
 

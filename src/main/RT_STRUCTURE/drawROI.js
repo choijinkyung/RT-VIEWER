@@ -346,7 +346,7 @@ function sendDrawImage(image) {
 }
 
 let img;
-function getImage(image){
+function getCTImage(image){
     img = image;
     return img;
 }
@@ -434,4 +434,4 @@ function reset() {
 
 
 
-export {structFile, draw, reset , sendDrawImage, getImage , addROIset}
+export {structFile, draw, reset , sendDrawImage, getCTImage , addROIset}

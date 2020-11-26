@@ -36,7 +36,6 @@ function checkAndDraw(dose_value, checkVal_check_dose) {
             findXY(dose_value, checkVal_check_dose[i], color[9]);
         }
     }
-
 }
 
 function drawDose(Px, Py, color) {
