@@ -26,7 +26,7 @@ class Controlled extends React.Component {
                      }}>
 
                     <canvas id="myCanvas" className={"canvas"} width={512} height={512}/>
-                    <canvas id="doseCanvas" className={"canvas"} width={94} height={121}/>
+                    <canvas id="doseCanvas" className={"canvas"} width={512} height={512}/>
                 </div>
             </MapInteractionCSS>
         );

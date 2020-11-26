@@ -1,5 +1,7 @@
 import * as cornerstone from "cornerstone-core";
 
+let Px, Py;
+
 //caculate voxel from pixel
 function voxelCal(image) {
     let modality = image.data.string('x00080060');
@@ -31,33 +33,34 @@ function voxelCal(image) {
 
         let el = document.getElementById('dicomImage');
 
+
         el.addEventListener('mousemove', function (event) {
             const pixelCoords = cornerstone.pageToPixel(el, event.pageX, event.pageY);
 
-            document.getElementById('coords').textContent = "X: " +  (Math.round(pixelCoords.x * 10) / 10) + "px  Y: " + (Math.round(pixelCoords.y * 10) / 10) + 'px';
+            document.getElementById('coords').textContent = "X: " + (Math.round(pixelCoords.x * 10) / 10) + "px  Y: " + (Math.round(pixelCoords.y * 10) / 10) + 'px';
 
-            let Px = (Xx * Di * pixelCoords.x) + (Yx * Dj * pixelCoords.y) + Sx;
-            let Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
+            Px = (Xx * Di * pixelCoords.x) + (Yx * Dj * pixelCoords.y) + Sx;
+            Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
 
             Px = Math.round(Px * 10) / 10;
             Py = Math.round(Py * 10) / 10;
-            document.getElementById('voxelCoords').textContent = "X: " + Px + "mm   Y: " + Py +'mm';
+            document.getElementById('voxelCoords').textContent = "X: " + Px + "mm   Y: " + Py + 'mm';
         });
 
         el.addEventListener('dblclick', function (event) {
             const pixelCoords = cornerstone.pageToPixel(el, event.pageX, event.pageY);
-            document.getElementById('pixelValue').textContent = "X: " +  (Math.round(pixelCoords.x * 10) / 10) + "px  Y: " + (Math.round(pixelCoords.y * 10) / 10) + 'px';
+            document.getElementById('pixelValue').textContent = "X: " + (Math.round(pixelCoords.x * 10) / 10) + "px  Y: " + (Math.round(pixelCoords.y * 10) / 10) + 'px';
 
-            let Px = (Xx * Di * pixelCoords.x) + (Yx * Dj * pixelCoords.y) + Sx;
-            let Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
+            Px = (Xx * Di * pixelCoords.x) + (Yx * Dj * pixelCoords.y) + Sx;
+            Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
 
-             Px = Math.round(Px * 10) / 10;
-             Py = Math.round(Py * 10) / 10;
+            Px = Math.round(Px * 10) / 10;
+            Py = Math.round(Py * 10) / 10;
 
-            document.getElementById('voxelValue').textContent = "X: " + Px + "mm   Y: " + Py +'mm';
+            document.getElementById('voxelValue').textContent = "X: " + Px + "mm   Y: " + Py + 'mm';
         });
 
-        return [Sx, Sy, Di, Dj]
+        return [Sx, Sy, Di, Dj, Px, Py]
     } else {
         alert('NOT CT IMAGES')
     }
