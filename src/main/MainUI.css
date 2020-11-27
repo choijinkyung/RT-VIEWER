@@ -4,7 +4,7 @@
     position: relative;
     top: 0px;
     left: 0px;
-    margin-left: 80px;
+    margin-left: 50px;
 }
 
 #dropZone {
@@ -42,7 +42,7 @@
 }
 .wrapper {
     padding-left: 30px;
-    width: 700px;
+    width: 650px;
     height: 512px;
     position: relative;
     color: #61dafb;
