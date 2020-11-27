@@ -1,4 +1,4 @@
-import {doseFile} from "../RT_DOSE/doseDataParser";
+import {doseFile} from "../RT_DOSE/convertMatrix";
 
 // this function gets called once the user drops the file onto the div
 //for drag and drop import doseFile
