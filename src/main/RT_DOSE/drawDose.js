@@ -1,4 +1,4 @@
-import {findXY} from "./doseDataParser";
+import {findXY} from "./convertMatrix";
 
 function checkAndDraw(dose_value, checkVal_check_dose) {
     let color = [];
@@ -39,11 +39,12 @@ function checkAndDraw(dose_value, checkVal_check_dose) {
 }
 
 function drawDose(Px, Py, color) {
-    let canvas = document.getElementById('doseCanvas');
+    let canvas = document.getElementById('myCanvas');
     let ctx = canvas.getContext('2d');
 
     ctx.save();
-    //draw path
+    ctx.scale(1.585938, 1.585938)
+    ctx.translate(-146.0892796, -105.3132142)
     ctx.beginPath();
     ctx.moveTo(Px[0], Py[0]);
     for (let i = 1; i < Px.length; i++) {
