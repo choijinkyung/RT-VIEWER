@@ -7,7 +7,7 @@ import * as cornerstoneMath from "cornerstone-math"
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import voxelCal from "../RT_STRUCTURE/pixel2voxel";
 import {structFile, reset, getCTImage, sendDrawImage} from "../RT_STRUCTURE/drawROI";
-import {CT2Patient,doseFile} from "../RT_DOSE/doseDataParser";
+import {getCTimage2,doseFile} from "../RT_DOSE/convertMatrix";
 import {Dose_Checkbox, Dose_checkEvent} from "../RT_DOSE/doseCheckbox";
 import {checkAndDraw} from "../RT_DOSE/drawDose";
 
@@ -133,13 +133,13 @@ function gridScaling(dose_image, dose_pixel_data, Rows, Columns, Number_of_Frame
     }
 
     for (let z = 110; z > 110 - Number_of_Frames; z--) {
-        for (let y = 0; y < Columns; y++) {
+        for (let y = 0; y < Rows; y++) {
             dose_value[z][y] = [];
         }
     }
     for (let z = 110; z > 110 - Number_of_Frames; z--) {
-        for (let y = 0; y < Columns; y++) {
-            for (let x = 0; x < Rows; x++) {
+        for (let y = 0; y < Rows; y++) {
+            for (let x = 0; x < Columns; x++) {
 
                 dose_value[z][y][x] = [];
             }
@@ -149,8 +149,8 @@ function gridScaling(dose_image, dose_pixel_data, Rows, Columns, Number_of_Frame
     let dose_sort = [];
     //convert array to 3 dimension
     for (let z = 110; z > 110 - Number_of_Frames; z--) {
-        for (let y = 0; y < Columns; y++) {
-            for (let x = 0; x < Rows; x++) {
+        for (let y = 0; y < Rows; y++) {
+            for (let x = 0; x < Columns; x++) {
                 dose_value[z][y][x] = dose_value_temp[cnt];
                 dose_sort.push(dose_value[z][y][x]);
                 cnt++;
@@ -185,7 +185,7 @@ function updateTheImage(CTimageIds, imageIndex) {
             patientInformation(CT_image);
             voxelCal(CT_image);
             getCTImage(CT_image);
-            CT2Patient(CT_image);
+            getCTimage2(CT_image);
             sendDrawImage(CT_image);
             checkAndDraw(dose_value[currentImageIndex], checkVal_check_dose);
 
@@ -214,7 +214,7 @@ function firstLoader(CTimageIds, imageIndex) {
             voxelCal(CT_image);
             getCTImage(CT_image);
             sendDrawImage(CT_image);
-            CT2Patient(CT_image);
+            getCTimage2(CT_image);
             getCheckValue([]);
 
             document.getElementById('topleft1').textContent = 'Image : ' + (currentImageIndex + 1) + '/' + (fileLength - 3);
