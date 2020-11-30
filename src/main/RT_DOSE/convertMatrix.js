@@ -237,7 +237,7 @@ function DOSE2CT(matrixDose2Patient, matrixCT2Patient, Vi, Vj) {
        //output.push('<ul>' + '[' + Px[i] + ',' + Py[i] + ']' + '</ul>');
     }
 
-    drawDose(Px, Py, dose_draw_color,CT_Di,CT_Dj,dose_Sx,dose_Sy);
+    drawDose(Px, Py, dose_draw_color,CT_Di,CT_Dj);
 }
 
 export {doseFile, findXY, CT2Patient, getCTimage2}
