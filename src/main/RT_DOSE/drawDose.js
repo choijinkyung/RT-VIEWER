@@ -38,7 +38,7 @@ function checkAndDraw(dose_value, checkVal_check_dose) {
     }
 }
 
-function drawDose(Px, Py, color,CT_Di,CT_Dj,dose_Sx,dose_Sy) {
+function drawDose(Px, Py, color,CT_Di,CT_Dj) {
     let canvas = document.getElementById('myCanvas');
     let ctx = canvas.getContext('2d');
 
