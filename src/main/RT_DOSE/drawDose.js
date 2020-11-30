@@ -38,13 +38,14 @@ function checkAndDraw(dose_value, checkVal_check_dose) {
     }
 }
 
-function drawDose(Px, Py, color) {
+function drawDose(Px, Py, color,CT_Di,CT_Dj,dose_Sx,dose_Sy) {
     let canvas = document.getElementById('myCanvas');
     let ctx = canvas.getContext('2d');
 
     ctx.save();
-    ctx.scale(1.585938, 1.585938)
-    ctx.translate(-146.0892796, -105.3132142)
+    ctx.scale(1.2+CT_Di,1.2+CT_Dj);
+    ctx.translate(-146,-125);
+
     ctx.beginPath();
     ctx.moveTo(Px[0], Py[0]);
     for (let i = 1; i < Px.length; i++) {
@@ -52,7 +53,8 @@ function drawDose(Px, Py, color) {
     }
     ctx.closePath();
     ctx.fillStyle = color;
-    ctx.globalAlpha = 0.5;
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = color;
     ctx.stroke();
     ctx.fill();
     ctx.restore();

@@ -107,7 +107,6 @@ function dose2patient(Vi, Vj, color) {
     dose_Di = parseFloat(dose_pixelSpaceArr[0]);
     dose_Dj = parseFloat(dose_pixelSpaceArr[1]);
 
-
     let dose_vecPatHor = [dose_Xx * dose_Di, dose_Xy * dose_Di, dose_Xz * dose_Di];
     let dose_vecPatVer = [dose_Yx * dose_Dj, dose_Yy * dose_Dj, dose_Yz * dose_Dj];
 
@@ -120,21 +119,20 @@ function dose2patient(Vi, Vj, color) {
         [dose_Xz * dose_Di, dose_Yz * dose_Dj, dose_vecPatNor[2], dose_Sz],
         [0, 0, 0, 1]]);
 
-
     /*
-    let dose_vecPatHor = [dose_Xx , dose_Xy , dose_Xz ];
-    let dose_vecPatVer = [dose_Yx , dose_Yy , dose_Yz ];
+      let dose_vecPatHor = [dose_Xx , dose_Xy , dose_Xz ];
+      let dose_vecPatVer = [dose_Yx , dose_Yy , dose_Yz ];
 
 
-    //cross product ( 외적 )
-    let dose_vecPatNor = math.cross(dose_vecPatHor, dose_vecPatVer);
+      //cross product ( 외적 )
+      let dose_vecPatNor = math.cross(dose_vecPatHor, dose_vecPatVer);
 
-    let matrixDose2Patient = math.matrix([[dose_Xx , dose_Yx , dose_vecPatNor[0], dose_Sx],
-        [dose_Xy , dose_Yy , dose_vecPatNor[1], dose_Sy],
-        [dose_Xz , dose_Yz , dose_vecPatNor[2], dose_Sz],
-        [0, 0, 0, 1]]);
+      let matrixDose2Patient = math.matrix([[dose_Xx , dose_Yx , dose_vecPatNor[0], dose_Sx],
+          [dose_Xy , dose_Yy , dose_vecPatNor[1], dose_Sy],
+          [dose_Xz , dose_Yz , dose_vecPatNor[2], dose_Sz],
+          [0, 0, 0, 1]]);
 
-     */
+   */
     dose_draw_color = color;
     CT2Patient(matrixDose2Patient, Vi, Vj);
 }
@@ -194,7 +192,18 @@ function CT2Patient(matrixDose2Patient, Vi, Vj) {
         [CT_Xy * CT_Di, CT_Yy * CT_Dj, vecPatNor[1], CT_Sy],
         [CT_Xz * CT_Di, CT_Yz * CT_Dj, vecPatNor[2], CT_Sz],
         [0, 0, 0, 1]]);
+/*
+    let vecPatHor = [CT_Xx , CT_Xy , CT_Xz ];
+    let vecPatVer = [CT_Yx , CT_Yy , CT_Yz ];
 
+    //cross product ( 외적 )
+    let vecPatNor = math.cross((vecPatHor), (vecPatVer));
+
+    let matrixCT2Patient = math.matrix([[CT_Xx , CT_Yx , vecPatNor[0], CT_Sx],
+        [CT_Xy , CT_Yy , vecPatNor[1], CT_Sy],
+        [CT_Xz , CT_Yz , vecPatNor[2], CT_Sz],
+        [0, 0, 0, 1]]);
+ */
     DOSE2CT(matrixDose2Patient, matrixCT2Patient, Vi, Vj);
 }
 
@@ -213,8 +222,6 @@ function DOSE2CT(matrixDose2Patient, matrixCT2Patient, Vi, Vj) {
         DOSE2CT_xy.push((coordsDOSE2CT[i]));
     }
 
-
-    let output = [];
     //find DOSE2CT x value
     for (let i = 0; i < DOSE2CT_xy.length; i++) {
         DOSE2CT_x[i] = math.subset(DOSE2CT_xy[i], math.index(0, 0));
@@ -222,16 +229,15 @@ function DOSE2CT(matrixDose2Patient, matrixCT2Patient, Vi, Vj) {
         //output.push('<ul>' + '[' + DOSE2CT_x[i] + ',' + DOSE2CT_y[i] + ']' + '</ul>');
     }
 
+    let output=[];
     let Px = [], Py = [];
     for (let i = 0; i < DOSE2CT_x.length; i++) {
         Px[i] = (CT_Xx * CT_Di * DOSE2CT_x[i]) + (CT_Yx * CT_Dj * DOSE2CT_y[i]) + CT_Sx;
         Py[i] = (CT_Xy * CT_Di * DOSE2CT_x[i]) + (CT_Yy * CT_Dj * DOSE2CT_y[i]) + CT_Sy;
-        output.push('<ul>' + '[' + Px[i] + ',' + Py[i] + ']' + '</ul>');
+       //output.push('<ul>' + '[' + Px[i] + ',' + Py[i] + ']' + '</ul>');
     }
 
-    document.getElementById('dose2').innerHTML = '<ul>' + output.join(' ') + '</ul>';
-
-    drawDose(Px, Py, dose_draw_color);
+    drawDose(Px, Py, dose_draw_color,CT_Di,CT_Dj,dose_Sx,dose_Sy);
 }
 
 export {doseFile, findXY, CT2Patient, getCTimage2}
