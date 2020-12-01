@@ -6,7 +6,15 @@ function isASCII(str) {
 }
 
 let dataSet;
-
+/**
+ * @function doseDataDump
+ * @param {obejct} file -> transmitted deose file
+ * @description
+ * (Only when needed)
+ * This function deals with
+ * 1. total data dump of dose
+ *
+ **/
 // This function will read the file into memory and then start dumping it
 function doseDataDump(file) {
     // clear any data currently being displayed as we parse this next file
@@ -90,7 +98,16 @@ function doseDataDump(file) {
 }
 
 let doseData = [];
-
+/**
+ * @function doseDump
+ * @param {object} dataSet -> Data parsed by Dose
+ * @param {object} output -> To show in hierarchy form.
+ * @description
+ * (Only when needed)
+ * This function deals with
+ * 1. Method for displaying data in a hierarchy
+ *
+ **/
 function doseDump(dataSet, output) {
     try {
         for (let propertyName in dataSet.elements) {

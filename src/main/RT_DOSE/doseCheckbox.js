@@ -1,6 +1,12 @@
 import $ from "jquery";
-import {getCheckValue} from "../Loader/firstLoader";
-
+import {getCheckValue} from "../Loader/fileLoader";
+/**
+ * @function Dose_Checkbox
+ * @param {number} dosemax -> dose Max Value
+ * @description
+ * This function deals with
+ * 1. Generate checkboxes by dividing by do level
+ */
 function Dose_Checkbox(dosemax) {
     let level = [];
     let pres = 40 * 100; //prescription : 4000cGy
@@ -33,6 +39,15 @@ function Dose_Checkbox(dosemax) {
     });
 }
 
+/**
+ * @function Dose_checkEvent
+ * @description
+ * This function deals with
+ * 1. checkbox event listener
+ * 2. Pass checked values to addDoseSet function
+ * 3. Function call
+ *  <br>1)name : addDoseSet
+ **/
 function Dose_checkEvent() {
     /*Event Listener*/
     $(document).ready(function () {
@@ -52,12 +67,23 @@ function Dose_checkEvent() {
 let information = {
     Dose: []
 }
-function addDoseSet(evt) {
-    if (evt.target.checked === true) {
-        information.Dose.push(evt.target.value);
+/**
+ * @function addDoseSet
+ * @param {event} e -> Event that occurs when Checkbox mouse click
+ * @description
+ * This function deals with
+ * 1. Add checked values to the Dose set
+ * 2. Delete unchecked values from the Dose set
+ * 3. Function call
+ *  <br> 1) name : getCheckValue
+ *          param : information.Dose
+ **/
+function addDoseSet(e) {
+    if (e.target.checked === true) {
+        information.Dose.push(e.target.value);
         getCheckValue(information.Dose);
-    } else {
-        let index = information.Dose.indexOf(evt.target.value);
+    } else { // 체크 해제된 값을 Dose set에서 뺀다
+        let index = information.Dose.indexOf(e.target.value);
         if (index !== -1) {
             information.Dose.splice(index, 1);
         }

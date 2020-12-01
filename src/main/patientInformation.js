@@ -7,8 +7,11 @@ function patientInformation(image) {
         document.getElementById('patientID').textContent = 'Patient ID : ' + image.data.string('x00100020');
         document.getElementById('gender').textContent = 'Gender : ' + image.data.string('x00100040');
 
-    } catch (ex) {
-        alert('parsing error');
+    } catch (err) {
+        var message = err;
+        if (err.exception) {
+            message = err.exception;
+        }
     }
 }
 
