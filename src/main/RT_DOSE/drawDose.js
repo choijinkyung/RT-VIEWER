@@ -1,5 +1,16 @@
 import {findXY} from "./convertMatrix";
-
+/**
+ * @function checkAndDraw
+ * @param {object} dose_value -> Dose value = pixelData * gridscaling
+ * @param {string} checkVal_check_dose -> vale that Checked Dose Level
+ * @description
+ * This function deals with
+ * 1. Method to confirm that the checked values are for each level
+ * 2. Specify color to draw
+ * 3. Function call
+ * <br> 1) name : findXY
+ *  <br>   param : dose_value, checkVal_check_dose, color
+ */
 function checkAndDraw(dose_value, checkVal_check_dose) {
     let color = [];
     color[0] = '#780000';
@@ -37,7 +48,14 @@ function checkAndDraw(dose_value, checkVal_check_dose) {
         }
     }
 }
-
+/**
+ * @function drawDose
+ * @param {object} Px -> A set of coordinate values converted from x coordinates above the reference dose value to dose -> ct.
+ * @param {object} Py ->  A set of coordinate values converted from y coordinates above the reference dose value to dose -> ct.
+ * @description
+ * This function deals with
+ * 1. Draw x,y coordinates received on canvas.
+ */
 function drawDose(Px, Py, color,CT_Di,CT_Dj) {
     let canvas = document.getElementById('myCanvas');
     let ctx = canvas.getContext('2d');

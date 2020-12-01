@@ -6,19 +6,8 @@ import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import Hammer from "hammerjs";
 import dicomParser from "dicom-parser"
 import "./MainUI.css"
-import {
-    angleOn,
-    lengthOn,
-    eraserOn,
-    drawCircle,
-    drawRectangle,
-    invertOn,
-    interpolationOn,
-    hflipOn,
-    vflipOn,
-    rotateOn
-} from "./RT_STRUCTURE/buttonEventFunction.js"
-import {imageIdList} from './Loader/firstLoader.js'
+import ButtonEvent from "./buttonEvent";
+import {fileLoader} from './Loader/fileLoader.js'
 import {handleFileSelect, handleDragOver} from "./Loader/dragAndDrop";
 import Controlled from "./mouseControl";
 
@@ -29,7 +18,11 @@ cornerstoneTools.external.Hammer = Hammer;
 cornerstoneTools.external.cornerstoneMath = cornerstoneMath
 cornerstoneTools.init();
 dicomParser.toString().bold()
-
+let buttonEvent = new ButtonEvent();
+/**
+ * MAIN UI class
+ * @class
+ */
 class MainUIElements extends React.Component {
     componentDidMount() {
         // Setup dropZon  and listeners.
@@ -93,62 +86,61 @@ class MainUIElements extends React.Component {
                 <div> Open patient =>
                     <input type="file" id="filepicker" name="fileList" webkitdirectory={""} directory={""} multiple
                            onChange={(e) => {
-                               imageIdList(e);
+                               fileLoader(e);
                            }}/>
                 </div>
-                <ul id="listing"></ul>
 
                 <div className={'left'}>
                     <div>
                         <button onClick={() => {
-                            angleOn()
+                            buttonEvent.angleOn()
                         }}>Angle
                         </button>
                         &nbsp;&nbsp;
                         <button onClick={() => {
-                            lengthOn()
+                            buttonEvent.lengthOn()
                         }}>Length
                         </button>
                         &nbsp;&nbsp;
                         <button onClick={() => {
-                            drawCircle()
+                            buttonEvent.drawCircle()
                         }}>Circle
                         </button>
                         &nbsp;&nbsp;
                         <button onClick={() => {
-                            drawRectangle()
+                            buttonEvent.drawRectangle()
                         }}>Rectangle
                         </button>
                         &nbsp;&nbsp;
                         <button onClick={() => {
-                            eraserOn()
+                            buttonEvent.eraserOn()
                         }}>Erase
                         </button>
                         &nbsp;&nbsp;
                     </div>
                     <div>
                         <button onClick={() => {
-                            invertOn()
+                            buttonEvent.invertOn()
                         }}>Toggle Invert
                         </button>
                         &nbsp;&nbsp;
                         <button onClick={() => {
-                            interpolationOn()
+                            buttonEvent.interpolationOn()
                         }}>Toggle Interpolation
                         </button>
                         &nbsp;&nbsp;
                         <button onClick={() => {
-                            hflipOn()
+                            buttonEvent.hflipOn()
                         }}>Horizontal Flip
                         </button>
                         &nbsp;&nbsp;
                         <button onClick={() => {
-                            vflipOn()
+                            buttonEvent.vflipOn()
                         }}>Vertical Flip
                         </button>
                         &nbsp;&nbsp;
                         <button onClick={() => {
-                            rotateOn()
+                            buttonEvent.rotateOn()
                         }}>Rotate 90
                         </button>
                         &nbsp;&nbsp;

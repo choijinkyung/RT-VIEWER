@@ -1,23 +1,38 @@
 import {doseFile} from "../RT_DOSE/convertMatrix";
-
-// this function gets called once the user drops the file onto the div
-//for drag and drop import doseFile
-function handleFileSelect(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
+/**
+ * @function handleFileSelect
+ * @param {event} e -> Events that occur when a file is selected
+ * @description
+ * This function deals with
+ * 1. This function gets called once the user drops the file onto the div for drag and drop import doseFile
+ * 2. drop event
+ * 3. Function call
+ *      <br>1) name : doseFile
+ *        <br> param : files[0]
+ */
+function handleFileSelect(e) {
+    e.stopPropagation();
+    e.preventDefault();
 
     // Get the FileList object that contains the list of files that were dropped
-    let files = evt.dataTransfer.files;
+    let files = e.dataTransfer.files;
 
     doseFile(files[0]);
 }
 
-//this function manage drag event
-function handleDragOver(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
+/**
+ * @function handleDragOver
+ * @param {event} e -> Events that occur handle Drag over
+ * @description
+ * This function deals with
+ * 1. This function gets called once the user drops the file onto the div for drag and drop import doseFile
+ * 2. dragOver event
+ */
+function handleDragOver(e) {
+    e.stopPropagation();
+    e.preventDefault();
 
-    evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+    e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 }
 
-export {handleFileSelect,handleDragOver}
+export {handleFileSelect, handleDragOver}

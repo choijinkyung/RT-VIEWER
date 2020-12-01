@@ -1,0 +1,3629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>Global - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ButtonEvent.html">ButtonEvent</a></li><li><a href="MainUIElements.html">MainUIElements</a></li></ul><h3>Global</h3><ul><li><a href="global.html#handleFileSelect">handleFileSelect</a></li><li><a href="global.html#handleDragOver">handleDragOver</a></li><li><a href="global.html#fileLoader">fileLoader</a></li><li><a href="global.html#wheelE">wheelE</a></li><li><a href="global.html#updateTheImage">updateTheImage</a></li><li><a href="global.html#getCheckValue">getCheckValue</a></li><li><a href="global.html#doseFile">doseFile</a></li><li><a href="global.html#findXY">findXY</a></li><li><a href="global.html#dose2patient">dose2patient</a></li><li><a href="global.html#getCTimage2">getCTimage2</a></li><li><a href="global.html#CT2Patient">CT2Patient</a></li><li><a href="global.html#DOSE2CT">DOSE2CT</a></li><li><a href="global.html#Dose_Checkbox">Dose_Checkbox</a></li><li><a href="global.html#Dose_checkEvent">Dose_checkEvent</a></li><li><a href="global.html#addDoseSet">addDoseSet</a></li><li><a href="global.html#doseDataDump">doseDataDump</a></li><li><a href="global.html#doseDump">doseDump</a></li><li><a href="global.html#checkAndDraw">checkAndDraw</a></li><li><a href="global.html#drawDose">drawDose</a></li><li><a href="global.html#gridScaling">gridScaling</a></li><li><a href="global.html#getDoseValue">getDoseValue</a></li><li><a href="global.html#importPixelData">importPixelData</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Global</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        
+        </h2>
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+            
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="handleFileSelect"><span class="type-signature"></span>handleFileSelect<span class="signature">(e)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>This function gets called once the user drops the file onto the div for drag and drop import doseFile</li>
+<li>drop event</li>
+<li>Function call
+<br>1) name : doseFile
+<br> param : files[0]</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>e</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">event</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Events that occur when a file is selected</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="handleDragOver"><span class="type-signature"></span>handleDragOver<span class="signature">(e)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>This function gets called once the user drops the file onto the div for drag and drop import doseFile</li>
+<li>dragOver event</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>e</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">event</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Events that occur handle Drag over</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="fileLoader"><span class="type-signature"></span>fileLoader<span class="signature">(e)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>function call for CTImage, RT DOSE, RT STRUCTURE files load</li>
+<li>mouseWheel event function -&gt; update image &amp; dose pixel data</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>e</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">event</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Event that occurs when Input tag call onChange function</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="wheelE"><span class="type-signature"></span>wheelE<span class="signature">(e)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>Transforming the z-coordinates of CT and DOSE use mouse Wheel</li>
+<li>Load them in order</li>
+<li>Output Image index and z coordinate</li>
+<li>Function call
+<br> 1) name : updateTheImage
+<br>    param : imageId, currentImageIndex ( +1 , -1, 0 )
+<br>   2) name : reset</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>e</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">event</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Event that occurs when mouse wheel</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>false -&gt; Prevent page from scrolling</p>
+</div>
+
+
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="updateTheImage"><span class="type-signature"></span>updateTheImage<span class="signature">(CTimageIds, imageIndex)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>Only CTImage load using cornerstone ImageLoader</li>
+<li>Load the image corresponding to the current index.</li>
+<li>Condition: Loading images only in CT</li>
+<li>function call
+<br>1) name : patientInformation
+<br>   param : CT_image
+<br> 2) name : voxelCal
+<br>    param : CT_image
+<br> 3) name : getCTImage
+<br>    param : CT_image
+<br> 4) name : getCTimage2
+<br>    param : CT_image
+<br> 5) name : sendDrawImage
+<br>    param : CT_image
+<br> 6) name : getCheckValue
+<br>   param : checkVal_check_dose
+<br> 7) name : checkAndDraw
+<br>  param : dose_value[currentImageIndex] , checkVal_check_dose</li>
+</ol>
+<p>&lt; DICOM Tag &gt;</p>
+<ol>
+<li>SOP Class UID : x00080016</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>CTimageIds</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">dicomObject</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>imageIndex</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>img</p>
+</div>
+
+
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getCheckValue"><span class="type-signature"></span>getCheckValue<span class="signature">(checkVal_check)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>Get checkValue checked in doseCheckBox function *</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>checkVal_check</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="doseFile"><span class="type-signature"></span>doseFile<span class="signature">(file)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>Loading DOSE file</li>
+<li>DOSE Data Parsing</li>
+<li>Function call
+<br>1) name : importPixelData
+<br>param : dose_image, dataSet</li>
+</ol>
+<p>&lt; DICOM Tag &gt;</p>
+<ol>
+<li>ROWS : x00280010</li>
+<li>COLUMNS : x00280011</li>
+<li>SOP Class UID : x00080016</li>
+<li>Pixel Spacing : x00280030</li>
+<li>Image Position : x00200032</li>
+<li>Image Orientation : x00200037</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// How to parse the dicom data ? // User ArrayBuffer and DicomParser let dataSet = dicomParser.parseDicom(byteArray) dataSet.uint16('x00280010') // Use cornerstone Image loader dose_image.data.string('x00080016') *</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>file</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>File transferred from fileLoaer function</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="findXY"><span class="type-signature"></span>findXY<span class="signature">(dose_value, checkVal_check_dose, color)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>Extract x,y coordinates from an obejct containing dose values that are above the reference dose value (checkVal_check_dose).</li>
+<li>Function call
+<br>1) name : dose2patient
+<br> param : Vi, Vj, color</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dose_value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Dose value = pixelData * gridscaling</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>checkVal_check_dose</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>vale that Checked Dose Level</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>color</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>dose overlay color</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="dose2patient"><span class="type-signature"></span>dose2patient<span class="signature">(Vi, Vj, color)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>Generate a matrix that converts the Dose to the patient coordinates</li>
+<li>Function call
+<br>1) name : CT2Patient
+<br> param : matrixDose2Patient, Vi, Vj</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Vi</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>A collection of x coordinates above the reference dose value.</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Vj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>A collection of y coordinates above the reference dose value.</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>color</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>dose overlay color</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getCTimage2"><span class="type-signature"></span>getCTimage2<span class="signature">(CT_img)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>Return CT images loaded from firstloader</li>
+<li>Objective: To use CT image data within the convertMatrix file.</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>CT_img</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>img</p>
+</div>
+
+
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="CT2Patient"><span class="type-signature"></span>CT2Patient<span class="signature">(matrixDose2Patient, Vi, Vj)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>Generate a matrix that converts the CT to the patient coordinates</li>
+<li>Function call
+<br>1) name : DOSE2CT
+<br> param : matrixDose2Patient, matrixCT2Patient, Vi, Vj</li>
+</ol>
+<p>&lt; DICOM Tag &gt;</p>
+<ol>
+<li>Pixel Spacing : x00280030</li>
+<li>Image Position : x00200032</li>
+<li>Image Orientation : x00200037</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// How to manipulate vector ?let vecPatHor = [CT_Xx * CT_Di, CT_Xy * CT_Di, CT_Xz * CT_Di];let vecPatVer = [CT_Yx * CT_Dj, CT_Yy * CT_Dj, CT_Yz * CT_Dj];//cross product ( 외적 )let vecPatNor = math.cross((vecPatHor), (vecPatVer));</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>matrixDose2Patient</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">matrix</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Convert Dose to Patient coords matrix</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Vi</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>A collection of x coordinates above the reference dose value.</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Vj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>A collection of y coordinates above the reference dose value.</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="DOSE2CT"><span class="type-signature"></span>DOSE2CT<span class="signature">(matrixDose2Patient, matrixCT2Patient, Vi, Vj)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>Inverse matrix ( CT- &gt; patient )</li>
+<li>Generate a matrix that converts it to DOSE - CT</li>
+<li>Obtain x,y after converting the dose coordinates.</li>
+<li>Function call
+<br> 1) name : drawDose
+<br> param :Px, Py, dose_draw_color, CT_Di, CT_Dj</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>matrixDose2Patient</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">matrix</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Convert Dose to Patient coords matrix</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>matrixCT2Patient</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">matrix</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Convert CT to Patient coords matrix</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Vi</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>A collection of x coordinates above the reference dose value.</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Vj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>A collection of y coordinates above the reference dose value.</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="Dose_Checkbox"><span class="type-signature"></span>Dose_Checkbox<span class="signature">(dosemax)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>Generate checkboxes by dividing by do level</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dosemax</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>dose Max Value</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="Dose_checkEvent"><span class="type-signature"></span>Dose_checkEvent<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>checkbox event listener</li>
+<li>Pass checked values to addDoseSet function</li>
+<li>Function call
+<br>1)name : addDoseSet</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="addDoseSet"><span class="type-signature"></span>addDoseSet<span class="signature">(e)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>Add checked values to the Dose set</li>
+<li>Delete unchecked values from the Dose set</li>
+<li>Function call
+<br> 1) name : getCheckValue
+param : information.Dose</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>e</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">event</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Event that occurs when Checkbox mouse click</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="doseDataDump"><span class="type-signature"></span>doseDataDump<span class="signature">(file)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>(Only when needed)
+This function deals with</p>
+<ol>
+<li>total data dump of dose</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>file</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">obejct</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>transmitted deose file</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="doseDump"><span class="type-signature"></span>doseDump<span class="signature">(dataSet, output)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>(Only when needed)
+This function deals with</p>
+<ol>
+<li>Method for displaying data in a hierarchy</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dataSet</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Data parsed by Dose</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>output</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>To show in hierarchy form.</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="checkAndDraw"><span class="type-signature"></span>checkAndDraw<span class="signature">(dose_value, checkVal_check_dose)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>Method to confirm that the checked values are for each level</li>
+<li>Specify color to draw</li>
+<li>Function call
+<br> 1) name : findXY
+<br>   param : dose_value, checkVal_check_dose, color</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dose_value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Dose value = pixelData * gridscaling</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>checkVal_check_dose</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>vale that Checked Dose Level</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="drawDose"><span class="type-signature"></span>drawDose<span class="signature">(Px, Py)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>Draw x,y coordinates received on canvas.</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>Px</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>A set of coordinate values converted from x coordinates above the reference dose value to dose -&gt; ct.</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Py</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>A set of coordinate values converted from y coordinates above the reference dose value to dose -&gt; ct.</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="gridScaling"><span class="type-signature"></span>gridScaling<span class="signature">(dose_image, dose_pixel_data, Rows, Columns, Number_of_Frames)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>Obtain dose values</li>
+<li>GridScaling the pixel data to obtain the dose value.</li>
+<li>Obtain max Dose value</li>
+<li>Function call
+<br> 1) name : Dose_Checkbox
+<br>    param : dosemax
+<br> 2) name : Dose_checkEvent</li>
+</ol>
+<p>&lt; DICOM tag &gt;
+1) Dose_Grid_SCaling : x3004000e</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dose_image</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Dose image object</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dose_pixel_data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Dose pixel data</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Rows</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Row value of received dose ( tag : x00280010 )</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Columns</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Columns value of received dose ( tag : x00280011 )</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>Number_of_Frames</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Number_of_Frames value of received dose ( tag : x00280008 )</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getDoseValue"><span class="type-signature"></span>getDoseValue<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>return dose_value</li>
+</ol>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>dose_value</p>
+</div>
+
+
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="importPixelData"><span class="type-signature"></span>importPixelData<span class="signature">(dose_image, dataSet)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>This function deals with</p>
+<ol>
+<li>Import Dose Pixel Data</li>
+<li>Parse the Pixel Data</li>
+<li>Function call
+<br> 1) name : gridScaling
+<br>    param :dose_image, dose_pixel_data, Rows, Columns, Number_of_Frames</li>
+</ol>
+<p>&lt; DICOM tag &gt;
+1) Pixel Data : x7fe00010
+2) Bits Allocated : x00280100</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dose_image</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Dose Image</p>
+</blockquote></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dataSet</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><blockquote>
+<p>Dose dataset</p>
+</blockquote></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Tue Dec 01 2020 17:09:51 GMT+0900 (GMT+09:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
