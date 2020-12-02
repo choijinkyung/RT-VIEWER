@@ -49,11 +49,7 @@ function drawROI(CT_image, struct, color) {
 function reset() {
     let canvas = document.getElementById("myCanvas");
     let ctx = canvas.getContext("2d");
-
-    let canvas2 = document.getElementById('doseCanvas');
-    let ctx2 = canvas2.getContext("2d");
     ctx.clearRect(0, 0, 512, 512);
-    ctx2.clearRect(0, 0, 512, 512);
 }
 
 
