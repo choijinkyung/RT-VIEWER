@@ -1,5 +1,5 @@
 import $ from "jquery";
-import {ROI_addCheckbox} from "./ROIcheckbox";
+import {ROI_Checkbox} from "./ROIcheckbox";
 import {drawROI} from "./drawROI";
 
 function ROIData2Json(roi_List) {
@@ -33,7 +33,7 @@ function ROIData2Json(roi_List) {
 
             ROI_LIST_Array.push(ROI_object);
         }
-        ROI_addCheckbox(ROI_LIST_Array);
+        ROI_Checkbox(ROI_LIST_Array);
     });
 
 }
@@ -156,17 +156,29 @@ function checkAndReset(checkVal_check) {
 
 }
 
-/*Function*/
+/**
+ * @function addROIset
+ * @param {event} evy
+ * @description
+ * This function deals with
+ * 1. Put the ROI check set when checking.
+ * 2. Delete from ROI check set when unchecked
+ * 3. Function call
+ * <br> 1) name : checkAndDraw
+ * <br> param : checkVal_check
+ * <br> 2) name : checkAndReset
+ * <br> param : checkVal_check
+ */
 function addROIset(evt) {
     let checkVal_check;
-    if (evt.target.checked === true) {
+    if (evt.target.checked === true) { // 체크 되었을 때
         information.ROIs.push(evt.target.value);
         checkVal_check = evt.target.value;
 
         checkAndDraw(checkVal_check);
-    } else {
+    } else { // 체크 해제시
         let index = information.ROIs.indexOf(evt.target.value);
-        if (index !== -1) {
+        if (index !== -1) { //해당 ROI를 set에서 삭제
             information.ROIs.splice(index, 1);
         }
         checkVal_check = evt.target.value;
