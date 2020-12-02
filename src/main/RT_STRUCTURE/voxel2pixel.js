@@ -53,6 +53,7 @@ function pixelCal(CT_image, struct) {
         var message = err;
         if (err.exception) {
             message = err.exception;
+            alert(message)
         }
     }
 }

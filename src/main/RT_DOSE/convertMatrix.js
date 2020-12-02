@@ -44,7 +44,7 @@ function doseFile(file) {
     const imageId = cornerstoneWadoImageLoader.wadouri.fileManager.add(file);
 
     let reader = new FileReader();
-    reader.onload = function (file) {
+    reader.onload = function () {
         let arrayBuffer = reader.result;
         // Here we have the file data as an ArrayBuffer.  dicomParser requires as input a
         // Uint8Array so we create that here
@@ -61,10 +61,8 @@ function doseFile(file) {
 
                 cornerstone.loadImage(imageId).then(function (dose_image) {
                     if (dose_image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.481.2') {
-                        let dose_pixelSpacing = 0;
-                        dose_pixelSpaceArr = [];
+                        let dose_pixelSpacing = dose_image.data.string('x00280030');
 
-                        dose_pixelSpacing = dose_image.data.string('x00280030');
                         dose_pixelSpacing = dose_pixelSpacing.toString();
                         dose_pixelSpaceArr = dose_pixelSpacing.split("\\");
 
@@ -83,6 +81,7 @@ function doseFile(file) {
                 var message = err;
                 if (err.exception) {
                     message = err.exception;
+                    alert(message)
                 }
             }
         }, 10);
@@ -233,12 +232,10 @@ let CT_Sx, CT_Sy, CT_Sz;
  *
  */
 function CT2Patient(matrixDose2Patient, Vi, Vj) {
-    let CT_pixelSpacing = 0;
-    let CT_pixelSpaceArr = [];
-
-    CT_pixelSpacing = img.data.string('x00280030');
+    let CT_pixelSpacing = img.data.string('x00280030');
     CT_pixelSpacing = CT_pixelSpacing.toString();
-    CT_pixelSpaceArr = CT_pixelSpacing.split("\\");
+
+    let CT_pixelSpaceArr = CT_pixelSpacing.split("\\");
 
     let CT_imgPos = img.data.string('x00200032');
     let CT_imgPosArr = CT_imgPos.split("\\");
@@ -319,7 +316,7 @@ function DOSE2CT(matrixDose2Patient, matrixCT2Patient, Vi, Vj) {
         coordsDOSE2CT[i] = math.multiply(DOSE2CT, math.matrix([[Vi[i]], [Vj[i]], [0], [1]]));
         DOSE2CT_xy.push((coordsDOSE2CT[i]));
     }
-
+    //let output = [];
     //find DOSE2CT x value
     for (let i = 0; i < DOSE2CT_xy.length; i++) {
         DOSE2CT_x[i] = math.subset(DOSE2CT_xy[i], math.index(0, 0));
@@ -327,7 +324,7 @@ function DOSE2CT(matrixDose2Patient, matrixCT2Patient, Vi, Vj) {
         //output.push('<ul>' + '[' + DOSE2CT_x[i] + ',' + DOSE2CT_y[i] + ']' + '</ul>');
     }
 
-    let output = [];
+
     let Px = [], Py = [];
     for (let i = 0; i < DOSE2CT_x.length; i++) {
         Px[i] = (CT_Xx * CT_Di * DOSE2CT_x[i]) + (CT_Yx * CT_Dj * DOSE2CT_y[i]) + CT_Sx;

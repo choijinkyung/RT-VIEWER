@@ -62,7 +62,7 @@ function structFile(file) {
     //document.getElementById('statusText2').innerHTML = 'Status: Loading file, please wait..';
 
     let reader = new FileReader();
-    reader.onload = function (file) {
+    reader.onload = function () {
         let arrayBuffer = reader.result;
         // Here we have the file data as an ArrayBuffer.  dicomParser requires as input a
         // Uint8Array so we create that here
@@ -157,7 +157,7 @@ function ROIListHierarchy(dataSet) {
                         text += " (" + dataSet.uint16(propertyName) + ")";
 
                     } else if (element.length === 4) {
-                        text += " (" + dataSet.uint32(propertyName) + ")";
+                        text += " (" + dataSet.uint8(propertyName) + ")";
                     }
                     //대부분은 문자열이지만 그렇지 않은 것들을 확인해서 표시하는 것을 위함
                     let str = dataSet.string(propertyName);

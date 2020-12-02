@@ -171,7 +171,7 @@ class MainUIElements extends React.Component {
                         <li>Double Click - save pixel/voxel</li>
                     </ul>
                 </div>
-                <br></br> <br></br> <br></br>
+                <br/> <br/><br/>
                 <div class="left">
                     <div>
                         <div>
@@ -186,7 +186,7 @@ class MainUIElements extends React.Component {
                     </div>
                     <div>
                         <div id="dicomImageWrapper" className="wrapper"
-                             onContextMenu="return false" onWheel={(e) => {
+                             onContextMenu="return false" onWheel={() => {
                         }}>
                             <div>
                                 <Controlled/>
@@ -211,21 +211,21 @@ class MainUIElements extends React.Component {
                     </div>
                     <div>
                         <div>
-                            <span id="coords"></span>
+                            <span id="coords"/>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <span id="voxelCoords"></span>
+                            <span id="voxelCoords"/>
                         </div>
                         <div>
-                            <span id="pixelValue"></span>
+                            <span id="pixelValue"/>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <span id="voxelValue"></span>
+                            <span id="voxelValue"/>
                         </div>
                         <div>
-                            <span id="doseCoords"></span>
+                            <span id="doseCoords"/>
 
                         </div>
                     </div>
-                    <br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+                    <br/><br/><br/><br/><br/><br/><br/>
                 </div>
                 <div className={'right'}>
                     <div className="lefthalf">
@@ -235,8 +235,7 @@ class MainUIElements extends React.Component {
                         <ul id="dose_checkbox_ul">Isodoses</ul>
                     </div>
                 </div>
-                <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
-                <br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
                 {/*
                 <div>
                     <div className="left">

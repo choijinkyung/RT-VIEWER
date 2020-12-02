@@ -22,6 +22,7 @@ function patientInformation(CT_image) {
         var message = err;
         if (err.exception) {
             message = err.exception;
+            alert(message)
         }
     }
 }

@@ -221,7 +221,7 @@ function checkAndDraw(checkVal_check) {
 
 /**
  * @function addROIset
- * @param {event} evy
+ * @param {event} evt
  * @description
  * This function deals with
  * 1. Put the ROI check set when checking.
@@ -244,7 +244,7 @@ function addROIset(evt) {
         if (index !== -1) { //해당 ROI를 set에서 삭제
             information.ROIs.splice(index, 1);
         }
-        checkVal_check = evt.target.value;
+        //checkVal_check = evt.target.value;
     }
 }
 
