@@ -39,6 +39,7 @@ function importPixelData(dose_image, dataSet) {
                 var message = err;
                 if (err.exception) {
                         message = err.exception;
+                        alert(message)
                 }
         }
 

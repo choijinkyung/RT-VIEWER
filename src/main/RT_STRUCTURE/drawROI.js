@@ -16,27 +16,36 @@ import fullColorHex from "./rgbToHex.js";
  * <br> param : color
  */
 function drawROI(CT_image, struct, color) {
-    let px = pixelCal(CT_image, struct);
-    let pi = px[0];
-    let pj = px[1];
+    try{
+        let px = pixelCal(CT_image, struct);
+        let pi = px[0];
+        let pj = px[1];
 
-    let canvas = document.getElementById("myCanvas");
-    let ctx = canvas.getContext("2d");
+        let canvas = document.getElementById("myCanvas");
+        let ctx = canvas.getContext("2d");
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(pi[0], pj[1]);
-    for (let i = 1; i <= pi.length * 3; i++) {
-        if (i % 3 === 0) {
-            ctx.lineTo(pi[i], pj[i + 1]);
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(pi[0], pj[1]);
+        for (let i = 1; i <= pi.length * 3; i++) {
+            if (i % 3 === 0) {
+                ctx.lineTo(pi[i], pj[i + 1]);
+            }
+        }
+        ctx.closePath();
+        ctx.fillStyle = fullColorHex(color);
+        ctx.globalAlpha = 0.5;
+        ctx.stroke();
+        ctx.fill();
+        ctx.restore();
+    }catch(err){
+        var message = err;
+        if (err.exception) {
+            message = err.exception;
+            alert(message)
         }
     }
-    ctx.closePath();
-    ctx.fillStyle = fullColorHex(color);
-    ctx.globalAlpha = 0.5;
-    ctx.stroke();
-    ctx.fill();
-    ctx.restore();
+
 }
 
 /**

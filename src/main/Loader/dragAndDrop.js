@@ -17,7 +17,16 @@ function handleFileSelect(e) {
     // Get the FileList object that contains the list of files that were dropped
     let files = e.dataTransfer.files;
 
-    doseFile(files[0]);
+    try{
+        doseFile(files[0]);
+    }catch (err){
+        var message = err;
+        if (err.exception) {
+            message = err.exception;
+            alert(message)
+        }
+    }
+
 }
 
 /**
