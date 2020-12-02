@@ -6,13 +6,13 @@ import * as cornerstoneTools from "cornerstone-tools";
 import * as cornerstoneMath from "cornerstone-math"
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import voxelCal from "../RT_STRUCTURE/pixel2voxel";
-import {structFile, reset, getCTImage, sendDrawImage} from "../RT_STRUCTURE/drawROI";
+import {reset} from "../RT_STRUCTURE/drawROI";
 import {getCTimage2, doseFile} from "../RT_DOSE/convertMatrix";
 import {checkAndDraw} from "../RT_DOSE/drawDose";
-import React from "react";
 import {getDoseValue} from "../RT_DOSE/gridScaling";
+import {structFile} from "../RT_STRUCTURE/getROIList";
+import {getDrawImageData} from "../RT_STRUCTURE/RTStructureData2Json";
 
-cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
 cornerstoneTools.external.cornerstone = cornerstone
 cornerstoneTools.external.Hammer = Hammer;
@@ -120,8 +120,8 @@ function fileLoader(e) {
 let img;
 /**
  * @method updateTheImage
- * @param {dicomObject}CTimageIds
- * @param {number}imageIndex
+ * @param {object} CTimageIds
+ * @param {number} imageIndex
  * @return img
  * @description
  * This function deals with
@@ -160,9 +160,9 @@ function updateTheImage(CTimageIds, imageIndex) {
 
             patientInformation(CT_image);
             voxelCal(CT_image);
-            getCTImage(CT_image);
+           // getCTImage(CT_image);
             getCTimage2(CT_image);
-            sendDrawImage(CT_image);
+            getDrawImageData(CT_image);
 
             getCheckValue(checkVal_check_dose);
 
