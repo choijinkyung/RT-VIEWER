@@ -62,6 +62,8 @@ function fileLoader(e) {
         imageId[i] = fileJsonArray[i].imageId;
     }
 
+    //이 프로젝트에 포함된 TEST849 폴더에서만 가능 (하드코딩)
+    // RT Dose, RT Plan, RT Structure로 파일 이름 변경한 후의 순서
     //Index 112 : RT DOSE FILE
     //Index 113 : RT PLAN FILE
     //Index 114 : RT STRUCTURE FILE

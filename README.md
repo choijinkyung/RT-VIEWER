@@ -4,6 +4,7 @@
 
 DICOM Web/App Viewer 
 - Can overlay CT IMAGE, DOSE, and RT STRUCTURE 
+- This project based on TEST849 
 
 ## Getting Started 
 1. Git Clone : https://github.com/choijinkyung/DICOM-RT-VIEWER
@@ -107,11 +108,38 @@ Your app is ready to be deployed!
 
 ### `yarn deploy`
 Deploy the project on your github page
+(Your Repository will be public)
+
+npm install gh-pages 
+In package.json
+<br>  "scripts": {
+<br>    "build": "react-scripts build",
+<br>    "deploy": "gh-pages -d build"
+<br>  }
+<br>  "devDependencies": {
+<br>     "gh-pages": "^3.1.0"
+<br>  }, "homepage": "https://choijinkyung.github.io/DICOM-RT-VIEWER/"
+
 
 ### `npm run jsdoc`
 Each code can be annotated into jsdoc.
 Running this script updates.
 
+## Modification Requirement
+1. Modify Check Event
+<br> -> Draw / reset as soon as check
+2. Dose Overlay
+<br> -> Find the contour point and trace it.
+3. Modify the mouse button to activate the zoom event
+<br> -> mouseButton = 3 on the wheel
+4. Modifying the import of Contour Data
+<br> -> import in class
+5. Rotate 90 degrees, flip simultaneously and modify to make it possible
+6. Import RT PLAN File
+7. Separate each file using DB and import
+8. Add Button for Reset x,y coords
+9. DVH 
+10. TreeView
 ## Contribution
 
 Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us. 
