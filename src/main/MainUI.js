@@ -22,6 +22,7 @@ let buttonEvent = new ButtonEvent();
 /**
  * MAIN UI class
  * @class
+ * @author Choi jin kyung
  */
 class MainUIElements extends React.Component {
     componentDidMount() {

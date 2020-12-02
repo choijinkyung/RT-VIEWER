@@ -1,6 +1,10 @@
 import React from "react";
 import {MapInteractionCSS} from "react-map-interaction";
-
+/**
+ * Controlled
+ * @class
+ * @author Choi jin kyung
+ */
 class Controlled extends React.Component {
     constructor(props) {
         super(props);
