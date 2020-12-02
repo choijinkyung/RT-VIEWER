@@ -2,18 +2,32 @@ import * as cornerstone from "cornerstone-core";
 
 let Px, Py;
 
-//caculate voxel from pixel
-function voxelCal(image) {
-    let modality = image.data.string('x00080060');
-    let SOP_UID = image.data.string('x00080016');
+/**
+ * @function voxelCal
+ * @param {object} CT_image
+ * @description
+ * (Only when needed)
+ * This function deals with
+ * 1. Method for displaying data in a hierarchy
+ * 2. Output in hierarchy for output of ROI List
+ *
+ * < DICOM Tag >
+ * 1) Modality : x00080060
+ * 2) ROI Number : x30060022
+ * 3) ROI Name : x30060026
+ **/
+
+function voxelCal(CT_image) {
+    let modality = CT_image.data.string('x00080060');
+    let SOP_UID = CT_image.data.string('x00080016');
     if (modality === ('CT') || SOP_UID === '1.2.840.10008.5.1.4.1.1.481.2' || modality === 'RTDOSE') {
-        let imgPos = image.data.string('x00200032');
+        let imgPos = CT_image.data.string('x00200032');
         let imgPosArr = imgPos.split("\\");
 
         let Sx = (parseFloat(imgPosArr[0]) * 10) / 10;
         let Sy = (parseFloat(imgPosArr[1]) * 10) / 10;
 
-        let imgOri = image.data.string('x00200037');
+        let imgOri = CT_image.data.string('x00200037');
         imgOri = imgOri.toString();
         let imgOriArr = imgOri.split("\\");
 
@@ -24,7 +38,7 @@ function voxelCal(image) {
         let Yy = (parseFloat(imgOriArr[4]) * 10) / 10;
 
 
-        let pixelSpace = image.data.string('x00280030');
+        let pixelSpace = CT_image.data.string('x00280030');
         pixelSpace = pixelSpace.toString();
         let pixelSpaceArr = pixelSpace.split("\\");
 

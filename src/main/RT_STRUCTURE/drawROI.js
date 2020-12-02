@@ -2,7 +2,7 @@ import pixelCal from "./voxel2pixel";
 import fullColorHex from "./rgbToHex.js";
 /**
  * @function drawROI
- * @param {object} image -> CT image corresponding to the current z coordinate
+ * @param {object} CT_image -> CT image corresponding to the current z coordinate
  * @param {string} struct -> Corresponding to current CT image, contour data of checked ROI
  * @param {string} color -> contouring color
  * @description
@@ -15,8 +15,8 @@ import fullColorHex from "./rgbToHex.js";
  * <br> 2)name : fullColorHex
  * <br> param : color
  */
-function drawROI(image, struct, color) {
-    let px = pixelCal(image, struct);
+function drawROI(CT_image, struct, color) {
+    let px = pixelCal(CT_image, struct);
     let pi = px[0];
     let pj = px[1];
 
