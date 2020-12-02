@@ -3,6 +3,8 @@ import {MapInteractionCSS} from "react-map-interaction";
 /**
  * Controlled
  * @class
+ * @description
+ * Performs CT Image, DOSE, and RT STRUCTURE simultaneously with Zoom in, out, and pan.
  * @author Choi jin kyung
  */
 class Controlled extends React.Component {
@@ -28,9 +30,7 @@ class Controlled extends React.Component {
                      ref={input => {
                          this.element = input;
                      }}>
-
                     <canvas id="myCanvas" className={"canvas"} width={512} height={512}/>
-                    <canvas id="doseCanvas" className={"canvas"} width={512} height={512}/>
                 </div>
             </MapInteractionCSS>
         );

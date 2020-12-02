@@ -56,6 +56,132 @@
 
 
 
+    <section class="readme usertext">
+        <article><h1>DICOM Web/App VIEWER</h1>
+<p><img src="https://user-images.githubusercontent.com/44565579/100818642-e57ade80-348d-11eb-9b5b-e9dd6bebb0d9.PNG" alt="fullscreen"></p>
+<p>DICOM Web/App Viewer</p>
+<ul>
+<li>Can overlay CT IMAGE, DOSE, and RT STRUCTURE</li>
+</ul>
+<h2>Getting Started</h2>
+<ol>
+<li>Git Clone : https://github.com/choijinkyung/DICOM-RT-VIEWER</li>
+<li>Installing Node.js</li>
+<li>Installing npm or yarn</li>
+<li>Run Scripts
+<br>  4-1) npm run install or yarn install
+<br>  -&gt; install package json</li>
+<li>For start
+<br>  5-1 ) npm run start or yarn start
+<br>  -&gt; Create a Web page through the local host and port 3000</li>
+</ol>
+<h2>Prerequisites</h2>
+<ol>
+<li>Node.js
+<br> - version : 12.18.3</li>
+<li>Package Manager
+<br> 2-1) yarn
+<br>    - version : 1.22.5
+<br> 2-2) npm
+<br>    - version : 6.14.6</li>
+</ol>
+<h2>Installing</h2>
+<ol>
+<li>npm install cornerstone</li>
+<li>npm install cornerstone-core
+<br> version : &quot;cornerstone-core&quot;: &quot;^2.3.0&quot;</li>
+<li>npm install cornerstone-math
+<br> version : &quot;cornerstone-math&quot;: &quot;^0.1.9&quot;</li>
+<li>npm install cornetstone-tools
+<br> version : &quot;cornerstone-tools&quot;: &quot;^5.0.0&quot;</li>
+<li>npm install conrnerstone-wado-image-loader
+<br> version : &quot;cornerstone-wado-image-loader&quot;: &quot;^3.1.2&quot;</li>
+<li>npm install hammerjs
+<br> version :&quot;hammerjs&quot;: &quot;^2.0.8&quot;</li>
+<li>npm install mathjs
+<br> version :&quot;mathjs&quot;: &quot;^8.0.1&quot;</li>
+<li>npm install cross
+<br> version : &quot;cross&quot;: &quot;^1.0.0&quot;</li>
+<li>npm install gh-pages
+<br> version : &quot;gh-pages&quot; : &quot;^3.1.0&quot;</li>
+<li>npm install react
+<br> version : &quot;react&quot;: &quot;^16.14.0&quot;</li>
+<li>npm install react-dom
+<br> version : &quot;react-dom&quot;: &quot;^16.14.0&quot;</li>
+<li>npm install react-map-interatcion
+<br> version : &quot;react-map-interaction&quot;: &quot;^2.0.0&quot;</li>
+<li>npm install react scripts
+<br> version : &quot;react-scripts&quot;: &quot;^3.4.3&quot;</li>
+<li>npm install webkit
+<br> version :&quot;webkit&quot;: &quot;^0.0.0&quot;</li>
+<li>npm install jsdoc docdash
+<br> version :&quot;jsdoc&quot; : &quot;^3.6.6&quot;</li>
+<li>npm install jquery
+<br> version : &quot;jquery&quot; : &quot;^3.5.1&quot;</li>
+</ol>
+<p>To install at once
+<br>-&gt; npm install or yarn install</p>
+<h2>Deployment</h2>
+<ol>
+<li>npm install gh-pages</li>
+<li>In package.json,
+<br> &quot;scripts&quot;: {
+<br>    &quot;build&quot;: &quot;react-scripts build&quot;,
+<br>    &quot;deploy&quot;: &quot;gh-pages -d build&quot;
+<br> }
+<br> &quot;devDependencies&quot;: {
+<br>     &quot;gh-pages&quot;: &quot;^3.1.0&quot;
+<br>   },
+&quot;homepage&quot;: &quot;https://choijinkyung.github.io/DICOM-RT-VIEWER/&quot;</li>
+</ol>
+<h2>Available Scripts</h2>
+<p>In the project directory, you can run:</p>
+<h3><code>npm run start</code></h3>
+<p>Runs the app in the development mode.<br />
+Open <a href="http://localhost:3000">http://localhost:3000</a> to view it in the browser.</p>
+<p>The page will reload if you make edits.<br />
+You will also see any lint errors in the console.</p>
+<h3><code>npm run build</code></h3>
+<p>Builds the app for production to the <code>build</code> folder.<br />
+It correctly bundles React in production mode and optimizes the build for the best performance.</p>
+<p>The build is minified and the filenames include the hashes.<br />
+Your app is ready to be deployed!</p>
+<h3><code>yarn deploy</code></h3>
+<p>Deploy the project on your github page</p>
+<h3><code>npm run jsdoc</code></h3>
+<p>Each code can be annotated into jsdoc.
+Running this script updates.</p>
+<h2>Contributiong</h2>
+<p>Please read <a href="https://gist.github.com/PurpleBooth/b24679402957c63ec426">CONTRIBUTING.md</a> for details on our code of conduct, and the process for submitting pull requests to us.
+<br><a href="https://gist.github.com/PurpleBooth/b24679402957c63ec426">CONTRIBUTING.md</a> 를 읽고 이에 맞추어 pull request 를 해주세요.</p>
+<h2>Author</h2>
+<ul>
+<li><a href="https://github.com/choijinkyung">Choi Jin Kyung</a></li>
+</ul>
+<h2>LICENSE</h2>
+<p>This project is licensed under the MIT License - see the [LICENSE.md]</p>
+<pre class="prettyprint source"><code> Copyright (c) 2020 j_iky
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</code></pre></article>
+    </section>
+
 
 
 
@@ -68,7 +194,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Wed Dec 02 2020 10:45:29 GMT+0900 (GMT+09:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Wed Dec 02 2020 12:45:12 GMT+0900 (GMT+09:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
