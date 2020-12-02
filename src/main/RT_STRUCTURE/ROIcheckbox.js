@@ -1,5 +1,5 @@
 import $ from "jquery";
-import {addROIset} from "./drawROI";
+import {addROIset} from "./RTStructureData2Json";
 
 function ROI_addCheckbox(ROI_LIST_Array) {
     ROI_LIST_Array.forEach(function (n) {

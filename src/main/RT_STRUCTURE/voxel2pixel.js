@@ -1,7 +1,7 @@
 import voxelCal from "./pixel2voxel";
 
 //Convert Parsed contour data to Array
-function pixelCal(image, struct) {
+function pixelCal(CT_image, struct) {
     let str = struct.split("\\");
     let vPx = []; //contour Data Px (voxel point x )
     let vPy = []; //contour Data Py (voxel point y )
@@ -14,7 +14,7 @@ function pixelCal(image, struct) {
         }
     }
 
-    let voxel = voxelCal(image);
+    let voxel = voxelCal(CT_image);
     let Sx = voxel[0];
     let Sy = voxel[1];
     let Di = voxel[2];

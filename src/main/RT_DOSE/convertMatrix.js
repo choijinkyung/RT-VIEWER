@@ -188,7 +188,7 @@ function dose2patient(Vi, Vj, color) {
 let img = 0;
 
 /**
- * @function getCTimage2
+ * @function getCTimage
  * @param {object} CT_img
  * @return img
  * @description
@@ -196,7 +196,7 @@ let img = 0;
  * 1. Return CT images loaded from firstloader
  * 2. Objective: To use CT image data within the convertMatrix file.
  */
-function getCTimage2(CT_img) {
+function getCTimage(CT_img) {
     img = CT_img;
     return img;
 }
@@ -338,4 +338,4 @@ function DOSE2CT(matrixDose2Patient, matrixCT2Patient, Vi, Vj) {
     drawDose(Px, Py, dose_draw_color, CT_Di, CT_Dj);
 }
 
-export {doseFile, findXY, CT2Patient, getCTimage2}
+export {doseFile, findXY, CT2Patient, getCTimage}

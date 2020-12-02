@@ -7,7 +7,7 @@ import * as cornerstoneMath from "cornerstone-math"
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import voxelCal from "../RT_STRUCTURE/pixel2voxel";
 import {reset} from "../RT_STRUCTURE/drawROI";
-import {getCTimage2, doseFile} from "../RT_DOSE/convertMatrix";
+import {getCTimage, doseFile} from "../RT_DOSE/convertMatrix";
 import {checkAndDraw} from "../RT_DOSE/drawDose";
 import {getDoseValue} from "../RT_DOSE/gridScaling";
 import {structFile} from "../RT_STRUCTURE/getROIList";
@@ -135,7 +135,7 @@ let img;
  *     <br>    param : CT_image
  *     <br> 3) name : getCTImage
  *     <br>    param : CT_image
- *     <br> 4) name : getCTimage2
+ *     <br> 4) name : getCTimage
  *     <br>    param : CT_image
  *     <br> 5) name : sendDrawImage
  *     <br>    param : CT_image
@@ -160,12 +160,10 @@ function updateTheImage(CTimageIds, imageIndex) {
 
             patientInformation(CT_image);
             voxelCal(CT_image);
-           // getCTImage(CT_image);
-            getCTimage2(CT_image);
+            getCTimage(CT_image);
             getDrawImageData(CT_image);
 
             getCheckValue(checkVal_check_dose);
-
             let dose_value = getDoseValue();
             checkAndDraw(dose_value[currentImageIndex], checkVal_check_dose);
 
