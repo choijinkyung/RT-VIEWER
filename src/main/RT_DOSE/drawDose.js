@@ -6,7 +6,7 @@ import {findXY} from "./convertMatrix";
  * @description
  * This function deals with
  * 1. Method to confirm that the checked values are for each level
- * 2. Specify color to draw
+ * 2. Specify color to drawROI
  * 3. Function call
  * <br> 1) name : findXY
  *  <br>   param : dose_value, checkVal_check_dose, color
@@ -52,6 +52,9 @@ function checkAndDraw(dose_value, checkVal_check_dose) {
  * @function drawDose
  * @param {object} Px -> A set of coordinate values converted from x coordinates above the reference dose value to dose -> ct.
  * @param {object} Py ->  A set of coordinate values converted from y coordinates above the reference dose value to dose -> ct.
+ * @param {string} color -> Colors assigned to each level
+ * @param {number} CT_Di -> x-coordinate of CT pixelspacing
+ * @param {number} CT_Dj -> y-coordinate of CT pixelspacing
  * @description
  * This function deals with
  * 1. Draw x,y coordinates received on canvas.
