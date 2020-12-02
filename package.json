@@ -27,7 +27,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "jsdoc" : "jsdoc -c jsdoc.json"
   },
   "eslintConfig": {
     "extends": "react-app"
