@@ -22,6 +22,23 @@ let buttonEvent = new ButtonEvent();
 /**
  * MAIN UI class
  * @class
+ * @description
+ * 1. Adding mouse events to the space where the dynamic image is visible
+ * 2. Mouse Events
+ * <br> 1) Drag and Drop
+ * <br> 2) MouseMove, MouseDown, MouseUp Listener
+ * <br> 3) If mouse button = 2, change WW/WC
+ * <br> 4) Mouse Event Handler
+ * 3. Rendering
+ * <br> 1) Generating the overall UI
+ * <br> 2) Apply CSS for each
+ * <br> 3) Create buttons, images, and check boxes.
+ * <br> 4) Input file
+ *
+ * @example
+ * //Add event to Element
+ * let element = document.getElementById ('dicomImage')
+ * element. addEventListener(type, listener(e){})
  * @author Choi jin kyung
  */
 class MainUIElements extends React.Component {
