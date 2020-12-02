@@ -79,10 +79,15 @@ Install : npm install jsdoc
 template : docdash
 Update : npm run jsdoc
 
-In package.json
-"scripts": {
-    "jsdoc": "jsdoc -c jsdoc.json"
-  }
+Add -> In package.json
+<br>"scripts": {
+<br>    "jsdoc": "jsdoc -c jsdoc.json"
+<br>  }
+
+How to open API docs?
+<br> -> './API_document/index.html'
+<br> -> open this use web browser
+  
 ## Available Scripts
 In the project directory, you can run:
 
@@ -107,7 +112,7 @@ Deploy the project on your github page
 Each code can be annotated into jsdoc.
 Running this script updates.
 
-## Contributiong 
+## Contribution
 
 Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us. 
 <br>[CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) 를 읽고 이에 맞추어 pull request 를 해주세요.
