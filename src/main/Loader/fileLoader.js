@@ -11,7 +11,7 @@ import {getCTimage, doseFile} from "../RT_DOSE/convertMatrix";
 import {checkAndDraw} from "../RT_DOSE/drawDose";
 import {getDoseValue} from "../RT_DOSE/gridScaling";
 import {structFile} from "../RT_STRUCTURE/getROIList";
-import {getDrawImageData} from "../RT_STRUCTURE/RTStructureData2Json";
+import {directCheckAndDraw} from "../RT_STRUCTURE/RTStructureData2JSON";
 
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
 cornerstoneTools.external.cornerstone = cornerstone
@@ -161,7 +161,7 @@ function updateTheImage(CTimageIds, imageIndex) {
             patientInformation(CT_image);
             voxelCal(CT_image);
             getCTimage(CT_image);
-            getDrawImageData(CT_image);
+            directCheckAndDraw(CT_image);
 
             getCheckValue(checkVal_check_dose);
             let dose_value = getDoseValue();

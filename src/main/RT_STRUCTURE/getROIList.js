@@ -1,7 +1,7 @@
 import $ from "jquery";
 import {ROI_checkEvent} from "./ROIcheckbox";
 import dicomParser from "dicom-parser";
-import {contourData2Json,ROIData2Json} from "./RTStructureData2Json";
+import {contourData2JSON,ROIData2JSON} from "./RTStructureData2JSON";
 
 /*
 * 데이터를 계층구조로 확인하려면?
@@ -35,9 +35,9 @@ let dataSet;
  *      <br>param : dataSet
  *    <br>2) name : getContourData
  *      <br>param : dataSet, output1, output3
- *    <br>3) name : ROIData2Json
+ *    <br>3) name : ROIData2JSON
  *      <br>param : ROI_List
- *   <br>4) name : contourData2Json
+ *   <br>4) name : contourData2JSON
  *      <br>param : contourList
  *   <br>5) name : ROI_checkEvent
  *      <br>param :
@@ -79,8 +79,8 @@ function structFile(file) {
 
                 ROIListHierarchy(dataSet);
                 getContourData(dataSet, output1, output3);
-                ROIData2Json(ROI_List);
-                contourData2Json(contourList);
+                ROIData2JSON(ROI_List);
+                contourData2JSON(contourList);
 
                 ROI_checkEvent();
             } catch (err) {
