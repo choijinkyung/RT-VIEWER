@@ -1,8 +1,8 @@
 import {findXY} from "./convertMatrix";
 /**
- * @function checkAndDraw
+ * @function doseCheckAndDraw
  * @param {object} dose_value -> Dose value = pixelData * gridscaling
- * @param {string} checkVal_check_dose -> vale that Checked Dose Level
+ * @param {string} checkVal_check_dose -> value that Checked Dose Level
  * @description
  * This function deals with
  * 1. Method to confirm that the checked values are for each level
@@ -11,7 +11,7 @@ import {findXY} from "./convertMatrix";
  * <br> 1) name : findXY
  *  <br>   param : dose_value, checkVal_check_dose, color
  */
-function checkAndDraw(dose_value, checkVal_check_dose) {
+function doseCheckAndDraw(dose_value, checkVal_check_dose) {
     try{
         let color = [];
         color[0] = '#780000';
@@ -98,4 +98,4 @@ function drawDose(Px, Py, color,CT_Di,CT_Dj) {
     }
 }
 
-export {drawDose, checkAndDraw}
+export {drawDose, doseCheckAndDraw}

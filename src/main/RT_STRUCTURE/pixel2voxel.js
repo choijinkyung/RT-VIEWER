@@ -6,7 +6,7 @@ let Px, Py;
  * @param {object} CT_image
  * @description
  * This function deals with
- * 1. Changed to pixels - mm mm
+ * 1. Changed to pixels -> mm
  * 2. Pixel -> Voxel
  * 3. Change from Canvas Coordinate to CT Coordinate
  * 4. Mousemove event occurred -> px, mm output

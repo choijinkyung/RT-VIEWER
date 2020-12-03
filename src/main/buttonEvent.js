@@ -6,7 +6,7 @@ import * as cornerstone from "cornerstone-core";
  * Button Event Class
  * @class
  * @description
- * This class Include Functions
+ * This class include Button Event Functions
  * 1) angleOn
  * 2) lengthOn
  * 3) eraserOn

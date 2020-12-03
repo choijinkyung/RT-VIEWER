@@ -14,8 +14,8 @@ let Rows, Columns, Number_of_Frames;
  * <br>    param :dose_image, dose_pixel_data, Rows, Columns, Number_of_Frames
  *
  * < DICOM tag >
- *     1) Pixel Data : x7fe00010
- *     2) Bits Allocated : x00280100
+ * <br>    1) Pixel Data : x7fe00010
+ *  <br>    2) Bits Allocated : x00280100
  */
 function importPixelData(dose_image, dataSet) {
         try{

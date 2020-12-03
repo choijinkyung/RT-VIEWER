@@ -1,13 +1,13 @@
 import $ from "jquery";
 import {getCheckValue} from "../Loader/fileLoader";
 /**
- * @function Dose_Checkbox
+ * @function DoseCheckbox
  * @param {number} dosemax -> dose Max Value
  * @description
  * This function deals with
  * 1. Generate checkboxes by dividing by do level
  */
-function Dose_Checkbox(dosemax) {
+function DoseCheckbox(dosemax) {
     let level = [];
     let pres = 40 * 100; //prescription : 4000cGy
     level[0] = parseInt(dosemax);
@@ -40,7 +40,7 @@ function Dose_Checkbox(dosemax) {
 }
 
 /**
- * @function Dose_checkEvent
+ * @function doseCheckEvent
  * @description
  * This function deals with
  * 1. checkbox event listener
@@ -48,7 +48,7 @@ function Dose_Checkbox(dosemax) {
  * 3. Function call
  *  <br>1)name : addDoseSet
  **/
-function Dose_checkEvent() {
+function doseCheckEvent() {
     /*Event Listener*/
     $(document).ready(function () {
         let dose = document.getElementsByName("dose");
@@ -76,7 +76,7 @@ let information = {
  * 2. Delete unchecked values from the Dose set
  * 3. Function call
  *  <br> 1) name : getCheckValue
- *          param : information.Dose
+ *  <br> param : information.Dose
  **/
 function addDoseSet(e) {
     if (e.target.checked === true) {
@@ -91,4 +91,4 @@ function addDoseSet(e) {
     }
 }
 
-export {Dose_Checkbox, Dose_checkEvent};
+export {DoseCheckbox, doseCheckEvent};
