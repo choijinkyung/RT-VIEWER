@@ -61,7 +61,7 @@ function structFile(file) {
     //document.getElementById('statusText2').innerHTML = 'Status: Loading file, please wait..';
 
     let reader = new FileReader();
-    reader.onload = function () {
+    reader.onload = function (file) {
         let arrayBuffer = reader.result;
         // Here we have the file data as an ArrayBuffer.  dicomParser requires as input a
         // Uint8Array so we create that here
@@ -78,7 +78,7 @@ function structFile(file) {
 
                 roiListHierarchy(dataSet);
                 getContourData(dataSet, output1, output3);
-                roiData2JSON(roiList);
+                roiData2JSON(ROI_List);
                 contourData2JSON(contourList);
 
                 roiCheckEvent();
@@ -100,7 +100,7 @@ function structFile(file) {
     return dataSet;
 }
 
-let roiList = [];
+let ROI_List = [];
 /**
  * @function roiListHierarchy
  * @param {object} dataSet -> Data parsed by RT Structure
@@ -156,7 +156,7 @@ function roiListHierarchy(dataSet) {
                         text += " (" + dataSet.uint16(propertyName) + ")";
 
                     } else if (element.length === 4) {
-                        text += " (" + dataSet.uint8(propertyName) + ")";
+                        text += " (" + dataSet.uint32(propertyName) + ")";
                     }
                     //대부분은 문자열이지만 그렇지 않은 것들을 확인해서 표시하는 것을 위함
                     let str = dataSet.string(propertyName);
@@ -177,7 +177,7 @@ function roiListHierarchy(dataSet) {
                     if (element.length === 0) {
                         color = '#C8C8C8';
                     }
-                    roiList.push(element.tag, dataSet.string(propertyName));
+                    ROI_List.push(element.tag, dataSet.string(propertyName));
                 }
             }
         }

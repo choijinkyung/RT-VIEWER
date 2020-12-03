@@ -51,6 +51,7 @@ function roiData2JSON(roi_List) {
 
             ROI_LIST_Array.push(ROI_object);
         }
+
         roiCheckbox(ROI_LIST_Array);
     });
 
