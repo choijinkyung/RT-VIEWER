@@ -94,7 +94,7 @@ function doseFile(file) {
 /**
  * @function findXY
  * @param {object} dose_value -> Dose value = pixelData * gridscaling
- * @param {string} checkVal_check_dose -> vale that Checked Dose Level
+ * @param {string} checkVal_check_dose -> value that Checked Dose Level
  * @param {string} color -> dose overlay color
  * @description
  * This function deals with
@@ -213,7 +213,7 @@ let CT_Sx, CT_Sy, CT_Sz;
  * This function deals with
  * 1. Generate a matrix that converts the CT to the patient coordinates
  * 2. Function call
- *      <br>1) name : DOSE2CT
+ *      <br>1) name : dose2CT
  *      <br> param : matrixDose2Patient, matrixCT2Patient, Vi, Vj
  *
  * < DICOM Tag >
@@ -284,11 +284,11 @@ function CT2Patient(matrixDose2Patient, Vi, Vj) {
             [CT_Xz , CT_Yz , vecPatNor[2], CT_Sz],
             [0, 0, 0, 1]]);
      */
-    DOSE2CT(matrixDose2Patient, matrixCT2Patient, Vi, Vj);
+    dose2CT(matrixDose2Patient, matrixCT2Patient, Vi, Vj);
 }
 
 /**
- * @function DOSE2CT
+ * @function dose2CT
  * @param {matrix} matrixDose2Patient -> Convert Dose to Patient coords matrix
  * @param {matrix} matrixCT2Patient -> Convert CT to Patient coords matrix
  * @param {object} Vi -> A collection of x coordinates above the reference dose value.
@@ -302,7 +302,7 @@ function CT2Patient(matrixDose2Patient, Vi, Vj) {
  *     <br> 1) name : drawDose
  *     <br> param :Px, Py, dose_draw_color, CT_Di, CT_Dj
  */
-function DOSE2CT(matrixDose2Patient, matrixCT2Patient, Vi, Vj) {
+function dose2CT(matrixDose2Patient, matrixCT2Patient, Vi, Vj) {
     let matrixPatient2CT = math.inv(matrixCT2Patient);
 
     let DOSE2CT = math.multiply(matrixDose2Patient, matrixPatient2CT);
@@ -311,13 +311,13 @@ function DOSE2CT(matrixDose2Patient, matrixCT2Patient, Vi, Vj) {
     let DOSE2CT_xy = [];
     let DOSE2CT_x = [], DOSE2CT_y = [];
 
-    //coords DOSE2CT
+    //coords dose2CT
     for (let i = 0; i < Vi.length; i++) {
         coordsDOSE2CT[i] = math.multiply(DOSE2CT, math.matrix([[Vi[i]], [Vj[i]], [0], [1]]));
         DOSE2CT_xy.push((coordsDOSE2CT[i]));
     }
     //let output = [];
-    //find DOSE2CT x value
+    //find dose2CT x value
     for (let i = 0; i < DOSE2CT_xy.length; i++) {
         DOSE2CT_x[i] = math.subset(DOSE2CT_xy[i], math.index(0, 0));
         DOSE2CT_y[i] = math.subset(DOSE2CT_xy[i], math.index(1, 0));

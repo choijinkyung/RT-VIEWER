@@ -1,7 +1,7 @@
 import $ from "jquery";
-import {ROI_checkEvent} from "./ROIcheckbox";
+import {roiCheckEvent} from "./roiCheckbox";
 import dicomParser from "dicom-parser";
-import {contourData2JSON,ROIData2JSON} from "./RTStructureData2JSON";
+import {contourData2JSON,roiData2JSON} from "./RTStructureData2JSON";
 
 /*
 * 데이터를 계층구조로 확인하려면?
@@ -25,22 +25,21 @@ function isASCII(str) {
 let dataSet;
 /**
  * @function structFile
- * @param {object} file -> File transferred from fileLoaer function : RT structure file
+ * @param {object} file -> File transferred from fileLoader function : RT structure file
  * @description
  * This function deals with
  * 1. Loading RT structure file
  * 2. RT structure Data Parsing
  * 3. Function call
- *    <br>1) name : ROIListHierarchy
+ *    <br>1) name : roiListHierarchy
  *      <br>param : dataSet
  *    <br>2) name : getContourData
  *      <br>param : dataSet, output1, output3
- *    <br>3) name : ROIData2JSON
- *      <br>param : ROI_List
+ *    <br>3) name : roiData2JSON
+ *      <br>param : roiList
  *   <br>4) name : contourData2JSON
  *      <br>param : contourList
- *   <br>5) name : ROI_checkEvent
- *      <br>param :
+ *   <br>5) name : roiCheckEvent
  *
  * @example
  *  // How to parse the dicom data ?
@@ -50,7 +49,7 @@ let dataSet;
  *  dataSet.uint16('x00280010')
  *
  *  // Use cornerstone Image loader
- *  dose_image.data.string('x00080016') *
+ *  dose_image.data.string('x00080016')
  */
 function structFile(file) {
     // clear any data currently being displayed as we parse this next file
@@ -77,12 +76,12 @@ function structFile(file) {
                 let output1 = [];
                 let output3 = [];
 
-                ROIListHierarchy(dataSet);
+                roiListHierarchy(dataSet);
                 getContourData(dataSet, output1, output3);
-                ROIData2JSON(ROI_List);
+                roiData2JSON(roiList);
                 contourData2JSON(contourList);
 
-                ROI_checkEvent();
+                roiCheckEvent();
             } catch (err) {
                 if (err.output1 || err.output3) {
 
@@ -90,7 +89,7 @@ function structFile(file) {
                     var output1 = [];
                     var output3 = [];
 
-                    ROIListHierarchy(err.dataSet);
+                    roiListHierarchy(err.dataSet);
                     getContourData(err.dataSet, output1, output3);
                 }
             }
@@ -101,13 +100,13 @@ function structFile(file) {
     return dataSet;
 }
 
-let ROI_List = [];
+let roiList = [];
 /**
- * @function ROIListHierarchy
+ * @function roiListHierarchy
  * @param {object} dataSet -> Data parsed by RT Structure
  * @description
  * (Only when needed)
- * This function deals with
+ * <br>This function deals with
  * 1. Method for displaying data in a hierarchy
  * 2. Output in hierarchy for output of ROI List
  *
@@ -116,7 +115,7 @@ let ROI_List = [];
  * 2) ROI Number : x30060022
  * 3) ROI Name : x30060026
  **/
-function ROIListHierarchy(dataSet) {
+function roiListHierarchy(dataSet) {
     try {
         for (let propertyName in dataSet.elements) {
             let element = dataSet.elements[propertyName];
@@ -138,7 +137,7 @@ function ROIListHierarchy(dataSet) {
                 if (element.items) { //item들을 표시
                     element.items.forEach(function (item) {
                         // each item contains its own data set so we iterate over the items and recursively call this function
-                        ROIListHierarchy(item.dataSet);
+                        roiListHierarchy(item.dataSet);
                     });
                 } else if (element.fragments) {
                     // each item contains its own data set so we iterate over the items and recursively call this function
@@ -178,7 +177,7 @@ function ROIListHierarchy(dataSet) {
                     if (element.length === 0) {
                         color = '#C8C8C8';
                     }
-                    ROI_List.push(element.tag, dataSet.string(propertyName));
+                    roiList.push(element.tag, dataSet.string(propertyName));
                 }
             }
         }
@@ -197,7 +196,7 @@ function ROIListHierarchy(dataSet) {
  * @param {object} output2
  * @description
  * (Only when needed)
- * This function deals with
+ * <br>This function deals with
  * 1. Method for displaying data in a hierarchy
  * 2. Output in hierarchy for output of contour data
  *

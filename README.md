@@ -18,15 +18,66 @@ DICOM Web/App Viewer
   <br>  -> Create a Web page through the local host and port 3000
 
 ## Prerequisites 
-1. Node.js 
-<br> - version : 12.18.3
-2. Package Manager 
-<br> 2-1) yarn 
-<br>    - version : 1.22.5
-<br> 2-2) npm 
-<br>    - version : 6.14.6
 
-## Installing 
+1.	PreKnowledge <br/>
+        1) Coordinate transformation
+<br>	We can get two matrices. 
+<br>			1-1) Dose - > Patient matrix
+<br>			1-2) CT -> Patient matrix	
+<br>	<br>	즉, Dose -> CT 로 좌표를 변환하기 위해서는 Dose -> Patient -> CT를 			해야 한다.
+<br>->	Patient -> CT를 구하기 위해선 CT -> Patient matrix를 inverse 해야 한다. 
+<br>->	Dose2CT 변환 매트릭스 = (Dose 2Patient) * (Patinet2CT) 
+<br>->	Dose2CT * ( x, y, z, 1 ) 를 하면 (x,y,z)좌표가 변환된다.
+<br>->	이때 1은 vector, 0은 포인트를 가르킨다.
+<br>->	자세한 내용은 DICOM standard의 c.7.6.2.1.1 를 참조
+<br>( 3차원 행렬의 transform 또는 scaling쪽 지식이 필요 )
+
+        2) Obtain Dose Value
+<br>->	RT DOSE의 pixelData(x7fe00010)
+<br>->	RT DOSE의 Dose Grid Scaling (x3004000e)
+<br>->	선량값 = pixelData * DoseGridScaling 
+
+		3) Import Sub-Data in DICOM file
+<br>->	Original :  class로 묶어서 가져와야 함
+<br>->  Present : cornerstone.js (GitHub) - > dicomParser -> liveExample -> DICOM DUMP
+<br>->	https://rawgit.com/cornerstonejs/dicomParser/master/examples/index.html
+<br>->	마우스 오른쪽 클릭 후 페이지 소스보기
+<br>->	이 소스를 분석하여 계층구조에 있는 data를 import 했다. 
+<br>->	Project에서 getROIList -> structFile , ROIListHierarchy , getContourData 코드 참조 
+<br> (output에 출력하면 계층구조로 보임)
+
+		4) Cornerstone
+<br>->	Github : https://github.com/cornerstonejs
+<br>->	Example : https://cornerstonejs.org/	
+
+		5) Zoom, pan event
+<br>->	React-map-interaction라는 opensource 사용
+<br>->	추후 마우스 휠 이벤트 분리해야 함
+
+		6) Open Source
+<br>->	Dcmjs : cornerstone과 비슷한 DICOM parser
+<br>->	Mathjs :" matrix 연산 시 python처럼 사용 가능
+<br>->	Jsdoc : Documentation Tool
+
+		7) Document
+<br>->	Word : WebViewer_API_document
+<br>->	JSDOC API documentation (권장)
+<br>: 개발 진행 시 보기 더 편함
+
+2.	개발 환경 setting
+        1) Window
+        2) Webstorm 
+        3) Node.js
+<br>	- Version :12.18.3
+        4) Package Manager 
+            1) yarn
+<br>		- version : 1.22.5
+        	2) npm
+<br>		- version : 6.14.6
+
+
+
+## Module install 
 1. npm install cornerstone 
 2. npm install cornerstone-core 
 <br> version : "cornerstone-core": "^2.3.0"
@@ -80,7 +131,7 @@ Install : npm install jsdoc
 template : docdash
 Update : npm run jsdoc
 
-Add -> In package.json
+In package.json
 <br>"scripts": {
 <br>    "jsdoc": "jsdoc -c jsdoc.json"
 <br>  }
@@ -125,7 +176,7 @@ In package.json
 Each code can be annotated into jsdoc.
 Running this script updates.
 
-## Modification Requirement
+## Modification Requirements
 1. Modify Check Event
 <br> -> Draw / reset as soon as check
 2. Dose Overlay
@@ -146,7 +197,9 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 <br>[CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) 를 읽고 이에 맞추어 pull request 를 해주세요.
 
 ## Author
-* [Choi Jin Kyung](https://github.com/choijinkyung)
+* Name : [Choi Jin Kyung](https://github.com/choijinkyung)
+* E-mail : twin7014@naver.com
+* GitHub : [https://github.com/choijinkyung](https://github.com/choijinkyung)
 
 ## LICENSE
 This project is licensed under the MIT License - see the [LICENSE.md]

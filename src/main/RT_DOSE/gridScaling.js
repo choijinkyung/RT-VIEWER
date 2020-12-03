@@ -1,4 +1,4 @@
-import {Dose_Checkbox, Dose_checkEvent} from "./doseCheckbox";
+import {DoseCheckbox, doseCheckEvent} from "./doseCheckbox";
 
 let dose_value = [];
 /**
@@ -14,12 +14,12 @@ let dose_value = [];
  * 2. GridScaling the pixel data to obtain the dose value.
  * 3. Obtain max Dose value
  * 4. Function call
- * <br> 1) name : Dose_Checkbox
+ * <br> 1) name : doseCheckbox
  * <br>    param : dosemax
- * <br> 2) name : Dose_checkEvent
+ * <br> 2) name : doseCheckEvent
  *
  * < DICOM tag >
- *     1) Dose_Grid_SCaling : x3004000e
+ *   <br>  1) Dose_Grid_SCaling : x3004000e
  */
 //calculate Dose value
 function gridScaling(dose_image, dose_pixel_data, Rows, Columns, Number_of_Frames) {
@@ -75,8 +75,8 @@ function gridScaling(dose_image, dose_pixel_data, Rows, Columns, Number_of_Frame
 
     let dosemax = dose_sort[0];
 
-    Dose_Checkbox(dosemax);
-    Dose_checkEvent();
+    DoseCheckbox(dosemax);
+    doseCheckEvent();
 }
 
 /**

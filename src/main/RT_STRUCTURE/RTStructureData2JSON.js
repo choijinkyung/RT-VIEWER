@@ -1,24 +1,24 @@
 import $ from "jquery";
-import {ROI_Checkbox} from "./ROIcheckbox";
+import {roiCheckbox} from "./roiCheckbox";
 import {drawROI} from "./drawROI";
 /**
- * @function ROIData2JSON
+ * @function roiData2JSON
  * @param {object} roi_List
  * @description
  * This function deals with
  * 1. Convert ROI data to JSON for parsing
- * 2. Add ROI number and name to JSON obejct.
+ * 2. Add ROI number and ROI name to JSON object.
  * 3. If you want to read object
  *  -> JSON.stringfy(object)
  * 4. Function call
- * <br> 1) name : ROI_checkbox
+ * <br> 1) name : roiCheckbox
  *  <br> param : ROI_LIST_Array
  *
  * < DICOM Tag >
  * 1) ROI Number : x30060022
  * 2) Patient ID : x30060026
  * */
-function ROIData2JSON(roi_List) {
+function roiData2JSON(roi_List) {
     let ROI_Number = [];
     let ROI_Name = [];
 
@@ -51,7 +51,7 @@ function ROIData2JSON(roi_List) {
 
             ROI_LIST_Array.push(ROI_object);
         }
-        ROI_Checkbox(ROI_LIST_Array);
+        roiCheckbox(ROI_LIST_Array);
     });
 
 }
@@ -63,7 +63,7 @@ let contour_data_Array = [];
  * @description
  * This function deals with
  * 1. Convert Contour data to JSON for parsing
- * 2. Add Referenced Instance UID, Referenced ROI number and name to JSON obejct.
+ * 2. Add Referenced Instance UID, Referenced ROI Number and ROI Name to JSON object.
  * 3. Add ROI Display Color to JSON object
  * 3. If you want to read object
  *  -> JSON.stringfy(object)
@@ -190,7 +190,7 @@ function directCheckAndDraw(CT_image) {
 }
 
 /**
- * @function checkAndDraw
+ * @function roiCheckAndDraw
  * @param {string} checkVal_check
  * @description
  * This function deals with
@@ -205,7 +205,7 @@ function directCheckAndDraw(CT_image) {
  * 3) Referenced SOP Instance UID : x00081155
  * 4) Referenced ROI Number : x30060084
  * */
-function checkAndDraw(checkVal_check) {
+function roiCheckAndDraw(checkVal_check) {
     let Instance_UID = img.data.string('x00080018');
     for (let i = 0; i < contour_data_Array.length; i++) {
         if (contour_data_Array[i]['x30060084'] === checkVal_check) {
@@ -227,7 +227,7 @@ function checkAndDraw(checkVal_check) {
  * 1. Put the ROI check set when checking.
  * 2. Delete from ROI check set when unchecked
  * 3. Function call
- * <br> 1) name : checkAndDraw
+ * <br> 1) name : roiCheckAndDraw
  * <br> param : checkVal_check
  * <br> 2) name : checkAndReset //will make function
  * <br> param : checkVal_check
@@ -238,7 +238,7 @@ function addROIset(evt) {
         information.ROIs.push(evt.target.value);
         checkVal_check = evt.target.value;
 
-        checkAndDraw(checkVal_check);
+        roiCheckAndDraw(checkVal_check);
     } else { // 체크 해제시
         let index = information.ROIs.indexOf(evt.target.value);
         if (index !== -1) { //해당 ROI를 set에서 삭제
@@ -248,4 +248,4 @@ function addROIset(evt) {
     }
 }
 
-export {ROIData2JSON,contourData2JSON,directCheckAndDraw,addROIset}
+export {roiData2JSON,contourData2JSON,directCheckAndDraw,addROIset}

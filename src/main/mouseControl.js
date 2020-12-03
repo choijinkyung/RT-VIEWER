@@ -1,7 +1,7 @@
 import React from "react";
 import {MapInteractionCSS} from "react-map-interaction";
 /**
- * Controlled
+ * Element Zoom , pan Controlled Class
  * @class
  * @description
  * Performs CT Image, DOSE, and RT STRUCTURE simultaneously with Zoom in, out, and pan.

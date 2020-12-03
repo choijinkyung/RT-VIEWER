@@ -8,7 +8,7 @@ import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import voxelCal from "../RT_STRUCTURE/pixel2voxel";
 import {reset} from "../RT_STRUCTURE/drawROI";
 import {getCTimage, doseFile} from "../RT_DOSE/convertMatrix";
-import {checkAndDraw} from "../RT_DOSE/drawDose";
+import {doseCheckAndDraw} from "../RT_DOSE/drawDose";
 import {getDoseValue} from "../RT_DOSE/gridScaling";
 import {structFile} from "../RT_STRUCTURE/getROIList";
 import {directCheckAndDraw} from "../RT_STRUCTURE/RTStructureData2JSON";
@@ -143,7 +143,7 @@ let img;
  *     <br>    param : CT_image
  *     <br> 6) name : getCheckValue
  *     <br>   param : checkVal_check_dose
- *     <br> 7) name : checkAndDraw
+ *     <br> 7) name : doseCheckAndDraw
  *     <br>  param : dose_value[currentImageIndex] , checkVal_check_dose
  *
  *
@@ -167,7 +167,7 @@ function updateTheImage(CTimageIds, imageIndex) {
 
             getCheckValue(checkVal_check_dose);
             let dose_value = getDoseValue();
-            checkAndDraw(dose_value[currentImageIndex], checkVal_check_dose);
+            doseCheckAndDraw(dose_value[currentImageIndex], checkVal_check_dose);
 
             let position = CT_image.data.string('x00200032').split('\\')[2];
             document.getElementById('topleft2').textContent = 'Position : ' + position + 'mm';
@@ -187,10 +187,10 @@ function updateTheImage(CTimageIds, imageIndex) {
 let checkVal_check_dose = [];
 /**
  * @method getCheckValue
- * @param {array} checkVal_check
+ * @param {object} checkVal_check
  * @description
  * This function deals with
- * 1. Get checkValue checked in doseCheckBox function *
+ * 1. Get checkValue checked in doseCheckBox function
  */
 function getCheckValue(checkVal_check) {
     checkVal_check_dose = checkVal_check;

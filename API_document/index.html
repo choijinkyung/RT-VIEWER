@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ButtonEvent.html">ButtonEvent</a></li><li><a href="MainUIElements.html">MainUIElements</a></li><li><a href="Controlled.html">Controlled</a></li></ul><h3>Global</h3><ul><li><a href="global.html#handleFileSelect">handleFileSelect</a></li><li><a href="global.html#handleDragOver">handleDragOver</a></li><li><a href="global.html#fileLoader">fileLoader</a></li><li><a href="global.html#wheelE">wheelE</a></li><li><a href="global.html#updateTheImage">updateTheImage</a></li><li><a href="global.html#getCheckValue">getCheckValue</a></li><li><a href="global.html#patientInformation">patientInformation</a></li><li><a href="global.html#doseFile">doseFile</a></li><li><a href="global.html#findXY">findXY</a></li><li><a href="global.html#dose2patient">dose2patient</a></li><li><a href="global.html#getCTimage">getCTimage</a></li><li><a href="global.html#CT2Patient">CT2Patient</a></li><li><a href="global.html#DOSE2CT">DOSE2CT</a></li><li><a href="global.html#Dose_Checkbox">Dose_Checkbox</a></li><li><a href="global.html#Dose_checkEvent">Dose_checkEvent</a></li><li><a href="global.html#addDoseSet">addDoseSet</a></li><li><a href="global.html#checkAndDraw">checkAndDraw</a></li><li><a href="global.html#drawDose">drawDose</a></li><li><a href="global.html#gridScaling">gridScaling</a></li><li><a href="global.html#getDoseValue">getDoseValue</a></li><li><a href="global.html#importPixelData">importPixelData</a></li><li><a href="global.html#drawROI">drawROI</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#isASCII">isASCII</a></li><li><a href="global.html#structFile">structFile</a></li><li><a href="global.html#ROIListHierarchy">ROIListHierarchy</a></li><li><a href="global.html#getContourData">getContourData</a></li><li><a href="global.html#voxelCal">voxelCal</a></li><li><a href="global.html#rgbToHex">rgbToHex</a></li><li><a href="global.html#fullColorHex">fullColorHex</a></li><li><a href="global.html#ROI_Checkbox">ROI_Checkbox</a></li><li><a href="global.html#ROI_checkEvent">ROI_checkEvent</a></li><li><a href="global.html#ROIData2JSON">ROIData2JSON</a></li><li><a href="global.html#contourData2JSON">contourData2JSON</a></li><li><a href="global.html#directCheckAndDraw">directCheckAndDraw</a></li><li><a href="global.html#addROIset">addROIset</a></li><li><a href="global.html#pixelCal">pixelCal</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ButtonEvent.html">ButtonEvent</a></li><li><a href="MainUIElements.html">MainUIElements</a></li><li><a href="Controlled.html">Controlled</a></li></ul><h3>Global</h3><ul><li><a href="global.html#handleFileSelect">handleFileSelect</a></li><li><a href="global.html#handleDragOver">handleDragOver</a></li><li><a href="global.html#fileLoader">fileLoader</a></li><li><a href="global.html#wheelE">wheelE</a></li><li><a href="global.html#updateTheImage">updateTheImage</a></li><li><a href="global.html#getCheckValue">getCheckValue</a></li><li><a href="global.html#patientInformation">patientInformation</a></li><li><a href="global.html#doseFile">doseFile</a></li><li><a href="global.html#findXY">findXY</a></li><li><a href="global.html#dose2patient">dose2patient</a></li><li><a href="global.html#getCTimage">getCTimage</a></li><li><a href="global.html#CT2Patient">CT2Patient</a></li><li><a href="global.html#dose2CT">dose2CT</a></li><li><a href="global.html#DoseCheckbox">DoseCheckbox</a></li><li><a href="global.html#doseCheckEvent">doseCheckEvent</a></li><li><a href="global.html#addDoseSet">addDoseSet</a></li><li><a href="global.html#doseCheckAndDraw">doseCheckAndDraw</a></li><li><a href="global.html#drawDose">drawDose</a></li><li><a href="global.html#gridScaling">gridScaling</a></li><li><a href="global.html#getDoseValue">getDoseValue</a></li><li><a href="global.html#importPixelData">importPixelData</a></li><li><a href="global.html#drawROI">drawROI</a></li><li><a href="global.html#reset">reset</a></li><li><a href="global.html#isASCII">isASCII</a></li><li><a href="global.html#structFile">structFile</a></li><li><a href="global.html#roiListHierarchy">roiListHierarchy</a></li><li><a href="global.html#getContourData">getContourData</a></li><li><a href="global.html#voxelCal">voxelCal</a></li><li><a href="global.html#rgbToHex">rgbToHex</a></li><li><a href="global.html#fullColorHex">fullColorHex</a></li><li><a href="global.html#roiCheckbox">roiCheckbox</a></li><li><a href="global.html#roiCheckEvent">roiCheckEvent</a></li><li><a href="global.html#roiData2JSON">roiData2JSON</a></li><li><a href="global.html#contourData2JSON">contourData2JSON</a></li><li><a href="global.html#directCheckAndDraw">directCheckAndDraw</a></li><li><a href="global.html#roiCheckAndDraw">roiCheckAndDraw</a></li><li><a href="global.html#addROIset">addROIset</a></li><li><a href="global.html#pixelCal">pixelCal</a></li></ul>
 </nav>
 
 <div id="main">
@@ -78,15 +78,66 @@
 </ol>
 <h2>Prerequisites</h2>
 <ol>
-<li>Node.js
-<br> - version : 12.18.3</li>
-<li>Package Manager
-<br> 2-1) yarn
-<br>    - version : 1.22.5
-<br> 2-2) npm
-<br>    - version : 6.14.6</li>
+<li>
+<p>PreKnowledge <br/>
+1) Coordinate transformation
+<br>	We can get two matrices.
+<br>			1-1) Dose - &gt; Patient matrix
+<br>			1-2) CT -&gt; Patient matrix	
+<br>	<br>	즉, Dose -&gt; CT 로 좌표를 변환하기 위해서는 Dose -&gt; Patient -&gt; CT를 			해야 한다.
+<br>-&gt;	Patient -&gt; CT를 구하기 위해선 CT -&gt; Patient matrix를 inverse 해야 한다.
+<br>-&gt;	Dose2CT 변환 매트릭스 = (Dose 2Patient) * (Patinet2CT)
+<br>-&gt;	Dose2CT * ( x, y, z, 1 ) 를 하면 (x,y,z)좌표가 변환된다.
+<br>-&gt;	이때 1은 vector, 0은 포인트를 가르킨다.
+<br>-&gt;	자세한 내용은 DICOM standard의 c.7.6.2.1.1 를 참조
+<br>( 3차원 행렬의 transform 또는 scaling쪽 지식이 필요 )</p>
+<pre><code>2) Obtain Dose Value
+</code></pre>
+</li>
 </ol>
-<h2>Installing</h2>
+<p><br>-&gt;	RT DOSE의 pixelData(x7fe00010)
+<br>-&gt;	RT DOSE의 Dose Grid Scaling (x3004000e)
+<br>-&gt;	선량값 = pixelData * DoseGridScaling</p>
+<pre><code>	3) Import Sub-Data in DICOM file
+</code></pre>
+<p><br>-&gt;	Original :  class로 묶어서 가져와야 함
+<br>-&gt;  Present : cornerstone.js (GitHub) - &gt; dicomParser -&gt; liveExample -&gt; DICOM DUMP
+<br>-&gt;	https://rawgit.com/cornerstonejs/dicomParser/master/examples/index.html
+<br>-&gt;	마우스 오른쪽 클릭 후 페이지 소스보기
+<br>-&gt;	이 소스를 분석하여 계층구조에 있는 data를 import 했다.
+<br>-&gt;	Project에서 getROIList -&gt; structFile , ROIListHierarchy , getContourData 코드 참조
+<br> (output에 출력하면 계층구조로 보임)</p>
+<pre><code>	4) Cornerstone
+</code></pre>
+<p><br>-&gt;	Github : https://github.com/cornerstonejs
+<br>-&gt;	Example : https://cornerstonejs.org/</p>
+<pre><code>	5) Zoom, pan event
+</code></pre>
+<p><br>-&gt;	React-map-interaction라는 opensource 사용
+<br>-&gt;	추후 마우스 휠 이벤트 분리해야 함</p>
+<pre><code>	6) Open Source
+</code></pre>
+<p><br>-&gt;	Dcmjs : cornerstone과 비슷한 DICOM parser
+<br>-&gt;	Mathjs :&quot; matrix 연산 시 python처럼 사용 가능
+<br>-&gt;	Jsdoc : Documentation Tool</p>
+<pre><code>	7) Document
+</code></pre>
+<p><br>-&gt;	Word : WebViewer_API_document
+<br>-&gt;	JSDOC API documentation (권장)
+<br>: 개발 진행 시 보기 더 편함</p>
+<ol start="2">
+<li>개발 환경 setting
+1) Window
+2) Webstorm
+3) Node.js
+<br>	- Version :12.18.3
+4) Package Manager
+1) yarn
+<br>		- version : 1.22.5
+2) npm
+<br>		- version : 6.14.6</li>
+</ol>
+<h2>Module install</h2>
 <ol>
 <li>npm install cornerstone</li>
 <li>npm install cornerstone-core
@@ -140,7 +191,7 @@
 Install : npm install jsdoc
 template : docdash
 Update : npm run jsdoc</p>
-<p>Add -&gt; In package.json
+<p>In package.json
 <br>&quot;scripts&quot;: {
 <br>    &quot;jsdoc&quot;: &quot;jsdoc -c jsdoc.json&quot;
 <br>  }</p>
@@ -174,7 +225,7 @@ In package.json
 <h3><code>npm run jsdoc</code></h3>
 <p>Each code can be annotated into jsdoc.
 Running this script updates.</p>
-<h2>Modification Requirement</h2>
+<h2>Modification Requirements</h2>
 <ol>
 <li>Modify Check Event
 <br> -&gt; Draw / reset as soon as check</li>
@@ -196,7 +247,9 @@ Running this script updates.</p>
 <br><a href="https://gist.github.com/PurpleBooth/b24679402957c63ec426">CONTRIBUTING.md</a> 를 읽고 이에 맞추어 pull request 를 해주세요.</p>
 <h2>Author</h2>
 <ul>
-<li><a href="https://github.com/choijinkyung">Choi Jin Kyung</a></li>
+<li>Name : <a href="https://github.com/choijinkyung">Choi Jin Kyung</a></li>
+<li>E-mail : twin7014@naver.com</li>
+<li>GitHub : <a href="https://github.com/choijinkyung">https://github.com/choijinkyung</a></li>
 </ul>
 <h2>LICENSE</h2>
 <p>This project is licensed under the MIT License - see the [LICENSE.md]</p>
@@ -234,7 +287,7 @@ SOFTWARE.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Wed Dec 02 2020 13:48:57 GMT+0900 (GMT+09:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a> on Thu Dec 03 2020 11:33:37 GMT+0900 (GMT+09:00) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
