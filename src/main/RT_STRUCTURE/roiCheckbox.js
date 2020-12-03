@@ -8,6 +8,7 @@ import {addROIset} from "./RTStructureData2JSON";
  * 1. Generate a check box referring to the ROI Number and Name in the ROI list
  */
 function roiCheckbox(ROI_LIST_Array) {
+
     ROI_LIST_Array.forEach(function (n) {
         let ul = document.getElementById('structure_checkbox_ul');
         let li = document.createElement('li');
