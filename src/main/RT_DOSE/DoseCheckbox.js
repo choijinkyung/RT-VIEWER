@@ -1,5 +1,5 @@
 import $ from "jquery";
-import {getCheckValue} from "../Loader/fileLoader";
+import {getCheckValue} from "../Loader/FileLoader";
 /**
  * @function DoseCheckbox
  * @param {number} dosemax -> dose Max Value

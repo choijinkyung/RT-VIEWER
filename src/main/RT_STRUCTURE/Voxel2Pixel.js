@@ -1,4 +1,4 @@
-import voxelCal from "./pixel2voxel";
+import voxelCal from "./Pixel2Voxel";
 
 /**
  * @function pixelCal

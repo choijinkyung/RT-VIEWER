@@ -1,8 +1,8 @@
 import * as cornerstone from "cornerstone-core";
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import dicomParser from "dicom-parser";
-import {importPixelData} from "./importPixelData";
-import {drawDose} from "./drawDose";
+import {importPixelData} from "./ImportPixelData";
+import {drawDose} from "./DrawDose";
 import * as math from 'mathjs';
 
 let dataSet = [];
@@ -108,8 +108,8 @@ function findXY(dose_value, checkVal_check_dose, color) {
     let cnt = 0;
 
     try {
-        for (let y = 0; y < Rows; y++) {
-            for (let x = 0; x < Columns; x++) {
+        for (let y = 1; y <= Rows; y++) {
+            for (let x = 1; x <= Columns; x++) {
                 if (parseInt(checkVal_check_dose) <= dose_value[y][x]) { // 기준 선량값 이상인 x,y 추출
                     Vi[cnt] = x;
                     Vj[cnt] = y;

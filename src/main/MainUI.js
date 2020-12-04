@@ -6,10 +6,10 @@ import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import Hammer from "hammerjs";
 import dicomParser from "dicom-parser"
 import "./MainUI.css"
-import ButtonEvent from "./buttonEvent";
-import {fileLoader} from './Loader/fileLoader.js'
-import {handleFileSelect, handleDragOver} from "./Loader/dragAndDrop";
-import Controlled from "./mouseControl";
+import ButtonEvent from "./ButtonEvent";
+import {fileLoader} from './Loader/FileLoader.js'
+import {handleFileSelect, handleDragOver} from "./Loader/DragAndDrop";
+import Controlled from "./MouseControl";
 
 cornerstoneWadoImageLoader.external.cornerstone = cornerstone
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
