@@ -1,5 +1,5 @@
-import pixelCal from "./voxel2pixel";
-import fullColorHex from "./rgbToHex.js";
+import pixelCal from "./Voxel2Pixel";
+import fullColorHex from "./RGB2Hex.js";
 /**
  * @function drawROI
  * @param {object} CT_image -> CT image corresponding to the current z coordinate

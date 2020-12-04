@@ -1,11 +1,11 @@
 /**
- * @function rgbToHex
+ * @function RGB2Hex
  * @param {string} color -> RGB color
  * @description
  * 1. Convert RGB to HEX
  **/
 
-let rgbToHex = function (color) {
+let RGB2Hex = function (color) {
     let hex = Number(color).toString(16);
     if (hex.length < 2) {
         hex = "0" + hex;
@@ -31,9 +31,9 @@ let fullColorHex = function (rgb) {
     let g = rgb[1];
     let b = rgb[2];
 
-    let red = rgbToHex(r);
-    let green = rgbToHex(g);
-    let blue = rgbToHex(b);
+    let red = RGB2Hex(r);
+    let green = RGB2Hex(g);
+    let blue = RGB2Hex(b);
 
     return "#" + red + green + blue;
 };

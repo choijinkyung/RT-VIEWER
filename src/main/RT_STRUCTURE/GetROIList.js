@@ -1,5 +1,5 @@
 import $ from "jquery";
-import {roiCheckEvent} from "./roiCheckbox";
+import {roiCheckEvent} from "./ROICheckbox";
 import dicomParser from "dicom-parser";
 import {contourData2JSON,roiData2JSON} from "./RTStructureData2JSON";
 

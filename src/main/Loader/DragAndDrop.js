@@ -1,4 +1,4 @@
-import {doseFile} from "../RT_DOSE/convertMatrix";
+import {doseFile} from "../RT_DOSE/ConvertMatrix";
 /**
  * @function handleFileSelect
  * @param {event} e -> Events that occur when a file is selected

@@ -1,6 +1,6 @@
 import $ from "jquery";
-import {roiCheckbox} from "./roiCheckbox";
-import {drawROI} from "./drawROI";
+import {ROICheckbox} from "./ROICheckbox";
+import {drawROI} from "./DrawROI";
 /**
  * @function roiData2JSON
  * @param {object} roi_List
@@ -11,7 +11,7 @@ import {drawROI} from "./drawROI";
  * 3. If you want to read object
  *  -> JSON.stringfy(object)
  * 4. Function call
- * <br> 1) name : roiCheckbox
+ * <br> 1) name : ROICheckbox
  *  <br> param : ROI_LIST_Array
  *
  * < DICOM Tag >
@@ -52,7 +52,7 @@ function roiData2JSON(roi_List) {
             ROI_LIST_Array.push(ROI_object);
         }
 
-        roiCheckbox(ROI_LIST_Array);
+        ROICheckbox(ROI_LIST_Array);
     });
 
 }

@@ -27,4 +27,5 @@ function patientInformation(CT_image) {
     }
 }
 
+
 export default patientInformation;

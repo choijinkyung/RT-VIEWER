@@ -1,16 +1,16 @@
-import patientInformation from "../patientInformation";
+import patientInformation from "../PatientInformation";
 import dicomParser from "dicom-parser";
 import Hammer from "hammerjs";
 import * as cornerstone from "cornerstone-core";
 import * as cornerstoneTools from "cornerstone-tools";
 import * as cornerstoneMath from "cornerstone-math"
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
-import voxelCal from "../RT_STRUCTURE/pixel2voxel";
-import {reset} from "../RT_STRUCTURE/drawROI";
-import {getCTimage, doseFile} from "../RT_DOSE/convertMatrix";
-import {doseCheckAndDraw} from "../RT_DOSE/drawDose";
-import {getDoseValue} from "../RT_DOSE/gridScaling";
-import {structFile} from "../RT_STRUCTURE/getROIList";
+import voxelCal from "../RT_STRUCTURE/Pixel2Voxel";
+import {reset} from "../RT_STRUCTURE/DrawROI";
+import {getCTimage, doseFile} from "../RT_DOSE/ConvertMatrix";
+import {doseCheckAndDraw} from "../RT_DOSE/DrawDose";
+import {getDoseValue} from "../RT_DOSE/GridScaling";
+import {structFile} from "../RT_STRUCTURE/GetROIList";
 import {directCheckAndDraw} from "../RT_STRUCTURE/RTStructureData2JSON";
 
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser

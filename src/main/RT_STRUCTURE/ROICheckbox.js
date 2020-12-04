@@ -1,13 +1,13 @@
 import $ from "jquery";
 import {addROIset} from "./RTStructureData2JSON";
 /**
- * @function roiCheckbox
+ * @function ROICheckbox
  * @param {object} ROI_LIST_Array -> Object with ROI list
  * @description
  * This function deals with
  * 1. Generate a check box referring to the ROI Number and Name in the ROI list
  */
-function roiCheckbox(ROI_LIST_Array) {
+function ROICheckbox(ROI_LIST_Array) {
 
     ROI_LIST_Array.forEach(function (n) {
         let ul = document.getElementById('structure_checkbox_ul');
@@ -49,4 +49,4 @@ function roiCheckEvent(){
         }
     });
 }
-export {roiCheckbox,roiCheckEvent};
+export {ROICheckbox,roiCheckEvent};

@@ -1,4 +1,4 @@
-import {DoseCheckbox, doseCheckEvent} from "./doseCheckbox";
+import {DoseCheckbox, doseCheckEvent} from "./DoseCheckbox";
 
 let dose_value = [];
 /**
@@ -38,18 +38,18 @@ function gridScaling(dose_image, dose_pixel_data, Rows, Columns, Number_of_Frame
 
     // javascript는 이렇게 각각 다 초기화 해줘야함..
     let cnt = 0;
-    for (let z = 110; z > 110 - Number_of_Frames; z--) {
+    for (let z = 111; z > 111 - Number_of_Frames; z--) {
         dose_value[z] = [];
     }
 
-    for (let z = 110; z > 110 - Number_of_Frames; z--) {
-        for (let y = 0; y < Rows; y++) {
+    for (let z = 111; z > 111 - Number_of_Frames; z--) {
+        for (let y = 1; y <= Rows; y++) {
             dose_value[z][y] = [];
         }
     }
-    for (let z = 110; z > 110 - Number_of_Frames; z--) {
-        for (let y = 0; y < Rows; y++) {
-            for (let x = 0; x < Columns; x++) {
+    for (let z = 111; z > 111 - Number_of_Frames; z--) {
+        for (let y = 1; y <= Rows; y++) {
+            for (let x = 1; x <= Columns; x++) {
 
                 dose_value[z][y][x] = [];
             }
@@ -58,9 +58,9 @@ function gridScaling(dose_image, dose_pixel_data, Rows, Columns, Number_of_Frame
 
     let dose_sort = [];
     //convert array to 3 dimension
-    for (let z = 110; z > 110 - Number_of_Frames; z--) {
-        for (let y = 0; y < Rows; y++) {
-            for (let x = 0; x < Columns; x++) {
+    for (let z = 111; z > 111 - Number_of_Frames; z--) {
+        for (let y = 1; y <= Rows; y++) {
+            for (let x = 1; x <= Columns; x++) {
                 dose_value[z][y][x] = dose_value_temp[cnt];
                 dose_sort.push(dose_value[z][y][x]);
                 cnt++;
