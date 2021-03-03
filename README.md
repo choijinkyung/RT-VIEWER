@@ -1,8 +1,8 @@
-# DICOM Web/App VIEWER
+# RT VIEWER
 
 ![fullscreen](https://user-images.githubusercontent.com/44565579/100818642-e57ade80-348d-11eb-9b5b-e9dd6bebb0d9.PNG)
 
-DICOM Web/App Viewer 
+RT Viewer 
 - Can overlay CT IMAGE, DOSE, and RT STRUCTURE 
 - This project based on TEST849 
 
