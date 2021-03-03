@@ -24,47 +24,48 @@ RT Viewer
 <br>	We can get two matrices. 
 <br>			1-1) Dose - > Patient matrix
 <br>			1-2) CT -> Patient matrix	
-<br>	<br>	즉, Dose -> CT 로 좌표를 변환하기 위해서는 Dose -> Patient -> CT를 			해야 한다.
-<br>->	Patient -> CT를 구하기 위해선 CT -> Patient matrix를 inverse 해야 한다. 
-<br>->	Dose2CT 변환 매트릭스 = (Dose 2Patient) * (Patinet2CT) 
-<br>->	Dose2CT * ( x, y, z, 1 ) 를 하면 (x,y,z)좌표가 변환된다.
-<br>->	이때 1은 vector, 0은 포인트를 가르킨다.
-<br>->	자세한 내용은 DICOM standard의 c.7.6.2.1.1 를 참조
-<br>( 3차원 행렬의 transform 또는 scaling쪽 지식이 필요 )
+<br>	<br>	In other words, to convert coordinates to Dose -> CT, Dose -> Patient -> CT is required.
+<br>->	To obtain -> Patient -> CT, CT -> Patient matrix must be inverse.
+<br>->	Dose2CT transformation matrix = (Dose 2Patient) * (Patinet2CT)
+<br>->	Dose2CT * (x, y, z, 1) converts the coordinates (x, y, z).
+<br>->	1 is the vector and 0 is the point.
+<br>->	See c7.6.2.1.1 of DICOM standard for more information.
+<br>(requires knowledge of the transform or scaling side of a three-dimensional matrix)
+
 
         2) Obtain Dose Value
-<br>->	RT DOSE의 pixelData(x7fe00010)
-<br>->	RT DOSE의 Dose Grid Scaling (x3004000e)
-<br>->	선량값 = pixelData * DoseGridScaling 
+<br>->	RT DOSE pixelData(x7fe00010)
+<br>->	RT DOSE Dose Grid Scaling (x3004000e)
+<br>->	DOSE Value = pixelData * DoseGridScaling 
 
 		3) Import Sub-Data in DICOM file
-<br>->	Original :  class로 묶어서 가져와야 함
+<br>->	Original :  DB import & use Class 
 <br>->  Present : cornerstone.js (GitHub) - > dicomParser -> liveExample -> DICOM DUMP
 <br>->	https://rawgit.com/cornerstonejs/dicomParser/master/examples/index.html
-<br>->	마우스 오른쪽 클릭 후 페이지 소스보기
-<br>->	이 소스를 분석하여 계층구조에 있는 data를 import 했다. 
-<br>->	Project에서 getROIList -> structFile , ROIListHierarchy , getContourData 코드 참조 
-<br> (output에 출력하면 계층구조로 보임)
+<br>->	click F12 & show developer tool
+<br>->	We analyzed this source and imported the data in the hierarchy.
+<br>->	In Project, Referenced Code Like getROIList -> structFile , ROIListHierarchy , getContourData 
+<br> (Output to output shows hierarchical)
 
 		4) Cornerstone
 <br>->	Github : https://github.com/cornerstonejs
 <br>->	Example : https://cornerstonejs.org/	
 
 		5) Zoom, pan event
-<br>->	React-map-interaction라는 opensource 사용
-<br>->	추후 마우스 휠 이벤트 분리해야 함
+<br>->	Use React-map-Interaction opensource 
+<br>->	After, Divided mouse event
 
 		6) Open Source
-<br>->	Dcmjs : cornerstone과 비슷한 DICOM parser
-<br>->	Mathjs :" matrix 연산 시 python처럼 사용 가능
+<br>->	Dcmjs : DICOM parser library like cornerstone 
+<br>->	Mathjs : Can be used like python for matrix operations
 <br>->	Jsdoc : Documentation Tool
 
 		7) Document
 <br>->	Word : WebViewer_API_document
-<br>->	JSDOC API documentation (권장)
-<br>: 개발 진행 시 보기 더 편함
+<br>->	JSDOC API documentation (Recommended)
+<br>: Easier to see when Developing
 
-2.	개발 환경 setting
+2.	Environment setting
         1) Window
         2) Webstorm 
         3) Node.js
