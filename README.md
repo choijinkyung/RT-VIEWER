@@ -124,7 +124,7 @@ To install at once
 <br> "devDependencies": {
 <br>     "gh-pages": "^3.1.0"
 <br>   },
-  "homepage": "https://choijinkyung.github.io/DICOM-RT-VIEWER/"
+  "homepage": "https://choijinkyung.github.io/RT-VIEWER/"
 
 ## API documentation
 Use JSDOC
@@ -170,7 +170,7 @@ In package.json
 <br>  }
 <br>  "devDependencies": {
 <br>     "gh-pages": "^3.1.0"
-<br>  }, "homepage": "https://choijinkyung.github.io/DICOM-RT-VIEWER/"
+<br>  }, "homepage": "https://choijinkyung.github.io/RT-VIEWER/"
 
 
 ### `npm run jsdoc`
