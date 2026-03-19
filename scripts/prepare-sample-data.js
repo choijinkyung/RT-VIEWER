@@ -40,7 +40,6 @@ function main() {
   }
 
   const manifest = {
-    generatedAt: new Date().toISOString(),
     basePath: "sample-data/TEST849",
     files,
   };
