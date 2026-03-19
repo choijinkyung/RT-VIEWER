@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/RT-VIEWER/static/css/main.baedf52d.css",
+    "main.js": "/RT-VIEWER/static/js/main.79aebb32.js",
+    "index.html": "/RT-VIEWER/index.html",
+    "main.baedf52d.css.map": "/RT-VIEWER/static/css/main.baedf52d.css.map",
+    "main.79aebb32.js.map": "/RT-VIEWER/static/js/main.79aebb32.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.baedf52d.css",
+    "static/js/main.79aebb32.js"
+  ]
+}
