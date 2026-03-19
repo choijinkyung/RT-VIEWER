@@ -22,6 +22,7 @@ cornerstoneTools.init();
 
 let currentImageIndex = 111; //for dose z coords setting
 let fileJsonArray = []; //Initialization Json Array , Only global variables are possible
+let sampleLoadPromise = null;
 
 function getSortableImageNumber(file) {
     const relativePath = (file.webkitRelativePath || file.name || "").toString();
@@ -48,11 +49,9 @@ function findFileByKeywords(files, keywords) {
  * 1. function call for CTImage, RT DOSE, RT STRUCTURE files load
  * 2. mouseWheel event function -> update image & dose pixel data
  */
-function fileLoader(e) {
+function loadFiles(files) {
     let imageId = []; //image ID list from file name list
     let temp_imageId = [];
-
-    let files = e.target.files; // event data transfer
     let fileName = [];
     fileJsonArray = [];
 
@@ -153,6 +152,55 @@ function fileLoader(e) {
     }
 }
 
+function fileLoader(e) {
+    return loadFiles(e.target.files);
+}
+
+async function loadBundledSample() {
+    if (sampleLoadPromise) {
+        return sampleLoadPromise;
+    }
+
+    sampleLoadPromise = (async () => {
+        const manifestUrl = `${process.env.PUBLIC_URL}/sample-data/manifest.json`;
+        const manifestResponse = await fetch(manifestUrl);
+
+        if (!manifestResponse.ok) {
+            throw new Error("Unable to load the bundled sample manifest.");
+        }
+
+        const manifest = await manifestResponse.json();
+        const files = await Promise.all(
+            manifest.files.map(async (fileName) => {
+                const fileUrl = `${process.env.PUBLIC_URL}/${manifest.basePath}/${fileName}`;
+                const response = await fetch(fileUrl);
+
+                if (!response.ok) {
+                    throw new Error(`Unable to fetch bundled sample file: ${fileName}`);
+                }
+
+                const blob = await response.blob();
+                const file = new File([blob], fileName, {
+                    type: "application/dicom",
+                    lastModified: Date.now(),
+                });
+
+                Object.defineProperty(file, "webkitRelativePath", {
+                    value: `TEST849/${fileName}`,
+                    configurable: true,
+                });
+
+                return file;
+            })
+        );
+
+        loadFiles(files);
+        return files;
+    })();
+
+    return sampleLoadPromise;
+}
+
 
 let img;
 /**
@@ -236,5 +284,4 @@ function getCheckValue(checkVal_check) {
     checkVal_check_dose = checkVal_check;
 }
 
-export {fileLoader, getCheckValue}
-
+export {fileLoader, getCheckValue, loadBundledSample}

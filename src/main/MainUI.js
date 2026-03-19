@@ -7,7 +7,7 @@ import Hammer from "hammerjs";
 import dicomParser from "dicom-parser"
 import "./MainUI.css"
 import ButtonEvent from "./ButtonEvent";
-import {fileLoader} from './Loader/FileLoader.js'
+import {fileLoader, loadBundledSample} from './Loader/FileLoader.js'
 import {handleFileSelect, handleDragOver} from "./Loader/DragAndDrop";
 import Controlled from "./MouseControl";
 
@@ -47,6 +47,13 @@ class MainUIElements extends React.Component {
         let dropZone = document.getElementById('dicomImage');
         dropZone.addEventListener('dragover', handleDragOver, false);
         dropZone.addEventListener('drop', handleFileSelect, false);
+
+        if (process.env.NODE_ENV !== "test") {
+            document.getElementById('patientName').textContent = 'Patient Name : Loading bundled TEST849 sample...';
+            loadBundledSample().catch(() => {
+                document.getElementById('patientName').textContent = 'Patient Name : Sample auto-load failed. Use "Open patient" to choose a folder.';
+            });
+        }
 
     const element = document.getElementById('dicomImage');
         element.addEventListener('mousedown', function (e) {
@@ -106,6 +113,13 @@ class MainUIElements extends React.Component {
                            onChange={(e) => {
                                fileLoader(e);
                            }}/>
+                    &nbsp;&nbsp;
+                    <button onClick={() => {
+                        loadBundledSample().catch(() => {
+                            alert("Unable to load the bundled TEST849 sample.");
+                        });
+                    }}>Load TEST849 Sample
+                    </button>
                 </div>
 
                 <div className={'left'}>

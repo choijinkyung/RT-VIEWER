@@ -21,6 +21,9 @@
     "react-scripts": "^5.0.1"
   },
   "scripts": {
+    "prepare-sample-data": "node scripts/prepare-sample-data.js",
+    "prestart": "npm run prepare-sample-data",
+    "prebuild": "npm run prepare-sample-data",
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
