@@ -172,7 +172,7 @@ class MainUIElements extends React.Component {
                     </ul>
                 </div>
                 <br/> <br/><br/>
-                <div class="left">
+                <div className="left">
                     <div>
                         <div>
                             <span id="patientName">Patient Name : </span>
@@ -185,13 +185,19 @@ class MainUIElements extends React.Component {
                         </div>
                     </div>
                     <div>
-                        <div id="dicomImageWrapper" className="wrapper"
-                             onContextMenu="return false" onWheel={() => {
-                        }}>
+                        <div
+                            id="dicomImageWrapper"
+                            className="wrapper"
+                            onContextMenu={(e) => {
+                                e.preventDefault();
+                            }}
+                            onWheel={() => {
+                            }}
+                        >
                             <div>
                                 <Controlled/>
                             </div>
-                            <div id='topleft' className="overlay" className="topleft">
+                            <div id='topleft' className="overlay topleft">
                                 <div id="topleft1" >
                                     Image :
                                 </div>
@@ -199,7 +205,7 @@ class MainUIElements extends React.Component {
                                     Position:
                                 </div>
                             </div>
-                            <div className="overlay" className="topright">
+                            <div className="overlay topright">
                                 <div id="topright1" >
                                     WW/WC:
                                 </div>

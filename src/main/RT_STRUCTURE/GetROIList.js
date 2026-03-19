@@ -19,7 +19,7 @@ import {contourData2JSON,roiData2JSON} from "./RTStructureData2JSON";
  * 1. Distinguish whether the string is an isASCII or not.
  */
 function isASCII(str) {
-    return /^[\x00-\x7F]*$/.test(str);
+    return Array.from(str || "").every((char) => char.charCodeAt(0) <= 127);
 }
 
 let dataSet;
@@ -122,60 +122,19 @@ function roiListHierarchy(dataSet) {
 
             //Show ROI list with the tag I want.
             if (element.tag === 'x30060020' || (element.tag === 'x30060022') || element.tag === 'x30060026') {
-                let text = element.tag;
-                if (element.hadUndefinedLength) {
-                    text += " <strong>(-1)</strong>";
-                }
-                text += "; ";
-
-                if (element.vr) {
-                    text += " VR=" + element.vr + "; ";
-                }
-
-                let color = 'black';
-
                 if (element.items) { //item들을 표시
                     element.items.forEach(function (item) {
                         // each item contains its own data set so we iterate over the items and recursively call this function
                         roiListHierarchy(item.dataSet);
                     });
                 } else if (element.fragments) {
-                    // each item contains its own data set so we iterate over the items and recursively call this function
-                    let itemNumber = 0;
-                    element.fragments.forEach(function (fragment) {
-                        let basicOffset;
-                        if (element.basicOffsetTable) {
-                            basicOffset = element.basicOffsetTable[itemNumber];
-                        }
-                        let str = '<li>Fragment #' + itemNumber++ + ' offset = ' + fragment.offset;
-                        str += '(' + basicOffset + ')';
-                        str += '; length = ' + fragment.length + '</li>';
-                    });
+                    // Fragment payloads are not used by the current ROI extraction flow.
                 } else {
-                    if (element.length === 2) {
-                        text += " (" + dataSet.uint16(propertyName) + ")";
-
-                    } else if (element.length === 4) {
-                        text += " (" + dataSet.uint32(propertyName) + ")";
-                    }
                     //대부분은 문자열이지만 그렇지 않은 것들을 확인해서 표시하는 것을 위함
                     let str = dataSet.string(propertyName);
-                    let stringIsAscii = isASCII(str);
 
-                    if (stringIsAscii) {
-                        // 정의되지 않은 경우 아무것도 넣지 않음
-                        if (str !== undefined) {
-                            text += '"' + str + '"';
-                        }
-                    } else {
-                        if (element.length !== 2 && element.length !== 4) {
-                            color = '#C8C8C8';
-                            // If it is some other length and we have no string
-                            text += "<i>binary data</i>";
-                        }
-                    }
-                    if (element.length === 0) {
-                        color = '#C8C8C8';
+                    if (!isASCII(str) && element.length !== 2 && element.length !== 4) {
+                        // Skip binary payloads while still keeping tag/value pairs we can use.
                     }
                     ROI_List.push(element.tag, dataSet.string(propertyName));
                 }
@@ -217,17 +176,6 @@ function getContourData(dataSet, output1, output3) {
             //show contour data list
 
             if (element.tag === 'x30060039' || element.tag === 'x3006002a' || element.tag === 'x30060040' || element.tag === 'x30060050' || element.tag === 'x30060016' || element.tag === 'x00081155' || element.tag === 'x30060084') {
-                let text = element.tag;
-
-                if (element.hadUndefinedLength) {
-                    text += " <strong>(-1)</strong>";
-                }
-                text += "; ";
-                if (element.vr) {
-                    text += " VR=" + element.vr + "; ";
-                }
-                let color = 'black';
-
                 // Here we check for Sequence items and iterate over them if present.
                 // items will not be set in the element object for elements that don't have SQ VR type.
                 //  Note that implicit little endian sequences will are currently not parsed.
@@ -242,46 +190,14 @@ function getContourData(dataSet, output1, output3) {
                         // output1.push('</ul>');
                     });
                 } else if (element.fragments) {
-                    // each item contains its own data set so we iterate over the items and recursively call this function
-                    let itemNumber = 0;
-                    element.fragments.forEach(function (fragment) {
-                        let basicOffset;
-                        if (element.basicOffsetTable) {
-                            basicOffset = element.basicOffsetTable[itemNumber];
-                        }
-                        let str = '<li>Fragment #' + itemNumber++ + ' offset = ' + fragment.offset;
-                        str += '(' + basicOffset + ')';
-                        str += '; length = ' + fragment.length + '</li>';
-                    });
+                    // Fragment payloads are not used by the current contour extraction flow.
                 } else {
-                    if (element.length === 2) {
-                        text += " (" + dataSet.uint16(propertyName) + ")";
-
-                    } else if (element.length === 4) {
-                        text += " (" + dataSet.uint32(propertyName) + ")";
-                    }
                     //대부분은 문자열이지만 그렇지 않은 것들을 확인해서 표시하는 것을 위함
                     let str = dataSet.string(propertyName);
-                    let stringIsAscii = isASCII(str);
 
-                    if (stringIsAscii) {
-                        // 정의되지 않은 경우 아무것도 넣지 않음
-                        if (str !== undefined) {
-                            text += '"' + str + '"';
-                        }
-                    } else {
-                        if (element.length !== 2 && element.length !== 4) {
-                            color = '#C8C8C8';
-                            // If it is some other length and we have no string
-                            text += "<i>binary data</i>";
-                        }
+                    if (!isASCII(str) && element.length !== 2 && element.length !== 4) {
+                        // Skip binary payloads while still keeping tag/value pairs we can use.
                     }
-                    if (element.length === 0) {
-                        color = '#C8C8C8';
-                    }
-                    //   output3.push('<li style="color:' + color + ';">' + text + '</li>');
-                    // output1.push('<li style="color:' + color + ';">' + text + '</li>');
-                    // finally we add the string to our  array
                     contourList.push(element.tag, dataSet.string(propertyName));
                 }
             }

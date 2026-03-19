@@ -1,33 +1,32 @@
 {
-  "name": "untitled5",
+  "name": "rt-viewer",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "cornerstone-core": "^2.3.0",
-    "cornerstone-math": "^0.1.9",
-    "cornerstone-tools": "^5.0.0",
-    "cornerstone-wado-image-loader": "^3.1.2",
-    "cross": "^1.0.0",
-    "docdash": "^1.2.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "cornerstone-core": "^2.6.1",
+    "cornerstone-math": "^0.1.10",
+    "cornerstone-tools": "^5.3.0",
+    "cornerstone-wado-image-loader": "^3.3.2",
+    "docdash": "^2.0.2",
     "hammerjs": "^2.0.8",
-    "jquery": "^3.5.1",
-    "mathjs": "^8.0.1",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "react-map-interaction": "^2.0.0",
-    "react-scripts": "^3.4.3",
-    "webkit": "^0.0.0"
+    "jquery": "^3.7.1",
+    "mathjs": "^15.1.0",
+    "path-browserify": "^1.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-map-interaction": "^2.1.0",
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject",
-    "deploy": "gh-pages -d build",
-    "jsdoc" : "jsdoc -c jsdoc.json"
+    "deploy": "npm run build && gh-pages -d build",
+    "jsdoc": "jsdoc -c jsdoc.json"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -45,7 +44,8 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^3.1.0"
+    "@craco/craco": "^7.1.0",
+    "gh-pages": "^6.3.0"
   },
-  "homepage": "https://choijinkyung.github.io/DICOM-RT-VIEWER/"
+  "homepage": "https://choijinkyung.github.io/RT-VIEWER/"
 }
