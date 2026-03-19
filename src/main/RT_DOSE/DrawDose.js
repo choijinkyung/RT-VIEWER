@@ -68,26 +68,23 @@ function doseCheckAndDraw(dose_value, checkVal_check_dose) {
  * This function deals with
  * 1. Draw x,y coordinates received on canvas.
  */
-function drawDose(Px, Py, color,CT_Di,CT_Dj) {
+function drawDose(segments, color) {
     try{
         let canvas = document.getElementById('myCanvas');
         let ctx = canvas.getContext('2d');
 
         ctx.save();
-        ctx.scale(1.2+CT_Di,1.2+CT_Dj);
-        ctx.translate(-146,-125);
-
-        ctx.beginPath();
-        ctx.moveTo(Px[0], Py[0]);
-        for (let i = 1; i < Px.length; i++) {
-            ctx.lineTo(Px[i], Py[i]);
-        }
-        ctx.closePath();
-        ctx.fillStyle = color;
-        ctx.globalAlpha = 1;
         ctx.strokeStyle = color;
-        ctx.stroke();
-        ctx.fill();
+        ctx.lineWidth = 1.25;
+        ctx.globalAlpha = 0.85;
+
+        for (let i = 0; i < segments.length; i++) {
+            const segment = segments[i];
+            ctx.beginPath();
+            ctx.moveTo(segment.start.x, segment.start.y);
+            ctx.lineTo(segment.end.x, segment.end.y);
+            ctx.stroke();
+        }
         ctx.restore();
     }catch (err){
         var message = err;

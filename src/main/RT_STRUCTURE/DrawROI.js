@@ -1,5 +1,14 @@
 import pixelCal from "./Voxel2Pixel";
 import fullColorHex from "./RGB2Hex.js";
+
+function parseRgbColor(color) {
+    const [r = "0", g = "0", b = "0"] = color.split("\\");
+    return {
+        r: Number(r),
+        g: Number(g),
+        b: Number(b),
+    };
+}
 /**
  * @function drawROI
  * @param {object} CT_image -> CT image corresponding to the current z coordinate
@@ -23,6 +32,7 @@ function drawROI(CT_image, struct, color) {
 
         let canvas = document.getElementById("myCanvas");
         let ctx = canvas.getContext("2d");
+        const rgb = parseRgbColor(color);
 
         ctx.save();
         ctx.beginPath();
@@ -33,8 +43,9 @@ function drawROI(CT_image, struct, color) {
             }
         }
         ctx.closePath();
-        ctx.fillStyle = fullColorHex(color);
-        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.16)`;
+        ctx.strokeStyle = fullColorHex(color);
+        ctx.lineWidth = 1.5;
         ctx.stroke();
         ctx.fill();
         ctx.restore();

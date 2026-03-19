@@ -1,6 +1,6 @@
 import $ from "jquery";
 import {ROICheckbox} from "./ROICheckbox";
-import {drawROI} from "./DrawROI";
+import {drawROI, reset} from "./DrawROI";
 /**
  * @function roiData2JSON
  * @param {object} roi_List
@@ -190,34 +190,13 @@ function directCheckAndDraw(CT_image) {
     return img;
 }
 
-/**
- * @function roiCheckAndDraw
- * @param {string} checkVal_check
- * @description
- * This function deals with
- * 1. If the checked value and the current CT slice, the corresponding contour data and color are saved and drawn.
- * 2. Function call
- * <br> 1) name: drawROI
- * <br> param : CT_image, struct, color
- *
- * < DICOM Tag >
- * 1) ROI Display Color : x3006002a
- * 2) Contour Data : x30060050
- * 3) Referenced SOP Instance UID : x00081155
- * 4) Referenced ROI Number : x30060084
- * */
-function roiCheckAndDraw(checkVal_check) {
-    let Instance_UID = img.data.string('x00080018');
-    for (let i = 0; i < contour_data_Array.length; i++) {
-        if (contour_data_Array[i]['x30060084'] === checkVal_check) {
-            if (contour_data_Array[i]['x00081155'] === Instance_UID) {
-                struct = contour_data_Array[i]['x30060050'];
-                color = contour_data_Array[i]['x3006002a'];
-
-                drawROI(img, struct, color);
-            }
-        }
+function redrawCheckedROIs() {
+    if (!img) {
+        return;
     }
+
+    reset();
+    directCheckAndDraw(img);
 }
 
 /**
@@ -227,26 +206,19 @@ function roiCheckAndDraw(checkVal_check) {
  * This function deals with
  * 1. Put the ROI check set when checking.
  * 2. Delete from ROI check set when unchecked
- * 3. Function call
- * <br> 1) name : roiCheckAndDraw
- * <br> param : checkVal_check
- * <br> 2) name : checkAndReset //will make function
- * <br> param : checkVal_check
+ * 3. Redraw the current slice immediately after the selection changes.
  */
 function addROIset(evt) {
-    let checkVal_check;
     if (evt.target.checked === true) { // 체크 되었을 때
         information.ROIs.push(evt.target.value);
-        checkVal_check = evt.target.value;
-
-        roiCheckAndDraw(checkVal_check);
     } else { // 체크 해제시
         let index = information.ROIs.indexOf(evt.target.value);
         if (index !== -1) { //해당 ROI를 set에서 삭제
             information.ROIs.splice(index, 1);
         }
-        //checkVal_check = evt.target.value;
     }
+
+    redrawCheckedROIs();
 }
 
-export {roiData2JSON,contourData2JSON,directCheckAndDraw,addROIset}
+export {roiData2JSON,contourData2JSON,directCheckAndDraw,addROIset,redrawCheckedROIs}

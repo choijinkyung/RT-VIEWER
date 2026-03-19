@@ -104,24 +104,86 @@ function doseFile(file) {
  *          <br> param : Vi, Vj, color
  */
 function findXY(dose_value, checkVal_check_dose, color) {
-    let Vi = [], Vj = [];
-    let cnt = 0;
-
     try {
-        for (let y = 1; y <= Rows; y++) {
-            for (let x = 1; x <= Columns; x++) {
-                if (parseInt(checkVal_check_dose) <= dose_value[y][x]) { // 기준 선량값 이상인 x,y 추출
-                    Vi[cnt] = x;
-                    Vj[cnt] = y;
-
-                    cnt++;
-                }
-            }
-        }
-        dose2patient(Vi, Vj, color);
+        const threshold = parseInt(checkVal_check_dose);
+        const contourSegments = buildDoseContourSegments(dose_value, threshold);
+        dose2patient(contourSegments, color);
     } catch (err) {
         alert('Can\'t find x,y ');
     }
+}
+
+function interpolateEdge(p1, p2, v1, v2, threshold) {
+    if (v1 === v2) {
+        return {
+            x: (p1.x + p2.x) / 2,
+            y: (p1.y + p2.y) / 2,
+        };
+    }
+
+    const ratio = (threshold - v1) / (v2 - v1);
+    return {
+        x: p1.x + (p2.x - p1.x) * ratio,
+        y: p1.y + (p2.y - p1.y) * ratio,
+    };
+}
+
+function buildDoseContourSegments(dose_value, threshold) {
+    const segments = [];
+
+    for (let y = 1; y < Rows; y++) {
+        for (let x = 1; x < Columns; x++) {
+            const topLeft = dose_value[y][x];
+            const topRight = dose_value[y][x + 1];
+            const bottomRight = dose_value[y + 1][x + 1];
+            const bottomLeft = dose_value[y + 1][x];
+
+            const corners = [
+                {x, y, value: topLeft},
+                {x: x + 1, y, value: topRight},
+                {x: x + 1, y: y + 1, value: bottomRight},
+                {x, y: y + 1, value: bottomLeft},
+            ];
+
+            const edges = [];
+            const cornerPairs = [
+                [0, 1],
+                [1, 2],
+                [2, 3],
+                [3, 0],
+            ];
+
+            for (let i = 0; i < cornerPairs.length; i++) {
+                const [startIndex, endIndex] = cornerPairs[i];
+                const start = corners[startIndex];
+                const end = corners[endIndex];
+                const isStartInside = start.value >= threshold;
+                const isEndInside = end.value >= threshold;
+
+                if (isStartInside !== isEndInside) {
+                    edges.push(interpolateEdge(start, end, start.value, end.value, threshold));
+                }
+            }
+
+            if (edges.length === 2) {
+                segments.push({
+                    start: edges[0],
+                    end: edges[1],
+                });
+            } else if (edges.length === 4) {
+                segments.push({
+                    start: edges[0],
+                    end: edges[1],
+                });
+                segments.push({
+                    start: edges[2],
+                    end: edges[3],
+                });
+            }
+        }
+    }
+
+    return segments;
 }
 
 let dose_draw_color = 0;
@@ -138,7 +200,7 @@ let dose_draw_color = 0;
  *    <br>1) name : CT2Patient
  *    <br> param : matrixDose2Patient, Vi, Vj
  */
-function dose2patient(Vi, Vj, color) {
+function dose2patient(contourSegments, color) {
     let dose_Sx = parseFloat(dose_imgPosArr[0]);
     let dose_Sy = parseFloat(dose_imgPosArr[1]);
     let dose_Sz = parseFloat(dose_imgPosArr[2]);
@@ -181,7 +243,7 @@ function dose2patient(Vi, Vj, color) {
    */
     dose_draw_color = color;
 
-    CT2Patient(matrixDose2Patient, Vi, Vj);
+    CT2Patient(matrixDose2Patient, contourSegments);
 }
 
 let img = 0;
@@ -231,7 +293,7 @@ let CT_Sx, CT_Sy, CT_Sz;
  * let vecPatNor = math.cross((vecPatHor), (vecPatVer));
  *
  */
-function CT2Patient(matrixDose2Patient, Vi, Vj) {
+function CT2Patient(matrixDose2Patient, contourSegments) {
     let CT_pixelSpacing = img.data.string('x00280030');
     CT_pixelSpacing = CT_pixelSpacing.toString();
 
@@ -284,7 +346,7 @@ function CT2Patient(matrixDose2Patient, Vi, Vj) {
             [CT_Xz , CT_Yz , vecPatNor[2], CT_Sz],
             [0, 0, 0, 1]]);
      */
-    dose2CT(matrixDose2Patient, matrixCT2Patient, Vi, Vj);
+    dose2CT(matrixDose2Patient, matrixCT2Patient, contourSegments);
 }
 
 /**
@@ -302,37 +364,27 @@ function CT2Patient(matrixDose2Patient, Vi, Vj) {
  *     <br> 1) name : drawDose
  *     <br> param :Px, Py, dose_draw_color, CT_Di, CT_Dj
  */
-function dose2CT(matrixDose2Patient, matrixCT2Patient, Vi, Vj) {
+function transformDosePoint(DOSE2CT, point) {
+    const doseToCtPoint = math.multiply(DOSE2CT, math.matrix([[point.x], [point.y], [0], [1]]));
+    const doseToCtX = math.subset(doseToCtPoint, math.index(0, 0));
+    const doseToCtY = math.subset(doseToCtPoint, math.index(1, 0));
+
+    return {
+        x: (CT_Xx * CT_Di * doseToCtX) + (CT_Yx * CT_Dj * doseToCtY) + CT_Sx,
+        y: (CT_Xy * CT_Di * doseToCtX) + (CT_Yy * CT_Dj * doseToCtY) + CT_Sy,
+    };
+}
+
+function dose2CT(matrixDose2Patient, matrixCT2Patient, contourSegments) {
     let matrixPatient2CT = math.inv(matrixCT2Patient);
 
     let DOSE2CT = math.multiply(matrixDose2Patient, matrixPatient2CT);
+    const transformedSegments = contourSegments.map((segment) => ({
+        start: transformDosePoint(DOSE2CT, segment.start),
+        end: transformDosePoint(DOSE2CT, segment.end),
+    }));
 
-    let coordsDOSE2CT = math.matrix([[], [], [], []]);
-    let DOSE2CT_xy = [];
-    let DOSE2CT_x = [], DOSE2CT_y = [];
-
-    //coords dose2CT
-    for (let i = 0; i < Vi.length; i++) {
-        coordsDOSE2CT[i] = math.multiply(DOSE2CT, math.matrix([[Vi[i]], [Vj[i]], [0], [1]]));
-        DOSE2CT_xy.push((coordsDOSE2CT[i]));
-    }
-    //let output = [];
-    //find dose2CT x value
-    for (let i = 0; i < DOSE2CT_xy.length; i++) {
-        DOSE2CT_x[i] = math.subset(DOSE2CT_xy[i], math.index(0, 0));
-        DOSE2CT_y[i] = math.subset(DOSE2CT_xy[i], math.index(1, 0));
-        //output.push('<ul>' + '[' + DOSE2CT_x[i] + ',' + DOSE2CT_y[i] + ']' + '</ul>');
-    }
-
-
-    let Px = [], Py = [];
-    for (let i = 0; i < DOSE2CT_x.length; i++) {
-        Px[i] = (CT_Xx * CT_Di * DOSE2CT_x[i]) + (CT_Yx * CT_Dj * DOSE2CT_y[i]) + CT_Sx;
-        Py[i] = (CT_Xy * CT_Di * DOSE2CT_x[i]) + (CT_Yy * CT_Dj * DOSE2CT_y[i]) + CT_Sy;
-        //output.push('<ul>' + '[' + Px[i] + ',' + Py[i] + ']' + '</ul>');
-    }
-
-    drawDose(Px, Py, dose_draw_color, CT_Di, CT_Dj);
+    drawDose(transformedSegments, dose_draw_color);
 }
 
 export {doseFile, findXY, CT2Patient, getCTimage}

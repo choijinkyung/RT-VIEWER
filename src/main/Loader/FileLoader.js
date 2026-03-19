@@ -284,4 +284,18 @@ function getCheckValue(checkVal_check) {
     checkVal_check_dose = checkVal_check;
 }
 
-export {fileLoader, getCheckValue, loadBundledSample}
+function redrawCurrentImageOverlays() {
+    if (!img) {
+        return;
+    }
+
+    reset();
+    directCheckAndDraw(img);
+
+    const doseValues = getDoseValue();
+    if (doseValues && doseValues[currentImageIndex]) {
+        doseCheckAndDraw(doseValues[currentImageIndex], checkVal_check_dose);
+    }
+}
+
+export {fileLoader, getCheckValue, loadBundledSample, redrawCurrentImageOverlays}

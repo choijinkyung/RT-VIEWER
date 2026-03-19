@@ -1,5 +1,5 @@
 import $ from "jquery";
-import {getCheckValue} from "../Loader/FileLoader";
+import {getCheckValue, redrawCurrentImageOverlays} from "../Loader/FileLoader";
 /**
  * @function DoseCheckbox
  * @param {number} dosemax -> dose Max Value
@@ -89,6 +89,8 @@ function addDoseSet(e) {
         }
         getCheckValue(information.Dose);
     }
+
+    redrawCurrentImageOverlays();
 }
 
 export {DoseCheckbox, doseCheckEvent};
