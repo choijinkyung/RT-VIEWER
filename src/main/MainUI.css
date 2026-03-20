@@ -1,126 +1,292 @@
+.app-shell {
+    min-height: 100vh;
+    padding: 24px;
+    background:
+        radial-gradient(circle at top left, rgba(88, 196, 220, 0.18), transparent 32%),
+        radial-gradient(circle at top right, rgba(126, 224, 161, 0.12), transparent 28%),
+        linear-gradient(180deg, #07111f 0%, #091523 42%, #050d17 100%);
+}
+
+.topbar {
+    margin-bottom: 20px;
+    border: 1px solid rgba(156, 200, 216, 0.12);
+    border-radius: 22px;
+    background: rgba(10, 21, 36, 0.72);
+    backdrop-filter: blur(20px);
+}
+
+.topbar-toolbar {
+    min-height: 84px;
+    padding: 12px 20px;
+}
+
+.brand-badge {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    color: #06111d;
+    background: linear-gradient(135deg, #7ee0a1 0%, #58c4dc 100%);
+    box-shadow: 0 10px 24px rgba(88, 196, 220, 0.28);
+}
+
+.workspace-grid {
+    display: grid;
+    grid-template-columns: minmax(260px, 320px) minmax(0, 1fr) minmax(280px, 340px);
+    gap: 20px;
+    align-items: start;
+}
+
+.panel {
+    padding: 22px;
+    border-radius: 24px;
+    background: linear-gradient(180deg, rgba(14, 27, 43, 0.94), rgba(9, 19, 31, 0.98));
+}
+
+.panel-sidebar {
+    position: sticky;
+    top: 24px;
+}
+
+.panel-copy {
+    line-height: 1.7;
+}
+
+.tool-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.tool-button {
+    min-height: 44px;
+    background: rgba(88, 196, 220, 0.04);
+    border-color: rgba(88, 196, 220, 0.22);
+}
+
+.viewer-column {
+    display: grid;
+    gap: 18px;
+}
+
+.hero-panel {
+    overflow: hidden;
+    position: relative;
+}
+
+.hero-panel::after {
+    content: "";
+    position: absolute;
+    inset: auto -80px -80px auto;
+    width: 240px;
+    height: 240px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(88, 196, 220, 0.24), transparent 66%);
+    pointer-events: none;
+}
+
+.hero-title {
+    margin-bottom: 8px;
+}
+
+.patient-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.info-chip {
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    color: #d7e3ea;
+}
+
+.viewer-panel {
+    padding: 18px;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 640px;
+    position: relative;
+    overflow: hidden;
+    color: #8fdff3;
+    border: 1px solid rgba(143, 223, 243, 0.12);
+    border-radius: 22px;
+    background:
+        linear-gradient(180deg, rgba(4, 9, 18, 0.62), rgba(4, 9, 18, 0.62)),
+        linear-gradient(135deg, #09121f 0%, #04070d 100%);
+}
+
+.wrapper::before {
+    content: "";
+    position: absolute;
+    inset: 18px;
+    border: 1px solid rgba(143, 223, 243, 0.08);
+    border-radius: 18px;
+    pointer-events: none;
+}
+
 .viewportElement {
     width: 512px;
     height: 512px;
     position: relative;
     top: 0;
     left: 0;
-    margin-left: 50px;
+    margin: 0;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
 }
 
-#dropZone {
-    height: 500px;
-    width: 100%;
-    background-color: #F0F0F0;
-    overflow: auto;
-}
-
-.canvas{
-    background: #00ff0000;
+.canvas {
+    background: transparent;
     position: absolute;
-    border: 1px;
+    border: 0;
 }
 
 .overlay {
-    height: 512px;
-    width: 512px;
-    /* prevent text selection on overlay */
+    width: 100%;
+    height: 100%;
+    color: #9fe4f4;
+    padding: 28px;
+    font-size: 0.92rem;
+    line-height: 1.8;
+    text-shadow: 0 0 12px rgba(0, 0, 0, 0.68);
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-
-    /* ignore pointer event on overlay */
     pointer-events: none;
-}
-.dicomImageWrapper{
-    width: 512px;
-    height: 512px;
-    position: relative;
-    color: #00000f;
-}
-.wrapper {
-    padding-left: 30px;
-    width: 650px;
-    height: 512px;
-    position: relative;
-    color: #61dafb;
-    stroke : #F0F0F0;
-    background-color: #060606;
-}
-
-div.left {
-    width: 50%;
-    float: left;
-    overflow: auto;
-}
-div.lefthalf {
-    width: 50%;
-    float: left;
-    overflow: auto;
-}
-div.righthalf {
-    width: 50%;
-    float: right;
-    overflow: auto;
-}
-
-div.right {
-    width: 50%;
-    float: right;
-    overflow: auto;
 }
 
 .topleft {
     position: absolute;
     top: 0;
     left: 0;
-    word-break: normal;
 }
 
 .topright {
     position: absolute;
     top: 0;
     right: 0;
-    word-break: normal;
+    text-align: right;
 }
 
-.bottomleft {
-    position: absolute;
-    bottom: 0;
-    left: 0;
+.viewer-footer {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 16px;
 }
 
+.metric-card {
+    min-height: 74px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    color: #b6c8d4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+}
+
+.list-panel {
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.overlay-list {
+    margin: 0;
+    padding-left: 18px;
+    min-height: 180px;
+    max-height: 260px;
+    overflow: auto;
+    color: #d7e3ea;
+}
+
+#structure_checkbox_ul li,
+#dose_checkbox_ul li {
+    margin-bottom: 10px;
+}
+
+#structure_checkbox_ul input,
+#dose_checkbox_ul input {
+    margin-right: 8px;
+}
+
+.tip-card {
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: rgba(88, 196, 220, 0.05);
+}
+
+.dicomImageWrapper,
+#dropZone,
+#rtstruct,
+#rtstruct3,
+#dose,
+#dose2,
+.left,
+.right,
+.lefthalf,
+.righthalf,
+.bottomleft,
 .bottomright {
-    position: absolute;
-    bottom: 0;
-    right: 0
+    all: unset;
 }
 
+@media (max-width: 1380px) {
+    .workspace-grid {
+        grid-template-columns: 1fr;
+    }
 
-#rtstruct {
-    height: 500px;
-    width: 100%;
-    background-color: #F0F0F0;
-    overflow: auto;
+    .panel-sidebar {
+        position: static;
+    }
 }
 
-#rtstruct3 {
-    height: 500px;
-    width: 100%;
-    background-color: #F0F0F0;
-    overflow: auto;
-}
-#dose {
-    height: 200px;
-    width: 100%;
-    background-color: #F0F0F0;
-    overflow: auto;
-}
-#dose2 {
-    height: 200px;
-    width: 100%;
-    background-color: #F0F0F0;
-    overflow: auto;
+@media (max-width: 900px) {
+    .app-shell {
+        padding: 14px;
+    }
+
+    .topbar-toolbar {
+        align-items: flex-start;
+        gap: 16px;
+        flex-direction: column;
+    }
+
+    .patient-grid,
+    .viewer-footer {
+        grid-template-columns: 1fr;
+    }
+
+    .tool-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .wrapper {
+        min-height: 540px;
+        padding: 16px;
+    }
+
+    .viewportElement {
+        width: 100%;
+        max-width: 512px;
+        aspect-ratio: 1 / 1;
+        height: auto;
+    }
+
+    .overlay {
+        padding: 18px;
+        font-size: 0.82rem;
+    }
 }
