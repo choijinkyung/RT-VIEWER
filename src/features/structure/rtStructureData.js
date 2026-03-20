@@ -1,6 +1,7 @@
 import $ from "jquery";
-import {ROICheckbox} from "./ROICheckbox";
-import {drawROI, reset} from "./DrawROI";
+import {ROICheckbox} from "./roiCheckbox";
+import {drawROI} from "./drawROI";
+import {redrawCurrentImageOverlays} from "../viewer/lib/fileLoader";
 /**
  * @function roiData2JSON
  * @param {object} roi_List
@@ -195,8 +196,7 @@ function redrawCheckedROIs() {
         return;
     }
 
-    reset();
-    directCheckAndDraw(img);
+    redrawCurrentImageOverlays();
 }
 
 /**

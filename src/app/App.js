@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import MainUIElements from "./main/MainUI";
+import MainUIElements from "../features/viewer/components/MainUI";
 
 class App extends React.Component {
   render() {

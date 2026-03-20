@@ -1,4 +1,4 @@
-import {findXY} from "./ConvertMatrix";
+import {findXY} from "./convertMatrix";
 /**
  * @function doseCheckAndDraw
  * @param {object} dose_value -> Dose value = pixelData * gridscaling

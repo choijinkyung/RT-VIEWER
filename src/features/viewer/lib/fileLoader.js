@@ -1,17 +1,18 @@
-import patientInformation from "../PatientInformation";
+import patientInformation from "./patientInfo";
 import dicomParser from "dicom-parser";
 import Hammer from "hammerjs";
 import * as cornerstone from "cornerstone-core";
 import * as cornerstoneTools from "cornerstone-tools";
 import * as cornerstoneMath from "cornerstone-math"
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
-import voxelCal from "../RT_STRUCTURE/Pixel2Voxel";
-import {reset} from "../RT_STRUCTURE/DrawROI";
-import {getCTimage, doseFile} from "../RT_DOSE/ConvertMatrix";
-import {doseCheckAndDraw} from "../RT_DOSE/DrawDose";
-import {getDoseValue} from "../RT_DOSE/GridScaling";
-import {structFile} from "../RT_STRUCTURE/GetROIList";
-import {directCheckAndDraw} from "../RT_STRUCTURE/RTStructureData2JSON";
+import voxelCal from "../../structure/pixelToVoxel";
+import {reset} from "../../structure/drawROI";
+import {getCTimage, doseFile} from "../../dose/convertMatrix";
+import {doseCheckAndDraw} from "../../dose/drawDose";
+import {getDoseValue} from "../../dose/gridScaling";
+import {structFile} from "../../structure/getROIList";
+import {directCheckAndDraw} from "../../structure/rtStructureData";
+import ButtonEvent from "./toolManager";
 
 cornerstoneWadoImageLoader.external.dicomParser = dicomParser
 cornerstoneTools.external.cornerstone = cornerstone
@@ -19,10 +20,98 @@ cornerstoneTools.external.Hammer = Hammer;
 cornerstoneTools.external.cornerstoneMath = cornerstoneMath
 cornerstoneTools.init();
 
-
 let currentImageIndex = 111; //for dose z coords setting
 let fileJsonArray = []; //Initialization Json Array , Only global variables are possible
 let sampleLoadPromise = null;
+let currentImageIds = [];
+const buttonEvent = new ButtonEvent();
+
+function emitViewerEvent(name, detail = {}) {
+    window.dispatchEvent(new CustomEvent(name, {detail}));
+}
+
+function syncStackState(element, imageIds, imageIndex) {
+    if (!element || !imageIds || imageIds.length === 0) {
+        return;
+    }
+
+    const safeIndex = Math.max(0, Math.min(imageIndex, imageIds.length - 1));
+    const stackState = cornerstoneTools.getToolState(element, "stack");
+    const stackData = stackState && stackState.data && stackState.data[0];
+
+    if (!stackData) {
+        cornerstoneTools.addStackStateManager(element, ["stack"]);
+        cornerstoneTools.addToolState(element, "stack", {
+            imageIds,
+            currentImageIdIndex: safeIndex,
+        });
+        return;
+    }
+
+    stackData.imageIds = imageIds;
+    stackData.currentImageIdIndex = safeIndex;
+}
+
+function updateImageOverlay(element, fileLength) {
+    const stackState = cornerstoneTools.getToolState(element, "stack");
+    const stackData = stackState && stackState.data && stackState.data[0];
+    const totalImages = Math.max(fileLength || (currentImageIds.length - 3), 0);
+    const currentIndex = stackData ? stackData.currentImageIdIndex : currentImageIndex;
+    const viewport = cornerstone.getViewport(element);
+
+    const topleft1 = document.getElementById("topleft1");
+    const topright1 = document.getElementById("topright1");
+    const topright2 = document.getElementById("topright2");
+
+    if (topleft1) {
+        topleft1.textContent = `Image : ${currentIndex + 1}/${totalImages}`;
+    }
+
+    if (viewport && topright1) {
+        topright1.textContent = `WW/WC:${Math.round(viewport.voi.windowWidth)}/${Math.round(viewport.voi.windowCenter)}`;
+    }
+
+    if (viewport && topright2) {
+        topright2.textContent = `Zoom:${viewport.scale.toFixed(2)}x`;
+    }
+}
+
+function handleViewerImageChanged(event) {
+    const element = event.currentTarget;
+    const stackState = cornerstoneTools.getToolState(element, "stack");
+    const stackData = stackState && stackState.data && stackState.data[0];
+    const renderedImage = event.detail && event.detail.image;
+
+    if (!renderedImage || renderedImage.data.string("x00080016") !== "1.2.840.10008.5.1.4.1.1.2") {
+        return;
+    }
+
+    if (stackData) {
+        currentImageIndex = stackData.currentImageIdIndex;
+    }
+
+    patientInformation(renderedImage);
+    voxelCal(renderedImage);
+    getCTimage(renderedImage);
+    reset();
+    directCheckAndDraw(renderedImage);
+    getCheckValue(checkVal_check_dose);
+
+    const doseValues = getDoseValue();
+    if (doseValues && doseValues[currentImageIndex]) {
+        doseCheckAndDraw(doseValues[currentImageIndex], checkVal_check_dose);
+    }
+
+    const position = renderedImage.data.string("x00200032").split("\\")[2];
+    document.getElementById("topleft2").textContent = "Position : " + position + "mm";
+    updateImageOverlay(element, currentImageIds.length);
+
+    img = renderedImage;
+    emitViewerEvent("rtviewer:image-ready", {
+        currentImageIndex,
+        totalImages: Math.max(currentImageIds.length, 0),
+    });
+}
 
 function getSortableImageNumber(file) {
     const relativePath = (file.webkitRelativePath || file.name || "").toString();
@@ -50,6 +139,8 @@ function findFileByKeywords(files, keywords) {
  * 2. mouseWheel event function -> update image & dose pixel data
  */
 function loadFiles(files) {
+    emitViewerEvent("rtviewer:load-start");
+
     let imageId = []; //image ID list from file name list
     let temp_imageId = [];
     let fileName = [];
@@ -81,7 +172,10 @@ function loadFiles(files) {
         imageId[i] = sortableFiles[i].imageId;
     }
 
+    currentImageIds = imageId;
+
     if (imageId.length === 0) {
+        emitViewerEvent("rtviewer:load-error");
         alert("No CT image files were found in the selected folder.");
         return;
     }
@@ -95,7 +189,7 @@ function loadFiles(files) {
     const structTargetFile = findFileByKeywords(files, ["rtstructure", "rtstruct", "rtst"]) || files[114];
     currentImageIndex = Math.min(currentImageIndex, imageId.length - 1);
 
-    updateTheImage(imageId, currentImageIndex);
+    updateTheImage(imageId, currentImageIndex, fileLength);
 
     if (structTargetFile) {
         structFile(structTargetFile);
@@ -105,55 +199,41 @@ function loadFiles(files) {
         doseFile(doseTargetFile);
     }
 
-    let el = document.getElementById('dicomImage');
-    el.onwheel = wheelE;
-
-    /**
-     * @method wheelE
-     * @param {event} e -> Event that occurs when mouse wheel
-     * @return false -> Prevent page from scrolling
-     * @description
-     * This function deals with
-     * 1. Transforming the z-coordinates of CT and DOSE use mouse Wheel
-     * 2. Load them in order
-     * 3. Output Image index and z coordinate
-     * 4. Function call
-     *     <br> 1) name : updateTheImage
-     *     <br>    param : imageId, currentImageIndex ( +1 , -1, 0 )
-     *     <br>   2) name : reset
-     */
-    function wheelE(e) {
-        // Firefox e.detail > 0 scroll back, < 0 scroll forward
-        // chrome/safari e.wheelDelta < 0 scroll back, > 0 scroll forward
-        e.stopPropagation();
-        e.preventDefault();
-
-        let index = currentImageIndex;
-        if (index >= 0 && index < imageId.length) {
-            if (e.deltaY < 0) {
-                if (index === currentImageIndex) {
-                    updateTheImage(imageId, Math.min(currentImageIndex + 1, imageId.length - 1)); //update images
-                    document.getElementById('topleft1').textContent = 'Image : ' + (currentImageIndex + 1) + '/' + (fileLength - 3);
-                    reset();
-                }
-            } else {
-                if (index === currentImageIndex) {
-                    updateTheImage(imageId, Math.max(currentImageIndex - 1, 0)); //update images
-                    document.getElementById('topleft1').textContent = 'Image : ' + (currentImageIndex + 1) + '/' + (fileLength - 3);
-                    reset();
-                }
-            }
-        } else {
-            updateTheImage(imageId, currentImageIndex); //update images
-            document.getElementById('topleft1').textContent = 'Image : ' + currentImageIndex + '/' + (fileLength - 3);
-            reset();
-        }
-        return false;
-    }
+    const el = document.getElementById("dicomImage");
+    el.removeEventListener("cornerstonenewimage", handleViewerImageChanged);
+    el.addEventListener("cornerstonenewimage", handleViewerImageChanged);
+    syncStackState(el, imageId, currentImageIndex);
+    updateImageOverlay(el, fileLength);
 }
 
 function fileLoader(e) {
     return loadFiles(e.target.files);
+}
+
+function goToSlice(targetIndex) {
+    if (!currentImageIds || currentImageIds.length === 0) {
+        return false;
+    }
+
+    const safeIndex = Math.max(0, Math.min(targetIndex, currentImageIds.length - 1));
+    updateTheImage(currentImageIds, safeIndex, currentImageIds.length);
+    return true;
+}
+
+function stepSlice(step) {
+    if (!currentImageIds || currentImageIds.length === 0) {
+        return false;
+    }
+
+    return goToSlice(currentImageIndex + step);
+}
+
+function getCurrentSliceIndex() {
+    return currentImageIndex;
+}
+
+function getTotalSliceCount() {
+    return currentImageIds.length;
 }
 
 async function loadBundledSample() {
@@ -234,38 +314,37 @@ let img;
  * 1) SOP Class UID : x00080016
 
  */
-function updateTheImage(CTimageIds, imageIndex) {
+function updateTheImage(CTimageIds, imageIndex, fileLength = CTimageIds.length) {
     let el = document.getElementById('dicomImage');
     if (!CTimageIds || CTimageIds.length === 0) {
         return img;
     }
 
     const safeImageIndex = Math.max(0, Math.min(imageIndex, CTimageIds.length - 1));
-    cornerstone.enable(el)
+    try {
+        cornerstone.getEnabledElement(el);
+    } catch (error) {
+        cornerstone.enable(el);
+    }
+
+    buttonEvent.ensureToolsRegisteredForElement(el);
     currentImageIndex = safeImageIndex;
+    syncStackState(el, CTimageIds, safeImageIndex);
     cornerstone.loadImage(CTimageIds[safeImageIndex]).then(function (CT_image) {
         const viewport = cornerstone.getDefaultViewportForImage(el, CT_image);
         if (CT_image.data.string('x00080016') === '1.2.840.10008.5.1.4.1.1.2') {
             cornerstone.displayImage(el, CT_image, viewport);
-
-            patientInformation(CT_image);
-            voxelCal(CT_image);
-            getCTimage(CT_image);
-            directCheckAndDraw(CT_image);
-
-            getCheckValue(checkVal_check_dose);
-            let dose_value = getDoseValue();
-            doseCheckAndDraw(dose_value[currentImageIndex], checkVal_check_dose);
-
-            let position = CT_image.data.string('x00200032').split('\\')[2];
-            document.getElementById('topleft2').textContent = 'Position : ' + position + 'mm';
-
-            img = CT_image;
+            buttonEvent.enableDefaultWheelStackScroll();
+            updateImageOverlay(el, fileLength);
         } else if (CT_image.data.string('x0080016') === '1.2.840.10008.5.1.4.1.1.481.2') {
+            emitViewerEvent("rtviewer:load-error");
             alert('dose file')
         } else {
+            emitViewerEvent("rtviewer:load-error");
             alert("ERROR: Confirm this image's modality : CT , MRI ... ");
         }
+    }).catch(() => {
+        emitViewerEvent("rtviewer:load-error");
     });
     return img;
 }
@@ -298,4 +377,13 @@ function redrawCurrentImageOverlays() {
     }
 }
 
-export {fileLoader, getCheckValue, loadBundledSample, redrawCurrentImageOverlays}
+export {
+    fileLoader,
+    getCheckValue,
+    getCurrentSliceIndex,
+    getTotalSliceCount,
+    goToSlice,
+    loadBundledSample,
+    redrawCurrentImageOverlays,
+    stepSlice,
+}

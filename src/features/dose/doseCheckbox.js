@@ -1,5 +1,5 @@
 import $ from "jquery";
-import {getCheckValue, redrawCurrentImageOverlays} from "../Loader/FileLoader";
+import {getCheckValue, redrawCurrentImageOverlays} from "../viewer/lib/fileLoader";
 /**
  * @function DoseCheckbox
  * @param {number} dosemax -> dose Max Value

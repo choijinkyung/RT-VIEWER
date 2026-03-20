@@ -1,8 +1,8 @@
 import * as cornerstone from "cornerstone-core";
 import * as cornerstoneWadoImageLoader from "cornerstone-wado-image-loader"
 import dicomParser from "dicom-parser";
-import {importPixelData} from "./ImportPixelData";
-import {drawDose} from "./DrawDose";
+import {importPixelData} from "./importPixelData";
+import {drawDose} from "./drawDose";
 import * as math from 'mathjs';
 
 let dataSet = [];

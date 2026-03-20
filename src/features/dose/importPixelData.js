@@ -1,4 +1,4 @@
-import {gridScaling} from "./GridScaling";
+import {gridScaling} from "./gridScaling";
 
 let Rows, Columns, Number_of_Frames;
 /**

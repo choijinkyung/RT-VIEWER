@@ -1,7 +1,7 @@
 import $ from "jquery";
-import {roiCheckEvent} from "./ROICheckbox";
+import {roiCheckEvent} from "./roiCheckbox";
 import dicomParser from "dicom-parser";
-import {contourData2JSON,roiData2JSON} from "./RTStructureData2JSON";
+import {contourData2JSON,roiData2JSON} from "./rtStructureData";
 
 /*
 * 데이터를 계층구조로 확인하려면?

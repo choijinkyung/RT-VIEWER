@@ -33,20 +33,21 @@
 
 .workspace-grid {
     display: grid;
-    grid-template-columns: minmax(260px, 320px) minmax(0, 1fr) minmax(280px, 340px);
-    gap: 20px;
-    align-items: start;
+    grid-template-columns: 360px minmax(620px, 1fr) 300px;
+    gap: 18px;
+    align-items: stretch;
 }
 
 .panel {
-    padding: 22px;
+    padding: 20px;
     border-radius: 24px;
     background: linear-gradient(180deg, rgba(14, 27, 43, 0.94), rgba(9, 19, 31, 0.98));
 }
 
 .panel-sidebar {
-    position: sticky;
-    top: 24px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
 }
 
 .panel-copy {
@@ -59,20 +60,91 @@
     gap: 10px;
 }
 
+.tool-grid-dense {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tool-grid-icons {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+}
+
 .tool-button {
-    min-height: 44px;
+    min-height: 48px;
     background: rgba(88, 196, 220, 0.04);
     border-color: rgba(88, 196, 220, 0.22);
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    min-width: 0;
+    overflow: visible;
+}
+
+.tool-button .MuiButton-startIcon {
+    flex: 0 0 20px;
+    margin-right: 2px;
+}
+
+.tool-button .MuiButton-startIcon > *:first-of-type {
+    font-size: 1.05rem;
+}
+
+.tool-button-label {
+    flex: 1 1 0;
+    display: block;
+    text-align: left;
+    min-width: 0;
+    overflow: visible;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 0.84rem;
+    line-height: 1.2;
+    word-break: normal;
+}
+
+.tool-shortcut {
+    flex: 0 0 52px;
+    min-width: 52px;
+    display: block;
+    text-align: right;
+    font-size: 0.66rem;
+    opacity: 0.7;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    align-self: center;
+}
+
+.tool-icon-button {
+    min-width: 0;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    min-height: 64px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(88, 196, 220, 0.04);
+    border-color: rgba(88, 196, 220, 0.22);
+}
+
+.tool-icon-button .MuiSvgIcon-root {
+    font-size: 1.2rem;
 }
 
 .viewer-column {
     display: grid;
     gap: 18px;
+    width: 100%;
+    margin: 0 auto;
+    min-width: 0;
 }
 
 .hero-panel {
     overflow: hidden;
     position: relative;
+    min-height: 140px;
 }
 
 .hero-panel::after {
@@ -105,46 +177,58 @@
 
 .viewer-panel {
     padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
 .wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     width: 100%;
-    min-height: 640px;
     position: relative;
     overflow: hidden;
     color: #8fdff3;
     border: 1px solid rgba(143, 223, 243, 0.12);
     border-radius: 22px;
+    padding: 16px;
     background:
         linear-gradient(180deg, rgba(4, 9, 18, 0.62), rgba(4, 9, 18, 0.62)),
         linear-gradient(135deg, #09121f 0%, #04070d 100%);
 }
 
+.viewer-stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    min-height: 540px;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
 .wrapper::before {
     content: "";
     position: absolute;
-    inset: 18px;
+    inset: 16px;
     border: 1px solid rgba(143, 223, 243, 0.08);
     border-radius: 18px;
     pointer-events: none;
 }
 
 .viewportElement {
-    width: 512px;
-    height: 512px;
+    width: 100%;
+    height: 100%;
     position: relative;
-    top: 0;
-    left: 0;
     margin: 0;
     box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+    border-radius: 16px;
+    overflow: hidden;
 }
 
 .canvas {
     background: transparent;
     position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     border: 0;
 }
 
@@ -152,7 +236,7 @@
     width: 100%;
     height: 100%;
     color: #9fe4f4;
-    padding: 28px;
+    padding: 24px;
     font-size: 0.92rem;
     line-height: 1.8;
     text-shadow: 0 0 12px rgba(0, 0, 0, 0.68);
@@ -178,11 +262,41 @@
     text-align: right;
 }
 
+.viewer-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(3, 8, 16, 0.62);
+    backdrop-filter: blur(8px);
+}
+
+.viewer-loading-card {
+    width: min(420px, 100%);
+    padding: 24px;
+    border-radius: 22px;
+    background: rgba(9, 19, 31, 0.88);
+    border: 1px solid rgba(143, 223, 243, 0.12);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+}
+
+.slice-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 0;
+    flex-wrap: wrap;
+}
+
 .viewer-footer {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
-    margin-top: 16px;
+    margin-top: 0;
 }
 
 .metric-card {
@@ -201,13 +315,15 @@
     padding: 16px;
     border-radius: 18px;
     background: rgba(255, 255, 255, 0.025);
+    flex: 1 1 auto;
+    min-height: 0;
 }
 
 .overlay-list {
     margin: 0;
     padding-left: 18px;
-    min-height: 180px;
-    max-height: 260px;
+    min-height: 220px;
+    max-height: 320px;
     overflow: auto;
     color: #d7e3ea;
 }
@@ -245,11 +361,22 @@
 
 @media (max-width: 1380px) {
     .workspace-grid {
+        grid-template-columns: 320px minmax(0, 1fr);
+        align-items: start;
+    }
+
+    .workspace-grid > .panel:last-child {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 1080px) {
+    .workspace-grid {
         grid-template-columns: 1fr;
     }
 
-    .panel-sidebar {
-        position: static;
+    .viewer-stage {
+        min-height: 460px;
     }
 }
 
@@ -273,20 +400,30 @@
         grid-template-columns: 1fr;
     }
 
+    .tool-grid-icons {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
     .wrapper {
-        min-height: 540px;
         padding: 16px;
+    }
+
+    .viewer-stage {
+        min-height: 340px;
+        max-width: 100%;
     }
 
     .viewportElement {
         width: 100%;
-        max-width: 512px;
-        aspect-ratio: 1 / 1;
-        height: auto;
+        height: 100%;
     }
 
     .overlay {
         padding: 18px;
         font-size: 0.82rem;
+    }
+
+    .slice-toolbar {
+        justify-content: center;
     }
 }

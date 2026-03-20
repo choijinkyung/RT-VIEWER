@@ -1,5 +1,5 @@
 import $ from "jquery";
-import {addROIset} from "./RTStructureData2JSON";
+import {addROIset} from "./rtStructureData";
 /**
  * @function ROICheckbox
  * @param {object} ROI_LIST_Array -> Object with ROI list

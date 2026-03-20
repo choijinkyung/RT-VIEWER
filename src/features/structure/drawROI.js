@@ -1,5 +1,5 @@
-import pixelCal from "./Voxel2Pixel";
-import fullColorHex from "./RGB2Hex.js";
+import pixelCal from "./voxelToPixel";
+import fullColorHex from "./rgbToHex.js";
 
 function parseRgbColor(color) {
     const [r = "0", g = "0", b = "0"] = color.split("\\");

@@ -1,4 +1,4 @@
-import {DoseCheckbox, doseCheckEvent} from "./DoseCheckbox";
+import {DoseCheckbox, doseCheckEvent} from "./doseCheckbox";
 
 let dose_value = [];
 /**
