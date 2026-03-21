@@ -32,7 +32,6 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && gh-pages -d build",
     "jsdoc": "jsdoc -c jsdoc.json"
   },
   "eslintConfig": {
@@ -51,8 +50,7 @@
     ]
   },
   "devDependencies": {
-    "@craco/craco": "^7.1.0",
-    "gh-pages": "^6.3.0"
+    "@craco/craco": "^7.1.0"
   },
   "homepage": "https://choijinkyung.github.io/RT-VIEWER/"
 }
