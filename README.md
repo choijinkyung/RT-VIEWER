@@ -3,7 +3,9 @@
 [![CI](https://github.com/choijinkyung/RT-VIEWER/actions/workflows/ci.yml/badge.svg)](https://github.com/choijinkyung/RT-VIEWER/actions/workflows/ci.yml)
 [![Deploy](https://github.com/choijinkyung/RT-VIEWER/actions/workflows/deploy.yml/badge.svg)](https://github.com/choijinkyung/RT-VIEWER/actions/workflows/deploy.yml)
 
-![RT Viewer workspace](https://user-images.githubusercontent.com/44565579/100818642-e57ade80-348d-11eb-9b5b-e9dd6bebb0d9.PNG)
+
+<img width="5120" height="2584" alt="image" src="https://github.com/user-attachments/assets/4537f2a3-4d1d-428d-a5fa-88e6119d0b97" />
+
 
 RT Viewer is a React-based radiation therapy imaging workspace built on Cornerstone. It is designed to inspect CT images together with RT Structure and RT Dose overlays in a workflow that feels closer to a clinical viewer.
 
@@ -170,8 +172,8 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Author
 
-- Name: [Choi Jin Kyung](https://github.com/choijinkyung)
-- E-mail: twin7014@naver.com
+- Name: [Jinkyung Choi](https://github.com/choijinkyung)
+- E-mail: jinkyung.dev@gmail.com
 - GitHub: https://github.com/choijinkyung
 
 ## License
