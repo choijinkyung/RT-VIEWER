@@ -94,13 +94,22 @@ function handleViewerImageChanged(event) {
     patientInformation(renderedImage);
     voxelCal(renderedImage);
     getCTimage(renderedImage);
-    reset();
-    directCheckAndDraw(renderedImage);
+    reset({
+        canvas: document.getElementById("myCanvas"),
+        element,
+    });
+    directCheckAndDraw(renderedImage, {
+        canvas: document.getElementById("myCanvas"),
+        element,
+    });
     getCheckValue(checkVal_check_dose);
 
     const doseValues = getDoseValue();
     if (doseValues && doseValues[currentImageIndex]) {
-        doseCheckAndDraw(doseValues[currentImageIndex], checkVal_check_dose);
+        doseCheckAndDraw(doseValues[currentImageIndex], checkVal_check_dose, {
+            canvas: document.getElementById("myCanvas"),
+            element,
+        });
     }
 
     const imagePosition = renderedImage.data.string("x00200032");
@@ -484,18 +493,34 @@ function getCheckValue(checkVal_check) {
     checkVal_check_dose = checkVal_check;
 }
 
+function renderViewportOverlays({canvas, element, image, imageIndex}) {
+    if (!canvas || !element || !image) {
+        return;
+    }
+
+    reset({canvas, element});
+    directCheckAndDraw(image, {canvas, element});
+
+    const doseValues = getDoseValue();
+    if (doseValues && doseValues[imageIndex]) {
+        doseCheckAndDraw(doseValues[imageIndex], checkVal_check_dose, {
+            canvas,
+            element,
+        });
+    }
+}
+
 function redrawCurrentImageOverlays() {
     if (!img) {
         return;
     }
 
-    reset();
-    directCheckAndDraw(img);
-
-    const doseValues = getDoseValue();
-    if (doseValues && doseValues[currentImageIndex]) {
-        doseCheckAndDraw(doseValues[currentImageIndex], checkVal_check_dose);
-    }
+    renderViewportOverlays({
+        canvas: document.getElementById("myCanvas"),
+        element: document.getElementById("dicomImage"),
+        image: img,
+        imageIndex: currentImageIndex,
+    });
 }
 
 export {
@@ -508,6 +533,7 @@ export {
     goToSlice,
     loadBundledSample,
     redrawCurrentImageOverlays,
+    renderViewportOverlays,
     setCurrentSeriesIndex,
     stepSlice,
 }

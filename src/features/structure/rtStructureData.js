@@ -172,7 +172,7 @@ let img;
  * 3) Referenced SOP Instance UID : x00081155
  * 4) Referenced ROI Number : x30060084
  * */
-function directCheckAndDraw(CT_image) {
+function directCheckAndDraw(CT_image, options = {}) {
     let Instance_UID = CT_image.data.string('x00080018');
 
     for (let j = 0; j < checkVal_send.length; j++) {
@@ -182,7 +182,7 @@ function directCheckAndDraw(CT_image) {
                     struct = contour_data_Array[i]['x30060050'];
                     color = contour_data_Array[i]['x3006002a'];
 
-                    drawROI(CT_image, struct, color);
+                    drawROI(CT_image, struct, color, options);
                 }
             }
         }
@@ -219,6 +219,7 @@ function addROIset(evt) {
     }
 
     redrawCheckedROIs();
+    window.dispatchEvent(new CustomEvent("rtviewer:overlay-selection-changed"));
 }
 
 export {roiData2JSON,contourData2JSON,directCheckAndDraw,addROIset,redrawCheckedROIs}

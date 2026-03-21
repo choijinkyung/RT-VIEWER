@@ -103,11 +103,11 @@ function doseFile(file) {
  *      <br>1) name : dose2patient
  *          <br> param : Vi, Vj, color
  */
-function findXY(dose_value, checkVal_check_dose, color) {
+function findXY(dose_value, checkVal_check_dose, color, options = {}) {
     try {
         const threshold = parseInt(checkVal_check_dose);
         const contourSegments = buildDoseContourSegments(dose_value, threshold);
-        dose2patient(contourSegments, color);
+        dose2patient(contourSegments, color, options);
     } catch (err) {
         alert('Can\'t find x,y ');
     }
@@ -200,7 +200,7 @@ let dose_draw_color = 0;
  *    <br>1) name : CT2Patient
  *    <br> param : matrixDose2Patient, Vi, Vj
  */
-function dose2patient(contourSegments, color) {
+function dose2patient(contourSegments, color, options = {}) {
     let dose_Sx = parseFloat(dose_imgPosArr[0]);
     let dose_Sy = parseFloat(dose_imgPosArr[1]);
     let dose_Sz = parseFloat(dose_imgPosArr[2]);
@@ -243,7 +243,7 @@ function dose2patient(contourSegments, color) {
    */
     dose_draw_color = color;
 
-    CT2Patient(matrixDose2Patient, contourSegments);
+    CT2Patient(matrixDose2Patient, contourSegments, options);
 }
 
 let img = 0;
@@ -293,7 +293,7 @@ let CT_Sx, CT_Sy, CT_Sz;
  * let vecPatNor = math.cross((vecPatHor), (vecPatVer));
  *
  */
-function CT2Patient(matrixDose2Patient, contourSegments) {
+function CT2Patient(matrixDose2Patient, contourSegments, options = {}) {
     let CT_pixelSpacing = img.data.string('x00280030');
     CT_pixelSpacing = CT_pixelSpacing.toString();
 
@@ -346,7 +346,7 @@ function CT2Patient(matrixDose2Patient, contourSegments) {
             [CT_Xz , CT_Yz , vecPatNor[2], CT_Sz],
             [0, 0, 0, 1]]);
      */
-    dose2CT(matrixDose2Patient, matrixCT2Patient, contourSegments);
+    dose2CT(matrixDose2Patient, matrixCT2Patient, contourSegments, options);
 }
 
 /**
@@ -370,21 +370,21 @@ function transformDosePoint(DOSE2CT, point) {
     const doseToCtY = math.subset(doseToCtPoint, math.index(1, 0));
 
     return {
-        x: (CT_Xx * CT_Di * doseToCtX) + (CT_Yx * CT_Dj * doseToCtY) + CT_Sx,
-        y: (CT_Xy * CT_Di * doseToCtX) + (CT_Yy * CT_Dj * doseToCtY) + CT_Sy,
+        x: doseToCtX,
+        y: doseToCtY,
     };
 }
 
-function dose2CT(matrixDose2Patient, matrixCT2Patient, contourSegments) {
+function dose2CT(matrixDose2Patient, matrixCT2Patient, contourSegments, options = {}) {
     let matrixPatient2CT = math.inv(matrixCT2Patient);
 
-    let DOSE2CT = math.multiply(matrixDose2Patient, matrixPatient2CT);
+    let DOSE2CT = math.multiply(matrixPatient2CT, matrixDose2Patient);
     const transformedSegments = contourSegments.map((segment) => ({
         start: transformDosePoint(DOSE2CT, segment.start),
         end: transformDosePoint(DOSE2CT, segment.end),
     }));
 
-    drawDose(transformedSegments, dose_draw_color);
+    drawDose(transformedSegments, dose_draw_color, options);
 }
 
 export {doseFile, findXY, CT2Patient, getCTimage}

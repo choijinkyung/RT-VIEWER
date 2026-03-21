@@ -1,4 +1,5 @@
 import {findXY} from "./convertMatrix";
+import * as cornerstone from "cornerstone-core";
 /**
  * @function doseCheckAndDraw
  * @param {object} dose_value -> Dose value = pixelData * gridscaling
@@ -11,7 +12,7 @@ import {findXY} from "./convertMatrix";
  * <br> 1) name : findXY
  *  <br>   param : dose_value, checkVal_check_dose, color
  */
-function doseCheckAndDraw(dose_value, checkVal_check_dose) {
+function doseCheckAndDraw(dose_value, checkVal_check_dose, options = {}) {
     try{
         let color = [];
         color[0] = '#780000';
@@ -27,25 +28,25 @@ function doseCheckAndDraw(dose_value, checkVal_check_dose) {
 
         for (let i = 0; i < checkVal_check_dose.length; i++) {
             if (parseInt(checkVal_check_dose[i]) === 4185) {
-                findXY(dose_value, checkVal_check_dose[i], color[0]);
+                findXY(dose_value, checkVal_check_dose[i], color[0], options);
             } else if (parseInt(checkVal_check_dose[i]) === 4000) {
-                findXY(dose_value, checkVal_check_dose[i], color[1]);
+                findXY(dose_value, checkVal_check_dose[i], color[1], options);
             } else if (parseInt(checkVal_check_dose[i]) === 3920) {
-                findXY(dose_value, checkVal_check_dose[i], color[2]);
+                findXY(dose_value, checkVal_check_dose[i], color[2], options);
             } else if (parseInt(checkVal_check_dose[i]) === 3800) {
-                findXY(dose_value, checkVal_check_dose[i], color[3]);
+                findXY(dose_value, checkVal_check_dose[i], color[3], options);
             } else if (parseInt(checkVal_check_dose[i]) === 3600) {
-                findXY(dose_value, checkVal_check_dose[i], color[4]);
+                findXY(dose_value, checkVal_check_dose[i], color[4], options);
             } else if (parseInt(checkVal_check_dose[i]) === 3200) {
-                findXY(dose_value, checkVal_check_dose[i], color[5]);
+                findXY(dose_value, checkVal_check_dose[i], color[5], options);
             } else if (parseInt(checkVal_check_dose[i]) === 2800) {
-                findXY(dose_value, checkVal_check_dose[i], color[6]);
+                findXY(dose_value, checkVal_check_dose[i], color[6], options);
             } else if (parseInt(checkVal_check_dose[i]) === 2000) {
-                findXY(dose_value, checkVal_check_dose[i], color[7]);
+                findXY(dose_value, checkVal_check_dose[i], color[7], options);
             } else if (parseInt(checkVal_check_dose[i]) === 1200) {
-                findXY(dose_value, checkVal_check_dose[i], color[8]);
+                findXY(dose_value, checkVal_check_dose[i], color[8], options);
             } else if (parseInt(checkVal_check_dose[i]) === 0) {
-                findXY(dose_value, checkVal_check_dose[i], color[9]);
+                findXY(dose_value, checkVal_check_dose[i], color[9], options);
             }
         }
     }catch (err){
@@ -68,10 +69,40 @@ function doseCheckAndDraw(dose_value, checkVal_check_dose) {
  * This function deals with
  * 1. Draw x,y coordinates received on canvas.
  */
-function drawDose(segments, color) {
+function prepareOverlayCanvas(canvas, element) {
+    if (!canvas || !element) {
+        return null;
+    }
+
+    const rect = element.getBoundingClientRect();
+    const width = Math.max(Math.round(rect.width), 1);
+    const height = Math.max(Math.round(rect.height), 1);
+    const dpr = window.devicePixelRatio || 1;
+
+    if (canvas.width !== Math.round(width * dpr) || canvas.height !== Math.round(height * dpr)) {
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+    }
+
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+
+    return ctx;
+}
+
+function drawDose(segments, color, options = {}) {
     try{
-        let canvas = document.getElementById('myCanvas');
-        let ctx = canvas.getContext('2d');
+        let canvas = options.canvas || document.getElementById('myCanvas');
+        let element = options.element || document.getElementById("dicomImage");
+        let ctx = prepareOverlayCanvas(canvas, element);
+
+        if (!ctx || !element) {
+            return;
+        }
 
         ctx.save();
         ctx.strokeStyle = color;
@@ -80,9 +111,11 @@ function drawDose(segments, color) {
 
         for (let i = 0; i < segments.length; i++) {
             const segment = segments[i];
+            const startPoint = cornerstone.pixelToCanvas(element, segment.start);
+            const endPoint = cornerstone.pixelToCanvas(element, segment.end);
             ctx.beginPath();
-            ctx.moveTo(segment.start.x, segment.start.y);
-            ctx.lineTo(segment.end.x, segment.end.y);
+            ctx.moveTo(startPoint.x, startPoint.y);
+            ctx.lineTo(endPoint.x, endPoint.y);
             ctx.stroke();
         }
         ctx.restore();

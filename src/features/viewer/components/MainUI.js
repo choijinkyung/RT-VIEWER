@@ -58,6 +58,8 @@ import {
   getTotalSliceCount,
   goToSlice,
   loadBundledSample,
+  redrawCurrentImageOverlays,
+  renderViewportOverlays,
   setCurrentSeriesIndex,
   stepSlice,
 } from "../lib/fileLoader";
@@ -287,6 +289,8 @@ class MainUIElements extends React.Component {
     this.handleViewerReady = this.handleViewerReady.bind(this);
     this.handleViewerLoadError = this.handleViewerLoadError.bind(this);
     this.handleViewportRendered = this.handleViewportRendered.bind(this);
+    this.handleOverlaySelectionChanged =
+      this.handleOverlaySelectionChanged.bind(this);
     this.handleSliceStep = this.handleSliceStep.bind(this);
     this.renderAuxiliaryViewports = this.renderAuxiliaryViewports.bind(this);
     this.resizeViewer = this.resizeViewer.bind(this);
@@ -313,6 +317,10 @@ class MainUIElements extends React.Component {
     window.addEventListener("rtviewer:load-start", this.handleViewerLoadStart);
     window.addEventListener("rtviewer:image-ready", this.handleViewerReady);
     window.addEventListener("rtviewer:load-error", this.handleViewerLoadError);
+    window.addEventListener(
+      "rtviewer:overlay-selection-changed",
+      this.handleOverlaySelectionChanged,
+    );
 
     if (process.env.NODE_ENV !== "test") {
       const patientName = document.getElementById("patientName");
@@ -362,6 +370,10 @@ class MainUIElements extends React.Component {
     window.removeEventListener(
       "rtviewer:load-error",
       this.handleViewerLoadError,
+    );
+    window.removeEventListener(
+      "rtviewer:overlay-selection-changed",
+      this.handleOverlaySelectionChanged,
     );
   }
 
@@ -436,6 +448,10 @@ class MainUIElements extends React.Component {
     this.setState({ isViewerLoading: false });
   }
 
+  handleOverlaySelectionChanged() {
+    this.renderAuxiliaryViewports();
+  }
+
   handleLayoutModeChange(layoutMode) {
     this.setState({ layoutMode });
   }
@@ -487,6 +503,8 @@ class MainUIElements extends React.Component {
     if (zoom) {
       zoom.textContent = `Zoom:${viewport.scale.toFixed(2)}x`;
     }
+
+    redrawCurrentImageOverlays();
   }
 
   handleToolActivation(toolName) {
@@ -677,6 +695,8 @@ class MainUIElements extends React.Component {
         }
       },
     );
+
+    redrawCurrentImageOverlays();
   }
 
   getLayoutPresetConfig() {
@@ -819,6 +839,12 @@ class MainUIElements extends React.Component {
             image,
           );
           cornerstone.displayImage(element, image, viewport);
+          renderViewportOverlays({
+            canvas: document.getElementById(`previewCanvas-${previewIndex}`),
+            element,
+            image,
+            imageIndex: assignment.imageIndex,
+          });
           this.updatePreviewOverlay(previewIndex, assignment, image, viewport);
         })
         .catch(() => {
@@ -1445,8 +1471,12 @@ class MainUIElements extends React.Component {
                                 <>
                                   <Controlled
                                     id={`previewViewport-${index}`}
-                                    canvasId={`previewCanvas-${index}`}
-                                    showOverlayCanvas={false}
+                                  />
+                                  <canvas
+                                    id={`previewCanvas-${index}`}
+                                    className="canvas"
+                                    width={512}
+                                    height={512}
                                   />
                                   {this.state.isViewerLoading &&
                                     this.renderViewportSkeleton(

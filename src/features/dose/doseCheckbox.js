@@ -91,6 +91,7 @@ function addDoseSet(e) {
     }
 
     redrawCurrentImageOverlays();
+    window.dispatchEvent(new CustomEvent("rtviewer:overlay-selection-changed"));
 }
 
 export {DoseCheckbox, doseCheckEvent};
