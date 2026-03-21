@@ -21,9 +21,10 @@ cornerstoneTools.external.cornerstoneMath = cornerstoneMath
 cornerstoneTools.init();
 
 let currentImageIndex = 111; //for dose z coords setting
-let fileJsonArray = []; //Initialization Json Array , Only global variables are possible
 let sampleLoadPromise = null;
 let currentImageIds = [];
+let currentSeriesIndex = 0;
+let currentSeriesGroups = [];
 const buttonEvent = new ButtonEvent();
 
 function emitViewerEvent(name, detail = {}) {
@@ -102,8 +103,14 @@ function handleViewerImageChanged(event) {
         doseCheckAndDraw(doseValues[currentImageIndex], checkVal_check_dose);
     }
 
-    const position = renderedImage.data.string("x00200032").split("\\")[2];
-    document.getElementById("topleft2").textContent = "Position : " + position + "mm";
+    const imagePosition = renderedImage.data.string("x00200032");
+    const topleft2 = document.getElementById("topleft2");
+
+    if (imagePosition && topleft2) {
+        const position = imagePosition.split("\\")[2];
+        topleft2.textContent = "Position : " + position + "mm";
+    }
+
     updateImageOverlay(element, currentImageIds.length);
 
     img = renderedImage;
@@ -130,6 +137,98 @@ function findFileByKeywords(files, keywords) {
         return keywords.some((keyword) => target.includes(keyword));
     });
 }
+
+function extractNumericValue(value, fallback = Number.NaN) {
+    const parsed = Number.parseFloat(value);
+    return Number.isNaN(parsed) ? fallback : parsed;
+}
+
+async function readDicomMetadata(file, imageId) {
+    try {
+        const buffer = await file.arrayBuffer();
+        const byteArray = new Uint8Array(buffer);
+        const dataSet = dicomParser.parseDicom(byteArray);
+        const sopClassUid = dataSet.string("x00080016") || "";
+
+        return {
+            file,
+            imageId,
+            fileName: getSortableImageNumber(file),
+            instanceNumber: extractNumericValue(dataSet.string("x00200013"), getSortableImageNumber(file)),
+            seriesInstanceUID: dataSet.string("x0020000e") || "unknown-series",
+            studyInstanceUID: dataSet.string("x0020000d") || "unknown-study",
+            seriesNumber: extractNumericValue(dataSet.string("x00200011"), 0),
+            seriesDescription: dataSet.string("x0008103e") || "Unnamed Series",
+            modality: dataSet.string("x00080060") || "",
+            sopClassUid,
+        };
+    } catch (error) {
+        return {
+            file,
+            imageId,
+            fileName: getSortableImageNumber(file),
+            instanceNumber: getSortableImageNumber(file),
+            seriesInstanceUID: "unknown-series",
+            studyInstanceUID: "unknown-study",
+            seriesNumber: 0,
+            seriesDescription: "Unnamed Series",
+            modality: "",
+            sopClassUid: "",
+        };
+    }
+}
+
+function isDiagnosticImage(metadata) {
+    const diagnosticSopClasses = new Set([
+        "1.2.840.10008.5.1.4.1.1.2",
+        "1.2.840.10008.5.1.4.1.1.4",
+    ]);
+
+    return diagnosticSopClasses.has(metadata.sopClassUid);
+}
+
+function buildSeriesGroups(metadataList) {
+    const groups = new Map();
+
+    metadataList
+        .filter((metadata) => isDiagnosticImage(metadata))
+        .forEach((metadata) => {
+            const groupKey = `${metadata.studyInstanceUID}::${metadata.seriesInstanceUID}`;
+
+            if (!groups.has(groupKey)) {
+                groups.set(groupKey, {
+                    studyInstanceUID: metadata.studyInstanceUID,
+                    seriesInstanceUID: metadata.seriesInstanceUID,
+                    seriesNumber: metadata.seriesNumber,
+                    seriesDescription: metadata.seriesDescription,
+                    modality: metadata.modality,
+                    imageIds: [],
+                    items: [],
+                });
+            }
+
+            const group = groups.get(groupKey);
+            group.items.push(metadata);
+        });
+
+    return Array.from(groups.values())
+        .map((group) => {
+            group.items.sort((left, right) => left.instanceNumber - right.instanceNumber);
+            group.imageIds = group.items.map((item) => item.imageId);
+            return group;
+        })
+        .sort((left, right) => {
+            if (left.studyInstanceUID !== right.studyInstanceUID) {
+                return left.studyInstanceUID.localeCompare(right.studyInstanceUID);
+            }
+
+            if (left.seriesNumber !== right.seriesNumber) {
+                return left.seriesNumber - right.seriesNumber;
+            }
+
+            return left.seriesDescription.localeCompare(right.seriesDescription);
+        });
+}
 /**
  * @method fileLoader
  * @param {event} e -> Event that occurs when Input tag call onChange function
@@ -138,47 +237,28 @@ function findFileByKeywords(files, keywords) {
  * 1. function call for CTImage, RT DOSE, RT STRUCTURE files load
  * 2. mouseWheel event function -> update image & dose pixel data
  */
-function loadFiles(files) {
+async function loadFiles(files) {
     emitViewerEvent("rtviewer:load-start");
 
-    let imageId = []; //image ID list from file name list
-    let temp_imageId = [];
-    let fileName = [];
-    fileJsonArray = [];
+    const fileEntries = Array.from(files).map((file) => ({
+        file,
+        imageId: cornerstoneWadoImageLoader.wadouri.fileManager.add(file),
+    }));
+    const metadataList = await Promise.all(
+        fileEntries.map(({file, imageId}) => readDicomMetadata(file, imageId))
+    );
 
-    for (let i = 0; i < files.length; i++) {
-        let fileJson = {};
-        //파일 이름 string순이 아닌 number로 정렬해주기 위함
-        //현재는 하드코딩으로 파일 이름을 임의로 불러옴
-        // 파일 이름의 마지막이 정렬되어야 CT가 순서대로 load 됨.
-        fileName[i] = getSortableImageNumber(files[i]);
-        temp_imageId[i] = cornerstoneWadoImageLoader.wadouri.fileManager.add(files[i])
+    currentSeriesGroups = buildSeriesGroups(metadataList);
+    currentSeriesIndex = 0;
+    currentImageIds = currentSeriesGroups[0] ? currentSeriesGroups[0].imageIds : [];
 
-        fileJson.fileName = fileName[i];
-        fileJson.imageId = temp_imageId[i];
-
-        fileJsonArray.push(fileJson);
-    }
-
-    const sortableFiles = fileJsonArray.filter((file) => !Number.isNaN(file.fileName));
-    let fileLength = sortableFiles.length;
-    //file name sorting
-    sortableFiles.sort(function (a, b) {
-        return a.fileName - b.fileName;
-    })
-
-    //assign imageId value
-    for (let i = 0; i < fileLength; i++) {
-        imageId[i] = sortableFiles[i].imageId;
-    }
-
-    currentImageIds = imageId;
-
-    if (imageId.length === 0) {
+    if (currentImageIds.length === 0) {
         emitViewerEvent("rtviewer:load-error");
         alert("No CT image files were found in the selected folder.");
         return;
     }
+
+    const fileLength = currentImageIds.length;
 
     //이 프로젝트에 포함된 TEST849 폴더에서만 가능 (하드코딩)
     // RT Dose, RT Plan, RT Structure로 파일 이름 변경한 후의 순서
@@ -187,9 +267,9 @@ function loadFiles(files) {
     //Index 114 : RT STRUCTURE FILE
     const doseTargetFile = findFileByKeywords(files, ["rtdose", "rtdose"]) || files[112];
     const structTargetFile = findFileByKeywords(files, ["rtstructure", "rtstruct", "rtst"]) || files[114];
-    currentImageIndex = Math.min(currentImageIndex, imageId.length - 1);
+    currentImageIndex = Math.min(currentImageIndex, currentImageIds.length - 1);
 
-    updateTheImage(imageId, currentImageIndex, fileLength);
+    updateTheImage(currentImageIds, currentImageIndex, fileLength);
 
     if (structTargetFile) {
         structFile(structTargetFile);
@@ -200,10 +280,18 @@ function loadFiles(files) {
     }
 
     const el = document.getElementById("dicomImage");
-    el.removeEventListener("cornerstonenewimage", handleViewerImageChanged);
-    el.addEventListener("cornerstonenewimage", handleViewerImageChanged);
-    syncStackState(el, imageId, currentImageIndex);
-    updateImageOverlay(el, fileLength);
+
+    if (el) {
+        el.removeEventListener("cornerstonenewimage", handleViewerImageChanged);
+        el.addEventListener("cornerstonenewimage", handleViewerImageChanged);
+        syncStackState(el, currentImageIds, currentImageIndex);
+        updateImageOverlay(el, fileLength);
+    }
+
+    emitViewerEvent("rtviewer:dataset-ready", {
+        seriesCount: currentSeriesGroups.length,
+        totalImages: currentImageIds.length,
+    });
 }
 
 function fileLoader(e) {
@@ -234,6 +322,35 @@ function getCurrentSliceIndex() {
 
 function getTotalSliceCount() {
     return currentImageIds.length;
+}
+
+function getSeriesGroups() {
+    return currentSeriesGroups.map((group) => ({
+        studyInstanceUID: group.studyInstanceUID,
+        seriesInstanceUID: group.seriesInstanceUID,
+        seriesNumber: group.seriesNumber,
+        seriesDescription: group.seriesDescription,
+        modality: group.modality,
+        imageCount: group.imageIds.length,
+        imageIds: [...group.imageIds],
+    }));
+}
+
+function getCurrentSeriesIndex() {
+    return currentSeriesIndex;
+}
+
+function setCurrentSeriesIndex(seriesIndex) {
+    if (!currentSeriesGroups.length) {
+        return false;
+    }
+
+    const safeSeriesIndex = Math.max(0, Math.min(seriesIndex, currentSeriesGroups.length - 1));
+    currentSeriesIndex = safeSeriesIndex;
+    currentImageIds = currentSeriesGroups[safeSeriesIndex].imageIds;
+    currentImageIndex = Math.max(0, Math.min(currentImageIndex, currentImageIds.length - 1));
+    updateTheImage(currentImageIds, currentImageIndex, currentImageIds.length);
+    return true;
 }
 
 async function loadBundledSample() {
@@ -274,7 +391,7 @@ async function loadBundledSample() {
             })
         );
 
-        loadFiles(files);
+        await loadFiles(files);
         return files;
     })();
 
@@ -317,6 +434,10 @@ let img;
 function updateTheImage(CTimageIds, imageIndex, fileLength = CTimageIds.length) {
     let el = document.getElementById('dicomImage');
     if (!CTimageIds || CTimageIds.length === 0) {
+        return img;
+    }
+
+    if (!el) {
         return img;
     }
 
@@ -381,9 +502,12 @@ export {
     fileLoader,
     getCheckValue,
     getCurrentSliceIndex,
+    getCurrentSeriesIndex,
+    getSeriesGroups,
     getTotalSliceCount,
     goToSlice,
     loadBundledSample,
     redrawCurrentImageOverlays,
+    setCurrentSeriesIndex,
     stepSlice,
 }

@@ -2,15 +2,23 @@ import React from "react";
 
 class Controlled extends React.Component {
     render() {
+        const {
+            canvasId = "myCanvas",
+            id = "dicomImage",
+            showOverlayCanvas = true,
+        } = this.props;
+
         return (
             <div
-                id="dicomImage"
+                id={id}
                 className="viewportElement"
                 ref={(input) => {
                     this.element = input;
                 }}
             >
-                <canvas id="myCanvas" className="canvas" width={512} height={512} />
+                {showOverlayCanvas ? (
+                    <canvas id={canvasId} className="canvas" width={512} height={512} />
+                ) : null}
             </div>
         );
     }

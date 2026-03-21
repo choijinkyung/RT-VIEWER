@@ -1,6 +1,82 @@
 import * as cornerstone from "cornerstone-core";
 
-let Px, Py;
+let Px;
+let Py;
+let cachedVoxelContext = null;
+
+function setTextContent(id, value) {
+    const target = document.getElementById(id);
+
+    if (target) {
+        target.textContent = value;
+    }
+}
+
+function hasEnabledCornerstoneElement(element) {
+    if (!element) {
+        return false;
+    }
+
+    try {
+        cornerstone.getEnabledElement(element);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+function updateVoxelReadout(event, shouldPersistValue = false) {
+    const element = document.getElementById("dicomImage");
+
+    if (!element || !cachedVoxelContext || !hasEnabledCornerstoneElement(element)) {
+        return;
+    }
+
+    let pixelCoords;
+
+    try {
+        pixelCoords = cornerstone.pageToPixel(element, event.pageX, event.pageY);
+    } catch (error) {
+        return;
+    }
+
+    const {Di, Dj, Sx, Sy, Xx, Xy, Yx, Yy} = cachedVoxelContext;
+
+    setTextContent(
+        shouldPersistValue ? "pixelValue" : "coords",
+        "X: " + (Math.round(pixelCoords.x * 10) / 10) + "px  Y: " + (Math.round(pixelCoords.y * 10) / 10) + "px"
+    );
+
+    Px = (Xx * Di * pixelCoords.x) + (Yx * Dj * pixelCoords.y) + Sx;
+    Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
+
+    Px = Math.round(Px * 10) / 10;
+    Py = Math.round(Py * 10) / 10;
+
+    setTextContent(
+        shouldPersistValue ? "voxelValue" : "voxelCoords",
+        "X: " + Px + "mm   Y: " + Py + "mm"
+    );
+}
+
+function handleMouseMove(event) {
+    updateVoxelReadout(event, false);
+}
+
+function handleDoubleClick(event) {
+    updateVoxelReadout(event, true);
+}
+
+function ensureInteractionListeners(element) {
+    if (!element || element.dataset.rtviewerVoxelBound === "true") {
+        return;
+    }
+
+    element.addEventListener("mousemove", handleMouseMove);
+    element.addEventListener("dblclick", handleDoubleClick);
+    element.dataset.rtviewerVoxelBound = "true";
+}
+
 /**
  * @function voxelCal
  * @param {object} CT_image
@@ -20,74 +96,57 @@ let Px, Py;
  * 5) Pixel Spacing :x00280030
  **/
 function voxelCal(CT_image) {
-    try{
-        let modality = CT_image.data.string('x00080060');
-        let SOP_UID = CT_image.data.string('x00080016');
+    try {
+        const modality = CT_image.data.string("x00080060");
+        const sopUid = CT_image.data.string("x00080016");
 
-        if (modality === ('CT') || SOP_UID === '1.2.840.10008.5.1.4.1.1.481.2') {
-            let imgPos = CT_image.data.string('x00200032');
-            let imgPosArr = imgPos.split("\\");
-
-            let Sx = (parseFloat(imgPosArr[0]) * 10) / 10;
-            let Sy = (parseFloat(imgPosArr[1]) * 10) / 10;
-
-            let imgOri = CT_image.data.string('x00200037');
-            imgOri = imgOri.toString();
-            let imgOriArr = imgOri.split("\\");
-
-            let Xx = (parseFloat(imgOriArr[0]) * 10) / 10;
-            let Xy = (parseFloat(imgOriArr[1]) * 10) / 10;
-
-            let Yx = (parseFloat(imgOriArr[3]) * 10) / 10;
-            let Yy = (parseFloat(imgOriArr[4]) * 10) / 10;
-
-            let pixelSpacing = CT_image.data.string('x00280030');
-            pixelSpacing = pixelSpacing.toString();
-            let pixelSpaceArr = pixelSpacing.split("\\");
-
-            let Di = parseFloat((pixelSpaceArr[0]) * 10) / 10;
-            let Dj = parseFloat((pixelSpaceArr[1]) * 10) / 10;
-
-
-            let el = document.getElementById('dicomImage');
-            //CTimage의 좌표를 mm로 반환
-            el.addEventListener('mousemove', function (event) {
-                const pixelCoords = cornerstone.pageToPixel(el, event.pageX, event.pageY);
-
-                document.getElementById('coords').textContent = "X: " + (Math.round(pixelCoords.x * 10) / 10) + "px  Y: " + (Math.round(pixelCoords.y * 10) / 10) + 'px';
-
-                Px = (Xx * Di * pixelCoords.x) + (Yx * Dj * pixelCoords.y) + Sx;
-                Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
-
-                Px = Math.round(Px * 10) / 10;
-                Py = Math.round(Py * 10) / 10;
-                document.getElementById('voxelCoords').textContent = "X: " + Px + "mm   Y: " + Py + 'mm';
-            });
-
-            //더블클릭시 해당 좌표를 저장 후 출력
-            el.addEventListener('dblclick', function (event) {
-                const pixelCoords = cornerstone.pageToPixel(el, event.pageX, event.pageY);
-                document.getElementById('pixelValue').textContent = "X: " + (Math.round(pixelCoords.x * 10) / 10) + "px  Y: " + (Math.round(pixelCoords.y * 10) / 10) + 'px';
-
-                Px = (Xx * Di * pixelCoords.x) + (Yx * Dj * pixelCoords.y) + Sx;
-                Py = (Xy * Di * pixelCoords.x) + (Yy * Dj * pixelCoords.y) + Sy;
-
-                Px = Math.round(Px * 10) / 10;
-                Py = Math.round(Py * 10) / 10;
-
-                document.getElementById('voxelValue').textContent = "X: " + Px + "mm   Y: " + Py + 'mm';
-            });
-
-            return [Sx, Sy, Di, Dj, Px, Py]
-        } else {
-            alert('NOT CT IMAGES')
+        if (modality !== "CT" && sopUid !== "1.2.840.10008.5.1.4.1.1.481.2") {
+            return null;
         }
-    }catch(err){
-        var message = err;
+
+        const imgPos = CT_image.data.string("x00200032");
+        const imgOri = CT_image.data.string("x00200037");
+        const pixelSpacing = CT_image.data.string("x00280030");
+        const element = document.getElementById("dicomImage");
+
+        if (!imgPos || !imgOri || !pixelSpacing || !element) {
+            return null;
+        }
+
+        const imgPosArr = imgPos.split("\\");
+        const imgOriArr = imgOri.toString().split("\\");
+        const pixelSpaceArr = pixelSpacing.toString().split("\\");
+
+        cachedVoxelContext = {
+            Sx: (parseFloat(imgPosArr[0]) * 10) / 10,
+            Sy: (parseFloat(imgPosArr[1]) * 10) / 10,
+            Xx: (parseFloat(imgOriArr[0]) * 10) / 10,
+            Xy: (parseFloat(imgOriArr[1]) * 10) / 10,
+            Yx: (parseFloat(imgOriArr[3]) * 10) / 10,
+            Yy: (parseFloat(imgOriArr[4]) * 10) / 10,
+            Di: parseFloat(pixelSpaceArr[0] * 10) / 10,
+            Dj: parseFloat(pixelSpaceArr[1] * 10) / 10,
+        };
+
+        ensureInteractionListeners(element);
+
+        return [
+            cachedVoxelContext.Sx,
+            cachedVoxelContext.Sy,
+            cachedVoxelContext.Di,
+            cachedVoxelContext.Dj,
+            Px,
+            Py,
+        ];
+    } catch (err) {
+        let message = err;
+
         if (err.exception) {
             message = err.exception;
-            alert(message)
         }
+
+        alert(message);
+        return null;
     }
 }
 
