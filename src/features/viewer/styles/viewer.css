@@ -33,13 +33,13 @@
 
 .workspace-grid {
     display: grid;
-    grid-template-columns: 360px minmax(620px, 1fr) 300px;
-    gap: 18px;
+    grid-template-columns: 300px minmax(760px, 1.4fr) 270px;
+    gap: 16px;
     align-items: stretch;
 }
 
 .panel {
-    padding: 20px;
+    padding: 18px;
     border-radius: 24px;
     background: linear-gradient(180deg, rgba(14, 27, 43, 0.94), rgba(9, 19, 31, 0.98));
 }
@@ -57,7 +57,7 @@
 .tool-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    gap: 6px;
 }
 
 .tool-grid-dense {
@@ -66,28 +66,28 @@
 
 .tool-grid-icons {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px;
+    gap: 4px;
 }
 
 .tool-button {
-    min-height: 48px;
+    min-height: 38px;
     background: rgba(88, 196, 220, 0.04);
     border-color: rgba(88, 196, 220, 0.22);
     justify-content: flex-start;
     align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
+    gap: 6px;
+    padding: 5px 8px;
     min-width: 0;
     overflow: visible;
 }
 
 .tool-button .MuiButton-startIcon {
-    flex: 0 0 20px;
+    flex: 0 0 16px;
     margin-right: 2px;
 }
 
 .tool-button .MuiButton-startIcon > *:first-of-type {
-    font-size: 1.05rem;
+    font-size: 0.88rem;
 }
 
 .tool-button-label {
@@ -99,17 +99,17 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    font-size: 0.84rem;
+    font-size: 0.74rem;
     line-height: 1.2;
     word-break: normal;
 }
 
 .tool-shortcut {
-    flex: 0 0 52px;
-    min-width: 52px;
+    flex: 0 0 38px;
+    min-width: 38px;
     display: block;
     text-align: right;
-    font-size: 0.66rem;
+    font-size: 0.58rem;
     opacity: 0.7;
     letter-spacing: 0.06em;
     white-space: nowrap;
@@ -120,7 +120,7 @@
     min-width: 0;
     width: 100%;
     aspect-ratio: 1 / 1;
-    min-height: 64px;
+    min-height: 38px;
     padding: 0;
     display: inline-flex;
     align-items: center;
@@ -130,7 +130,7 @@
 }
 
 .tool-icon-button .MuiSvgIcon-root {
-    font-size: 1.2rem;
+    font-size: 0.82rem;
 }
 
 .viewer-column {
@@ -176,10 +176,10 @@
 }
 
 .viewer-panel {
-    padding: 18px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
 }
 
 .layout-toolbar {
@@ -193,6 +193,10 @@
     min-width: 0;
 }
 
+.layout-mode-selector {
+    width: 100%;
+}
+
 .layout-selector-panel {
     position: relative;
     display: inline-flex;
@@ -200,10 +204,20 @@
     gap: 6px;
 }
 
+.layout-selector-panel-block {
+    width: 100%;
+    display: flex;
+}
+
 .layout-selector-trigger {
     border-radius: 16px;
     border-color: rgba(143, 223, 243, 0.3);
     font-weight: 600;
+}
+
+.layout-selector-trigger-block {
+    width: 100%;
+    justify-content: flex-start;
 }
 
 .layout-selector-hover {
@@ -307,7 +321,7 @@
     color: #8fdff3;
     border: 1px solid rgba(143, 223, 243, 0.12);
     border-radius: 22px;
-    padding: 16px;
+    padding: 14px;
     background:
         linear-gradient(180deg, rgba(4, 9, 18, 0.62), rgba(4, 9, 18, 0.62)),
         linear-gradient(135deg, #09121f 0%, #04070d 100%);
@@ -332,9 +346,9 @@
 .viewport-grid {
     position: relative;
     display: grid;
-    gap: 12px;
-    min-height: 460px;
-    max-height: calc(100vh - 380px);
+    gap: 10px;
+    min-height: 520px;
+    max-height: calc(100vh - 330px);
     z-index: 1;
 }
 
@@ -343,7 +357,7 @@
     min-height: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .viewport-tile.is-active {
@@ -353,7 +367,7 @@
 
 .viewport-frame {
     position: relative;
-    min-height: 320px;
+    min-height: 360px;
     height: 100%;
     border-radius: 18px;
     overflow: hidden;
@@ -400,16 +414,16 @@
 }
 
 .preset-2x1 {
-    min-height: 420px;
+    min-height: 460px;
 }
 
 .preset-2x2 {
-    min-height: 640px;
+    min-height: 680px;
 }
 
 .preset-3x3,
 .preset-4x4 {
-    min-height: 780px;
+    min-height: 760px;
 }
 
 .preset-2x1 .viewport-frame {
@@ -423,6 +437,53 @@
 .preset-3x3 .viewport-frame,
 .preset-4x4 .viewport-frame {
     aspect-ratio: 1 / 1;
+    min-height: 0;
+}
+
+.preset-3x3 .viewport-tile,
+.preset-4x4 .viewport-tile {
+    gap: 4px;
+}
+
+.preset-3x3 .viewport-meta,
+.preset-4x4 .viewport-meta {
+    gap: 0;
+}
+
+.preset-3x3 .viewport-title,
+.preset-4x4 .viewport-title {
+    font-size: 0.8rem;
+}
+
+.preset-3x3 .viewport-meta .MuiTypography-caption,
+.preset-4x4 .viewport-meta .MuiTypography-caption {
+    font-size: 0.68rem;
+}
+
+.preset-3x3 .overlay,
+.preset-4x4 .overlay {
+    padding: 10px;
+    font-size: 0.68rem;
+    line-height: 1.35;
+}
+
+.preset-4x4 .overlay {
+    padding: 8px;
+    font-size: 0.58rem;
+}
+
+.preset-3x3 .topleft,
+.preset-4x4 .topleft {
+    max-width: 58%;
+}
+
+.preset-3x3 .topright,
+.preset-4x4 .topright {
+    max-width: 42%;
+}
+
+.preset-4x4 .viewport-meta {
+    display: none;
 }
 
 .viewportElement {
@@ -537,8 +598,8 @@
 .overlay-list {
     margin: 0;
     padding-left: 18px;
-    min-height: 220px;
-    max-height: 320px;
+    min-height: 200px;
+    max-height: 300px;
     overflow: auto;
     color: #d7e3ea;
 }
@@ -576,7 +637,7 @@
 
 @media (max-width: 1380px) {
     .workspace-grid {
-        grid-template-columns: 320px minmax(0, 1fr);
+        grid-template-columns: 272px minmax(0, 1fr);
         align-items: start;
     }
 
@@ -592,6 +653,11 @@
 
     .viewport-grid {
         min-height: auto;
+        max-height: none;
+    }
+
+    .viewport-frame {
+        min-height: 300px;
     }
 }
 
@@ -626,10 +692,12 @@
     .viewport-grid {
         grid-template-columns: 1fr !important;
         grid-template-rows: none !important;
+        gap: 12px;
     }
 
     .viewport-frame {
         aspect-ratio: 1 / 1;
+        min-height: 260px;
     }
 
     .viewportElement {

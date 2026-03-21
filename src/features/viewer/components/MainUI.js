@@ -49,7 +49,7 @@ import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
 import Hammer from "hammerjs";
 import dicomParser from "dicom-parser";
 import "../styles/viewer.css";
-import ButtonEvent, { TOOL_DEFINITIONS } from "../lib/toolManager";
+import ButtonEvent from "../lib/toolManager";
 import {
   fileLoader,
   getCurrentSliceIndex,
@@ -971,6 +971,80 @@ class MainUIElements extends React.Component {
     );
   }
 
+  renderIntegratedLayoutModeSelector(mode, label) {
+    const { layoutHoverPreset, layoutMode, layoutPreset } = this.state;
+    const activePreset =
+      layoutPresets.find((preset) => preset.label === layoutHoverPreset) ||
+      layoutPresets.find((preset) => preset.label === layoutPreset) ||
+      layoutPresets[0];
+    const isActiveMode = layoutMode === mode;
+
+    return (
+      <Box className={`layout-mode-selector ${isActiveMode ? "is-active" : ""}`}>
+        <Box className="layout-selector-panel layout-selector-panel-block">
+          <Button
+            variant={isActiveMode ? "contained" : "outlined"}
+            color="primary"
+            onClick={() => this.handleLayoutModeChange(mode)}
+            className="layout-selector-trigger layout-selector-trigger-block"
+          >
+            {label}
+            {isActiveMode ? ` · ${layoutPreset}` : ""}
+          </Button>
+          <Box className="layout-selector-hover">
+            <Box className="layout-selector-grid">
+              {Array.from({ length: 4 }, (_, rowIndex) =>
+                Array.from({ length: 4 }, (_, columnIndex) => {
+                  const rows = rowIndex + 1;
+                  const columns = columnIndex + 1;
+                  const presetOption = this.getLayoutPresetByGrid(rows, columns);
+                  const isHighlighted =
+                    rowIndex < activePreset.rows &&
+                    columnIndex < activePreset.columns;
+
+                  return (
+                    <Box
+                      key={`${mode}-${rows}-${columns}`}
+                      className={`layout-selector-cell ${
+                        isHighlighted ? "is-highlighted" : ""
+                      } ${presetOption ? "is-supported" : "is-disabled"}`}
+                      onMouseEnter={() => {
+                        if (presetOption) {
+                          this.handleLayoutPresetHover(presetOption.label);
+                        }
+                      }}
+                      onClick={() => {
+                        if (presetOption) {
+                          this.handleLayoutModeChange(mode);
+                          this.handleLayoutPresetChange(presetOption.label);
+                        }
+                      }}
+                      role={presetOption ? "button" : undefined}
+                      tabIndex={presetOption ? 0 : -1}
+                      onKeyDown={(event) => {
+                        if (
+                          presetOption &&
+                          (event.key === "Enter" || event.key === " ")
+                        ) {
+                          event.preventDefault();
+                          this.handleLayoutModeChange(mode);
+                          this.handleLayoutPresetChange(presetOption.label);
+                        }
+                      }}
+                    />
+                  );
+                }),
+              )}
+            </Box>
+            <Typography variant="body2" className="layout-preset-label">
+              {label} · {activePreset.label}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+    );
+  }
+
   renderLoadingOverlay() {
     if (!this.state.isViewerLoading) {
       return null;
@@ -1031,7 +1105,7 @@ class MainUIElements extends React.Component {
   }
 
   render() {
-    const { activeTool, currentSlice, layoutMode, layoutPreset, totalSlices } =
+    const { activeTool, currentSlice, layoutPreset, totalSlices } =
       this.state;
     const preset = this.getLayoutPresetConfig();
     const assignments = this.getLayoutAssignments();
@@ -1186,6 +1260,30 @@ class MainUIElements extends React.Component {
                     alignItems="center"
                     sx={{ mb: 1 }}
                   >
+                    <GridViewRoundedIcon color="primary" fontSize="small" />
+                    <Typography variant="subtitle2" color="primary.main">
+                      Layout Mode
+                    </Typography>
+                  </Stack>
+                  <Stack spacing={1}>
+                    {this.renderIntegratedLayoutModeSelector(
+                      "image",
+                      "Image Layout",
+                    )}
+                    {this.renderIntegratedLayoutModeSelector(
+                      "series",
+                      "Series Layout",
+                    )}
+                  </Stack>
+                </Box>
+
+                <Box>
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    alignItems="center"
+                    sx={{ mb: 1 }}
+                  >
                     <FilterCenterFocusRoundedIcon
                       color="primary"
                       fontSize="small"
@@ -1254,7 +1352,7 @@ class MainUIElements extends React.Component {
                     >
                       Patient Summary
                     </Typography>
-                    <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                    {/* <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                       <Chip
                         label="Loading Overlay Added"
                         color="success"
@@ -1270,7 +1368,7 @@ class MainUIElements extends React.Component {
                         color="primary"
                         variant="outlined"
                       />
-                    </Stack>
+                    </Stack> */}
                   </Box>
                 </Stack>
 
@@ -1288,60 +1386,6 @@ class MainUIElements extends React.Component {
               </Paper>
 
               <Paper className="panel viewer-panel" elevation={0}>
-                <Box className="layout-toolbar">
-                  <Stack
-                    direction={{ xs: "column", md: "row" }}
-                    spacing={1.5}
-                    justifyContent="space-between"
-                  >
-                    <Box className="layout-group">
-                      <Typography
-                        variant="subtitle2"
-                        color="primary.main"
-                        gutterBottom
-                      >
-                        Layout Mode
-                      </Typography>
-                      <Stack
-                        direction="row"
-                        spacing={1}
-                        flexWrap="wrap"
-                        useFlexGap
-                      >
-                        <Button
-                          variant={
-                            layoutMode === "image" ? "contained" : "outlined"
-                          }
-                          color="primary"
-                          onClick={() => this.handleLayoutModeChange("image")}
-                        >
-                          Image Layout
-                        </Button>
-                        <Button
-                          variant={
-                            layoutMode === "series" ? "contained" : "outlined"
-                          }
-                          color="primary"
-                          onClick={() => this.handleLayoutModeChange("series")}
-                        >
-                          Series Layout
-                        </Button>
-                      </Stack>
-                    </Box>
-
-                    <Box className="layout-group">
-                      <Typography
-                        variant="subtitle2"
-                        color="primary.main"
-                        gutterBottom
-                      >
-                        Grid Preset
-                      </Typography>
-                      {this.renderLayoutPresetTiles()}
-                    </Box>
-                  </Stack>
-                </Box>
-
                 <Box className="slice-toolbar">
                   <Button
                     variant="outlined"
@@ -1469,9 +1513,7 @@ class MainUIElements extends React.Component {
                                 </>
                               ) : (
                                 <>
-                                  <Controlled
-                                    id={`previewViewport-${index}`}
-                                  />
+                                  <Controlled id={`previewViewport-${index}`} />
                                   <canvas
                                     id={`previewCanvas-${index}`}
                                     className="canvas"
