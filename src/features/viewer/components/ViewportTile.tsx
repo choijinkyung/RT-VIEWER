@@ -53,7 +53,9 @@ function ViewportTile({
     <Box
       key={isActiveTile ? "active-viewport" : `preview-${index}`}
       className={`viewport-tile ${isActiveTile ? "is-active" : ""}`}
-      onClick={assignment ? () => onViewportSelection(assignment, isActiveTile) : undefined}
+      onDoubleClick={
+        assignment ? () => onViewportSelection(assignment, isActiveTile) : undefined
+      }
       onWheel={!isActiveTile && assignment ? onViewportWheel : undefined}
       role={assignment ? "button" : undefined}
       tabIndex={assignment ? 0 : undefined}
